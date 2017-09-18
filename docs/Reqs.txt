@@ -4,14 +4,15 @@
 - Teardown - Terminate connection with Olympus
 - Periodically poll client for config changes
 - Fetch the current config - configFetch
-- Send updates to head
-- Send queries to tail
+- Send updates to head (maintain id for each distinct operation)
+- Send queries to tail (caching results?)
 - Validate the set of result proofs
 - Setup and handle timeouts
-	-- Retransmit message to ALL replicas in the chain
+	-- Retransmit message to ALL replicas in the chain (Flag notifying of retransmission)
 - Deal with error statements from replicas
 	-- fetchConfig
-	-- Retransmit to head/tail depending on request type
+	-- Retransmit to head/tail depending on request type (Flag notifying of retransmission)
+
 
 
 2. Olympus:
@@ -22,24 +23,32 @@
 - switchConfig
 - Reconfig (steps mentioned in pg 9)
 	-- Notify replicas of topology
+	-- Validate proof of misbehavior
 
 3. Replica
 - Receive shuttle
-	-- Check validity of order proof in shuttle
+	-- Check validity of order proof in shuttle. If invalid, send reconfig request.
 	-- Apply o to the running state (DS) and obtain a result r
 	-- Add an order statement <s, o> to the order proof
 	-- Add a result statement to the result proof
 	-- Forward the shuttle (using forward(shuttle, direction))
 - forward(shuttle, direction)
 - Caching result shuttle(DS) with result
-- Send reconfig requests to Olympus
-- Respond to client with an error statement if it is immutable
+- Setup and handle timeouts
+	-- Send reconfig requests to Olympus
+- Handle retransimission requests
+	-- Respond to client with an error statement if it is immutable [if immutable]
+	-- Respond to client with Result Shuttle, if cached, else if not cached forwards the request to the head. [if correcct]
+- 
 
 4. Head
 - Handle update
+	-- Check duplicate updates & treat them as no-ops
 	-- Assign slot nos to update requests and create shuttle to pass along
 	-- Create shuttle (containing client id info??) and forward
 - Handle retransimission (3 cases in pg 9)
+- Handle checkpointing
+
 
 5. Tail
 - Know who the clients are
