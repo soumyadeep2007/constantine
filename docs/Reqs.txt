@@ -1,0 +1,49 @@
+1. Client:
+- Init - Connect to Olympus
+	-- Fetch the current config - configFetch
+- Teardown - Terminate connection with Olympus
+- Periodically poll client for config changes
+- Fetch the current config - configFetch
+- Send updates to head
+- Send queries to tail
+- Validate the set of result proofs
+- Setup and handle timeouts
+	-- Retransmit message to ALL replicas in the chain
+- Deal with error statements from replicas
+	-- fetchConfig
+	-- Retransmit to head/tail depending on request type
+
+
+2. Olympus:
+- Initialize system - ie inithist on C1(a brand new config)
+	-- Notify replicas of topology
+- Notify replicas of topology - ie for each p what is the predecessor and successor?
+- Notify client about what is head and what is tail (share config with client)
+- switchConfig
+- Reconfig (steps mentioned in pg 9)
+	-- Notify replicas of topology
+
+3. Replica
+- Receive shuttle
+	-- Check validity of order proof in shuttle
+	-- Apply o to the running state (DS) and obtain a result r
+	-- Add an order statement <s, o> to the order proof
+	-- Add a result statement to the result proof
+	-- Forward the shuttle (using forward(shuttle, direction))
+- forward(shuttle, direction)
+- Caching result shuttle(DS) with result
+- Send reconfig requests to Olympus
+- Respond to client with an error statement if it is immutable
+
+4. Head
+- Handle update
+	-- Assign slot nos to update requests and create shuttle to pass along
+	-- Create shuttle (containing client id info??) and forward
+- Handle retransimission (3 cases in pg 9)
+
+5. Tail
+- Know who the clients are
+- Handle update
+	-- Forwards result proof (DS) and result to client.
+	-- Forward result shuttle back along the chain using forward(shuttle, direction)
+	
