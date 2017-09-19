@@ -1,0 +1,9 @@
+1) Client sends Update/Read:
+	a) Recevies response
+		-- Valid Result Proof
+		-- Invalid Result Proof
+	b) Timeout
+		-- Receives response on retransmission
+		-- Does not receive response on retransmission
+		-- Receives error message
+2) 
