@@ -19,19 +19,18 @@
 - Notify replicas of topology - ie for each p what is the predecessor and successor?
 - Notify client about what is head and what is tail (share config with client)
 - Reconfig (steps mentioned in pg 9)
-	-- Notify replicas of topology
 	-- Validate proof of misbehavior
-- Handle 
+	-- Notify replicas of topology
 
 3. Replica
-- Receive shuttle
+- Receive update shuttle
 	-- Check validity of order proof in shuttle. If invalid, send reconfig request.
 	-- Apply o to the running state (DS) and obtain a result r
 	-- Add an order statement <s, o> to the order proof
 	-- Add a result statement to the result proof
 	-- Forward the shuttle (using forward(shuttle, direction))
 - forward(shuttle, direction)
-- Caching result shuttle(DS) with result
+- Caching result shuttle(DS) with result	
 - Setup and handle timeouts
 	-- Send reconfig requests to Olympus
 - Handle retransimission requests
