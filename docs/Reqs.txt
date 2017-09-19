@@ -13,17 +13,15 @@
 	-- fetchConfig
 	-- Retransmit to head/tail depending on request type (Flag notifying of retransmission)
 
-
-
 2. Olympus:
 - Initialize system - ie inithist on C1(a brand new config)
 	-- Notify replicas of topology
 - Notify replicas of topology - ie for each p what is the predecessor and successor?
 - Notify client about what is head and what is tail (share config with client)
-- switchConfig
 - Reconfig (steps mentioned in pg 9)
 	-- Notify replicas of topology
 	-- Validate proof of misbehavior
+- Handle 
 
 3. Replica
 - Receive shuttle

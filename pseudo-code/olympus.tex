@@ -1,0 +1,14 @@
+\section{Olympus}
+
+\begin{algorithmic}[1]
+\Function{initializeConfig}{t}
+	\For{$i\gets 0, 2t$}
+		\State $replicas\gets replicas \cup \Call{createReplica}{i, h}$;
+    \State $currentConfig\gets \{\};$
+    \State $currentConfig.tail\gets replicas[replicas.length - 1];$
+    \State $currentConfig.replicas\gets replicas;$
+    \EndFor
+    \State \Call{initializeTopology}{};
+    \State $currentConfig.head\gets replicas[0];$
+\EndFunction
+\end{algorithmic}
