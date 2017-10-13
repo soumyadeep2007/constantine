@@ -32,11 +32,10 @@
 - forward(shuttle, direction)
 - Caching result shuttle(DS) with result	
 - Setup and handle timeouts
-	-- Send reconfig requests to Olympus
+	-- Send reconfig requests to Olympus	
 - Handle retransimission requests
 	-- Respond to client with an error statement if it is immutable [if immutable]
 	-- Respond to client with Result Shuttle, if cached, else if not cached forwards the request to the head. [if correcct]
-- 
 
 4. Head
 - Handle update
