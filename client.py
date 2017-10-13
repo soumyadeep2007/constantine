@@ -45,11 +45,10 @@ class Client (process):
             return
         self._private_key = message['private_key']
         self._public_keys = message['public_keys']
-        self._public_key = self._public_keys[self._id]
 
     # On receipt of a result message from a replica
     def receive(self, msg=('result', message), from_=self._current_config['replicas']):
-        if not Commons.is_valid_signature(message, self._public_key):
+        if not Commons.is_valid_signature(message, self._public_keys[from_["id"]]):
             output(log_messages.INVALID_SIGNATURE, level=logging.ERROR)
             return
         if message['content']['operation']['id'] not in self._pending_requests:
@@ -62,7 +61,7 @@ class Client (process):
 
     # On receipt of an error message from a replica
     def receive(self, msg=('error', message), from_=self._current_config['replicas']):
-        if not Commons.is_valid_signature(message, self._public_key):
+        if not Commons.is_valid_signature(message, self._public_keys[from_["id"]]):
             return
         self._retry_request(message)
 
