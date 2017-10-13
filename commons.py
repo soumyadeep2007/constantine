@@ -1,16 +1,21 @@
+import json
+
+from nacl.exceptions import BadSignatureError
+
+
 class Commons:
     @staticmethod
-    def is_valid_signature(message, public_key):
-        decrypted_content = Commons.decrypt(message["signed_content"], public_key)
-        return decrypted_content == message.content
-
-    @staticmethod
-    def decrypt(signed_content, public_key):
-        pass
+    def is_valid_signature(signed_content, public_key):
+        try:
+            public_key.verify(signed_content)
+            return True
+        except BadSignatureError:
+            return False
 
     @staticmethod
     def sign(content, private_key):
-        pass
+        content_json_string = json.dumps(content)
+        return private_key.sign(bytes(content_json_string, 'utf-8'))
 
     @staticmethod
     def is_valid_result(message, replicas, public_keys):
