@@ -1,6 +1,7 @@
-import log_messages
 import logging
-from commons import Commons
+import log_messages
+
+from src.commons import Commons
 
 
 # noinspection PyUnresolvedReferences,PyStatementEffect

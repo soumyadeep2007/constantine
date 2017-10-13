@@ -1,8 +1,3 @@
-import log_messages
-import logging
-from commons import Commons
-
-
 # noinspection PyUnresolvedReferences,PyStatementEffect
 class Replica (process):
     def setup(self):
