@@ -1,0 +1,72 @@
+import logging
+
+o_client = import_da('client')
+
+# noinspection PyMethodParameters
+class Olympus(process):
+    def setup():
+        self.config = dict()
+        self.clients = []
+
+    def parse_config():
+        with open('config.txt', 'r') as f:
+            for line in f:
+                if line[0] != '#':
+                    (key, sep, val) = line.partition('=')
+                    # if the line does not contain '=', it is invalid and hence ignored
+                    if len(sep) != 0:
+                        val = val.strip()
+                        self.save_config_line(key.strip(), int(val) if str.isdecimal(val) else val)
+        print(self.config)
+
+    def save_config_line(key, val):
+        if key == 'hosts':
+            hosts = {}
+            id = 0
+            for host in val.split("; "):
+                hosts[id] = host
+                id +=1
+            self.config[key] = hosts
+        elif key == 'client_hosts':
+            client_hosts = {}
+            id_num = 0
+            hosts = self.config['hosts']
+            for client_host_id in val.split("; "):
+                client_hosts['c' + str(id_num)] = hosts[int(client_host_id)]
+                id_num += 1
+            self.config[key] = client_hosts
+        elif key == 'replica_hosts':
+            replica_hosts = {}
+            id_num = 0
+            hosts = self.config['hosts']
+            for replica_host in val.split("; "):
+                replica_hosts['r' + str(id_num)] = replica_host
+                id_num += 1
+            self.config[key] = replica_hosts
+        elif "workload[" in key:
+            workloads = self.config['workloads'] if 'workloads' in self.config else {}
+            client_id = "c" + key[-2:-1]
+            workloads[client_id] = val.split("; ")
+            self.config['workloads'] = workloads
+        else:
+            self.config[key] = val
+
+    def init_client():
+        workloads = self.config['workloads']
+        for client_id, host in self.config['client_hosts'].items():
+            client_config = {}
+            client_config['id'] = client_id
+            client_config['host'] = host
+            client_config['workload'] = workloads[client_id]
+            # Add keys
+            client = new(Client, args(client_config))
+            self.clients.append(start(client))
+
+    def run():
+        parse_config()
+        init_client()
+
+
+def main():
+    olympus = new(Olympus, args=())
+    start(olympus)
