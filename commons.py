@@ -1,6 +1,8 @@
 import json
 
 from nacl.exceptions import BadSignatureError
+from nacl.hash import sha256
+from nacl.encoding import HexEncoder
 
 
 class Commons:
@@ -14,12 +16,11 @@ class Commons:
 
     @staticmethod
     def sign(content, private_key):
-        content_json_string = json.dumps(content)
-        return private_key.sign(bytes(content_json_string, 'utf-8'))
+        return private_key.sign(bytes(str(content), 'utf-8'))
 
     @staticmethod
     def is_valid_result(message, replicas, public_keys):
-        expected_hash = hash(message["content"]["result"])
+        expected_hash = Commons.hash(message["content"]["result"])
         valid_result = True
         replicas_clone = set(replicas)
         for result_statement in message["content"]["result_proof"]:
@@ -29,3 +30,12 @@ class Commons:
             replicas_clone.remove(result_statement["replica"])
         valid_result = valid_result and len(replicas_clone) == 0
         return valid_result
+
+    @staticmethod
+    def hash(obj):
+        obj_bytes = bytes(str(obj), 'utf-8')
+        hash_result = {
+            'digest': sha256(obj_bytes, encoder=HexEncoder),
+            'encoded_message': HexEncoder.encode(obj_bytes)
+        }
+        return hash_result
