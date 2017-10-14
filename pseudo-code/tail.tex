@@ -1,0 +1,32 @@
+\section{Tail(Extends Replica)}
+
+\begin{algorithmic}[1]
+
+\Require A shuttle is received
+\Function{onShuttleReceived}{message, source} \Comment Handle an incoming result shuttle
+    \If{$\neg \Call{isValidSignature}{message, self.publicKeys[source]}$}
+    	\State \textbf{return};
+    \EndIf
+	
+	\If{$message.slot <= self.lastSignedSlot$}
+		\State \textbf{return}; \Comment Drop the message.
+	\EndIf
+	
+	\If{$\Call{hasSignatureMismatch}{message.orderProof}$}
+    	\State $\Call{handleOrderStatementSignMismatchError}{message};$
+    \ElsIf{$\Call{hasOrderConflict}{message}$}
+    	\State $\Call{handleOrderConflictError}{message, source};$
+    \Else
+    	\State $message.orderProof\gets \Call{updateOrderProof}{message};$
+		\State $self.history \cup message.orderProof;$
+		\State $self.lastSignedSlot\gets message.slot;$
+        \State $result\gets \Call{updateRunningState}{message.operation};$ 
+        \State $message.resultProof\gets \Call{updateResultProof}{message, message.result};$
+        \State $self.resultCache[message.clientId][message.operation] = message;$
+        \State \Call{sendResult}{message.resultProof, result};
+        \State $\Call{route}{message, DIRECTION\_BACKWARD};$
+    \EndIf
+\EndFunction
+\\
+
+\end{algorithmic}

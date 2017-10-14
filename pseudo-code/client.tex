@@ -1,0 +1,69 @@
+\section{client}
+
+\begin{algorithmic}[1]
+\Function{updateConfig}{} \Comment{Fetches the configuration from Olympus and updates the local copy at a fixed interval}
+    \State $self.currentConfig \gets \Call{Olympus::fetchConfig}{}$;
+\EndFunction
+\\
+
+\Require A keys message from Olympus has been received.
+\Function{onKeysMessage}{message}
+	\State $self.privateKey\gets message.privateKey;$
+    \State $self.publicKeys\gets message.publicKeys;$
+\EndFunction
+\\
+
+\Function{issueRequest}{operation} \Comment{Makes a request to head}
+    \State $head \gets self.currentConfig.head$;
+    \State $requestMessage \gets \Call{createRequest}{operation}$;
+    \State $self.pendingRequests[requestMessage.operation] \gets requestMessage$;
+    \State \Call{send}{head, requestMessage, self};
+    \State $self.isResponseReceived \gets $self.pendingRequests[requestMessage.operation] == NULL;
+    \State \Call{wait}{self.isResponseReceived, TIMEOUT\_DURATION};
+\EndFunction
+\\
+
+\Function{createRequest}{operation} \Comment{Creates the request object}
+    \State $requestMessage.content.client \gets self;$
+    \State $requestMessage.content.isRetry \gets false$;
+    \State $requestMessage.content.operation \gets operation;$
+    \State $requestMessage.signedHash \gets \Call{sign}{requestMessage.content, self.privateKey};$
+\EndFunction
+\\
+
+\Require A response is received
+\Function{onResultReceived}{message} \Comment {Contains actions to be taken when a message is received}
+    \If {$self.pendingRequests[message.content.operation] == NULL$} 
+        \State \textbf{return};
+    \ElsIf {\Call{isValidResult}{message, self.currentConfig.replicas, self.publicKeys}} 
+        \State del $self.pendingRequests[message.content.operation]$; 
+        \State \Call{processResult}{message.content.operation, message.content.result};
+    \Else \State \Call{retryRequest}{pendingRequests[message.content.operation]};
+    \EndIf
+\EndFunction
+\\
+
+\Require An error message is received
+\Function{onErrorReceived}{message} \Comment {Contains actions to be taken when an error message is received}
+    \State \Call{retryRequest}{self.pendingRequests[message.content.operation]};
+\EndFunction
+\\
+
+\Require A request is timed out
+\Function{onTimeout}{requestMessage} \Comment {Contains actions to be taken on a timeout}
+     \State \Call{retryRequest}{pendingRequests[message.content.operation]};
+\EndFunction
+\\
+
+\Function{retryRequest}{requestMessage} \Comment {Handles retransmission of a failed request (timeout or incorrect response)}
+    \State $requestMessage.isRetry \gets true$;
+    \State $requestMessage.signedHash \gets \Call{sign}{requestMessage, self.privateKey};$
+    \For{replica in self.currentConfig.replicas}
+        \State \Call{send}{replica, requestMessage};
+    \EndFor
+    \State $self.isResponseReceived \gets self.pendingRequests[requestMessage.operation] == NULL$;
+    \State \Call{wait}{self.isResponseReceived, timeoutDuration};
+\EndFunction
+\\
+
+\end{algorithmic}

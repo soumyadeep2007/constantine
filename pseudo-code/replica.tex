@@ -1,0 +1,226 @@
+\section{Replica}
+\begin{algorithmic}[1]
+\Function{initialize}{id, h, privateKey, publicKeys} \Comment Initialize a replica.
+    \State $self.id\gets id;$
+    \State $self.h\gets h;$
+    \State $self.replicas\gets \Call{Olympus::fetchConfig}{}.replicas;$
+    \State $self.privateKey\gets privateKey;$
+    \State $self.publicKeys\gets publicKeys;$
+    \State $self.state\gets REPLICA\_ACTIVE;$
+    \State $self.resultCache\gets \{\};$
+    \State \textbf{return} self;
+\EndFunction
+\\
+\Require An update shuttle is received
+\Function{onUpdateShuttle}{message, source} \Comment Handle an incoming update shuttle
+	\If{$\neg \Call{isValidSignature}{message, self.publicKeys[source]}$}
+    	\State \textbf{return};
+    \EndIf
+    \If{$message.slot <= self.lastSignedSlot$}
+        \State \textbf{return}; \Comment Drop the message.
+    \EndIf
+	\If{$\neq \Call{isValidOrderProof}{message, self.replicas, self.publicKeys}$}
+    	\State $self.state\gets REPLICA\_IMMUTABLE;$
+      \State $reconfigRequestMessage\gets \{\};$
+      \State $reconfigRequestMessage.misbehaviorProof\gets \{\};$
+      \State $reconfigRequestMessage.misbehaviorProof.orderProof\gets message.orderProof;$
+      \State $signedMessage\gets \Call{sign}{reconfigRequestMessage, self.privateKey}$
+      \State $\Call {send}{Olympus, signedMessage, self};$  	
+    \Else
+    	\State $message.orderProof\gets \Call{updateOrderProof}{message};$
+        \State $self.history \cup message.orderProof;$
+        \State $self.lastSignedSlot\gets message.slot;$
+        \State $result\gets \Call{updateRunningState}{message.operation};$ 
+        \State $message.resultProof\gets \Call{updateResultProof}{message, result};$
+        \State $\Call{route}{message, DIRECTION\_FORWARD};$
+        \State $\Call{wait}{self.resultShuttleReceived};$
+    \EndIf
+\EndFunction
+\\
+
+\Require Replica waiting for result shuttle timed out
+\Function{onResultShuttleTimeout}{message, source} \Comment Handle a timeout for waiting on a result shuttle.
+	\State $reconfigRequestMessage\gets \{\};$
+    \State $self.state\gets REPLICA\_IMMUTABLE;$
+    \State $signedMessage\gets \Call{sign}{reconfigRequestMessage, self.privateKey};$
+    \State $\Call {send}{Olympus, signedMessage, self};$
+\EndFunction
+\\
+
+\Comment order statement: (slot, operation) Config omitted as there can be only 1 active configuration
+\Function{updateOrderProof}{message} \Comment Update the order proof to include an order statement made by this replica.
+	\State $orderStatement\gets (message.slot, message.operation, self);$
+    \State $signedOrderStatement\gets \Call{sign}{orderStatement, self.privateKey};$
+	\State $message.orderProof.orderStatements \cup signedOrderStatement;$
+    \State $message.orderProof.replica\gets self;$
+    \State $self.history \cup message.orderProof;$
+\EndFunction
+\\
+
+\Function{updateRunningState}{operation} \Comment Apply the operation specified on the designated object and return its value.
+\State \textbf{return} $\Call{update}{self.object, message.operation};$
+\EndFunction
+\\
+
+\Function{getRunningState}{}
+	\State \textbf{return} \Call{get}{self.object};
+\EndFunction
+\\
+
+\Function{updateResultProof}{message, result} \Comment Update the result proof to include a hash of the result computed at this replica.
+	\State $resultStatement\gets (message.operation, \Call{hash}{result});$
+    \State $signedResultStatement\gets \Call{sign}{resultStatement, self.privateKey};$
+	\State $message.resultProof \cup signedResultStatement;$
+\EndFunction
+\\
+
+\Require A result shuttle is received
+\Function{onResultShuttle}{message, source} \Comment Handle an incoming result shuttle
+	\If{$\neg \Call{isValidSignature}{message, self.publicKeys[source]}$}
+    	\State \textbf{return};
+    \EndIf
+	\If{$\Call{isValidResult}{message, self.replicas, self.publicKeys}$}
+        \State $resultShuttleReceived\gets true;$
+        \State $resultCache[message.operation] = message;$
+        \State \Call{forward}{message, DIRECTION\_BACKWARD};
+    \Else
+        \State \Call{handleInvalidResultProofError}{message};
+    \EndIf
+\EndFunction
+\\
+
+\Function{handleInvalidResultProofError}{message} \Comment Handle a result proof error
+    \State $state\gets REPLICA\_IMMUTABLE;$
+    \State $reconfigRequestMessage\gets \{\};$
+    \State $reconfigRequestMessage.misbehaviorProof\gets \{\};$
+    \State $reconfigRequestMessage.misbehaviorProof.invalidResultProof\gets message.resultProof;$
+    \State $signedMessage\gets \Call{sign}{reconfigRequestMessage, self.privateKey}$
+    \State $\Call {send}{Olympus, signedMessage, self};$
+\EndFunction
+\\
+
+\Require A wedge request is received from Olympus \Comment Handle an incoming wedge request.
+\Function{onWedgeRequest}{message, source}
+	\If{$\neg \Call{isValidSignature}{message, self.publicKeys[source]}$}
+    	\State \textbf{return};
+    \EndIf
+	\State $wedgedMessage\gets \{\};$
+    \State $wedgedMessage.replica\gets self;$
+    \State $wedgedMessage.history\gets self.history;$
+    \State $signedMessage\gets \Call{wedgedMessage, self.privateKey};$
+    \State \Call {send}{Olympus, signedMessage, self};
+\EndFunction
+\\
+
+\Require A request is received from the client
+\Function{onClientRequest}{message, source} \Comment Handle an incoming client request.
+	\If{$\neg \Call{isValidSignature}{message, self.publicKeys[source]}$}
+    	\State \textbf{return};
+    \EndIf
+    \If{$message.isRetry$}
+    	\State $\Call{handleRetransmissionRequest}{message, source};$
+    \Else
+        \State $\Call{route}{message, DIRECTION\_BACKWARD};$
+    \EndIf
+\EndFunction
+\\
+
+\Function{handleRetransmissionRequest}{message, client} \Comment Handle an incoming retransmission request.
+    \If{$state == REPLICA\_ACTIVE$}
+        \State $resultMessage\gets \{\};$
+        \State $cachedResultShuttle\gets resultCache[message.operation];$
+        \State $resultMessage.result\gets cachedResultShuttle.result;$
+        \State $resultMessage.operation;\gets cachedResultShuttle.operation;$
+        \State $resultMessage.resultProof\gets cachedResultShuttle.resultProof;$
+        \State $\Call{send}{client, resultMessage, self};$
+    \Else
+        \State \Comment Transmit an error message to the client as it has reached an immutable replica.
+        \State $errorMessage\gets \{\};$
+        \State $errorMessage.type\gets ERROR_MESSAGE;$
+        \State \Call{send}{message.client, errorMessage, self};
+    \EndIf
+\EndFunction
+\\
+
+\Require A catch-up message has been received.
+\Function{onCatchUp}{message}
+	\If{$\neg \Call{isValidSignature}{message, self.publicKeys[Olympus]}$}
+    	\State \textbf{return};
+    \EndIf
+    \ForAll{orderProof in message.deltaHistory}
+    	\State \Call{updateRunningState}{orderProof.operation};
+    \EndFor
+    \State $caughtUpMessage\gets \{\}$;
+    \State $runningState \gets \Call{getRunningState};$
+    \State $caughtUpMessage.ch\gets \Call{hash}{runningState}$;
+    \State $signedMessage\gets \Call{sign}{caughtUpMessage, self.privateKey}$;
+    \State \Call{send}{Olympus, signedMessage, self};
+\EndFunction
+\\
+
+\Function{route}{message, direction} \Comment route a shuttle upstream or downstream.
+	\If{$direction == DIRECTION\_FORWARD$}
+    	\State $\Call{send}{self.next, message, self};$
+    \Else
+    	\State $\Call{send}{self.pre, message, self};$
+	\EndIf
+\EndFunction
+\\
+
+\Function{receiveCheckpointShuttle}{checkpointShuttle} \Comment {Actions to be taken when a checkpoint is received}
+    \If {\Call{isValidCheckpoint}{checkpointShuttle}}
+        \If {checkpointShuttle.content.isComplete}
+            \State \Call{truncateHistory}{}
+            \State \Call{route}{checkpointShuttle, DIRECTION\_BACKWARD};
+            \State $self.checkpointInitiated \gets false;$
+            \State \Call{cleanResultCache}{}
+        \Else 
+            \State $checkpointShuttle.checkpointProof \cup \Call{createCheckpoint}{};$
+             \State $self.CHECKPOINT\_SLOT\_ID \gets checkpointShuttle.checkpoint;$
+            \State $self.checkpointInitiated \gets true;$
+            \State \Call{route}{checkpointShuttle, DIRECTION\_FORWARD};
+            \State \Call{wait}{checkpointInitiated == false, timeoutDuration};
+        \EndIf
+    \EndIf
+\EndFunction
+\\
+
+\Function{createCheckpoint}{} \Comment {Creates a checkpoint}
+    \State $checkpoint.content.hash \gets \Call{hash}{self.object};$
+\EndFunction
+\\
+
+\Function{sendResult}{resultProof, result} \Comment Sends result of the operation to the client
+    \State $resultObject \gets \{\};$
+    \State $resultObject.resultProof \gets resultProof;$
+    \State $resultObject.result \gets message.result;$
+    \State $resultObject.hash \gets \Call{cryptographicHash}{resultObject.result};$
+    \State $resultObject.operation \gets message.operation;$
+    \State \Call{send}{message.client, resultObject, self}
+\EndFunction
+\\
+
+\Function{truncateHistory}{} 
+   \State \Comment Truncate all but latest $MIN\_ORDER\_HISTORY\_SIZE$ number of records from $self.history;$
+\EndFunction
+\\
+
+\Require Replica waiting for checkpoint shuttle timed out
+\Function{onCheckpointShuttleTimeout}{} \Comment Handle a timeout for waiting on a checkpoint shuttle.
+	\State $reconfigRequestMessage\gets \{\};$
+        \State $self.state\gets REPLICA\_IMMUTABLE;$
+        \State $reconfigRequestMessage.signedHash\gets \Call{sign}{reconfigRequestMessage, self.privateKey}$
+        \State $\Call{requestReconfiguration}{reconfigRequestMessage};$
+        \State \textbf{return};
+\EndFunction
+\\
+
+\Function{cleanResultCache}{} \Comment Removes operation older than the caching threshold from the resultCache
+    \For {$\forall Map[operation, resultProof] \in resultCache$}
+        \If {operation older than OPERATION\_CACHING\_THRESHOLD}
+            \State del $map[operation];$
+        \EndIf
+    \EndFor
+\EndFunction
+\\
+\end{algorithmic}

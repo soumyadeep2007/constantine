@@ -1,0 +1,92 @@
+\section{Head(Extends Replica)}
+
+\begin{algorithmic}[1]
+\Require A request is received
+\Function{onClientRequest}{message} \Comment {Actions taken when a request is received from a client}
+    \If {$processedRequests[message.content.operation] != NULL$)}
+        \State \textbf{return} $processedRequests[message.content.operation]$;
+    \ElsIf {$pendingRequests[message.content.operation] != NULL$}
+        \State $isResponseReceived \gets pendingRequests[message.content.operation] == NULL$;
+    \State \Call{wait}{isResponseReceived, TIMEOUT\_DURATION};
+    \Else \State \Call{processRequest}{message}
+    \EndIf
+\EndFunction
+\\
+
+\Function{processRequest}{message}
+    \If{$\neg \Call{isValidSignature}{message, self.publicKeys[message.content.client]}$}
+        \State \textbf{return};
+    \EndIf
+    \If {$message.content.operationType == READ$}
+        \State \textbf{return} \Call{handleRead}{message};
+    \ElsIf {$message.content.operationType == UPDATE$}
+        \State \textbf{return} \Call{handleUpdate}{message};
+    \Else \State \textbf{return};
+    \EndIf
+\EndFunction
+\\
+
+\Function{handleUpdate}{updateMessage} \Comment {Actions to be taken when an update operation is requested}
+    \State $slot \gets \Call{getSlot}{};$
+    \State $message \gets \Call{createShuttle}{updateMessage, slot};$
+    \State $message.orderProof \gets \Call{updateOrderProof}{message};$
+    \State $r \gets \Call{updateRunningState}{self.object, updateMessage.operation};$ 
+    \State $message.resultProof \gets \Call{updateResultProof}{message.resultProof, r};$
+    \State \Call{route}{message, DIRECTION\_FORWARD};
+\EndFunction
+\\
+
+\Function{handleRead}{message} \Comment {Actions to be taken when a read operation is requested}
+    \If {$processedRequests[message.content.operation] != NULL$)}
+        \State \textbf{return} $processedRequests[message.content.operation]$;
+    \Else \State \textbf{return}
+    \EndIf
+\EndFunction
+\\
+
+\Function{createShuttle}{request, slot} \Comment {Creates a shuttle from the request and slot}
+    \State $message \gets \{\};$
+    \State $message.content.slot \gets slot;$
+    \State $message.content.operation \gets request.content.operation;$
+    \State $message.content.orderProof \gets \{\};$
+    \State $message.content.resultProof \gets \{\};$
+    \State $message.content.client \gets request.content.client;$
+\EndFunction
+\\
+
+\Function{onCheckpointTrigger}{} \Comment {Initiates checkpoint after every CHECKPOINT\_TRIGGER\_SIZE slots}
+    \State $checkpointShuttle \gets \Call{createCheckpointShuttle}{};$
+    \State $self.checkpointInitiated \gets true;$
+    \State $checkpointShuttle.signedHash \gets \Call{sign}{checkpointShuttle, self.privateKey};$
+    \State \Call{route}{checkpointShuttle, DIRECTION\_FORWARD};
+    \State \Call{wait}{checkpointInitiated == false, timeoutDuration};
+\EndFunction
+\\
+
+\Function{createCheckpointShuttle}{} \Comment {Creates a checkpoint}
+    \State $checkpointShuttle \gets \{\};$
+    \State $checkpointShuttle.content.checkpointProof \gets \{\};$
+    \State $checkpointShuttle.content.isComplete \gets false;$
+    \State $checkpointShuttle.content.checkpoint \gets self.CHECKPOINT\_SLOT\_ID + self.CHECKPOINT\_TRIGGER\_SIZE;$
+    \State $checkpointShuttle.content.checkpointProof \cup \Call{createCheckpoint}{};$
+\EndFunction
+\\
+
+\Function{receiveCheckpointShuttle}{checkpointShuttle} \Comment {Actions to be taken when a checkpoint is received}
+    \If {\Call{isValidCheckpoint}{checkpointShuttle}}
+        \If {checkpointShuttle.content.isComplete}
+            \State \Call{truncateHistory}{}
+            \State $self.checkpointInitiated \gets false;$
+            \State \Call{cleanResultCache}{}
+        \Else 
+            \State $checkpointShuttle.checkpointProof \cup \Call{createCheckpoint}{};$
+             \State $self.CHECKPOINT\_SLOT\_ID \gets checkpointShuttle.checkpoint;$
+            \State $self.checkpointInitiated \gets true;$
+            \State \Call{route}{checkpointShuttle, DIRECTION\_FORWARD};
+            \State \Call{wait}{checkpointInitiated == false, timeoutDuration};
+        \EndIf
+    \EndIf
+\EndFunction
+\\
+
+\end{algorithmic}

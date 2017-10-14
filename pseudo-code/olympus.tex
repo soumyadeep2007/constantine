@@ -1,14 +1,177 @@
 \section{Olympus}
 
-\begin{algorithmic}[1]
-\Function{initializeConfig}{t}
+\begin{algorithmic}[1] 
+\Function{initializeConfig}{clients, t, h} \Comment Constructs a new configuration with new replicas. Distributes keys.
+    \State $self.publicKeys\gets \Call{generatePublicKeys}{clients, t};$
+	\State $self.clients\gets clients;$
+    \ForAll{client in self.clients}
+    	\State $keysMessage\gets \{\};$
+        \State $keysMessage.privateKey\gets \Call{generatePrivateKey}{};$
+    	\State $keysMessage.publicKeys\gets self.publicKeys;$
+        \State $\Call{send}{client, keysMessage, self};$
+    \EndFor
+	\State $self.currentConfig\gets \{\};$
+	\State $self.currentConfig.t\gets t;$
 	\For{$i\gets 0, 2t$}
 		\State $replicas\gets replicas \cup \Call{createReplica}{i, h}$;
-    \State $currentConfig\gets \{\};$
-    \State $currentConfig.tail\gets replicas[replicas.length - 1];$
-    \State $currentConfig.replicas\gets replicas;$
     \EndFor
+    \State $self.currentConfig.head\gets replicas[0];$
+    \State $self.currentConfig.tail\gets replicas[|replicas| - 1];$
+    \State $self.currentConfig.replicas\gets replicas;$
     \State \Call{initializeTopology}{};
-    \State $currentConfig.head\gets replicas[0];$
+\EndFunction
+\\
+
+\Function{createReplica}{rid, h} \Comment Initialize a new Replica process.
+    \State $privateKey\gets \Call{generatePrivateKey}$;
+    \State $replica\gets \textbf{new} Replica;$
+    \State replica.$\Call{initialize}{rid, h, privateKey, self.publicKeys};$
+    \State \textbf{return} replica;
+\EndFunction
+\\
+
+\Function{initializeTopology}{} \Comment Make replicas aware of the network topology.
+	\State $self.currentConfig.head.pre\gets NULL;$
+    \State $self.currentConfig.tail.next\gets NULL;$
+    \For{$i\gets 1, |replicas| - 2$}
+    	\State $self.currentConfig.replicas[i].pre\gets self.currentConfig.replicas[i - 1];$
+    	\State $self.currentConfig.replicas[i].next\gets self.currentConfig.replicas[i + 1];$
+    \EndFor
+\EndFunction
+\\
+
+\Function{fetchConfig}{} \Comment Return the current configuration.
+	\State \textbf{return} self.currentConfig; 
+\EndFunction
+\\
+
+\Require A reconfiguration request is received.
+\Function{onReconfigRequest}{message, source} \Comment Handle a reconfiguration request.
+	\If{$\neg \Call{isValidSignature}{message, self.publicKeys[source]}$}
+        \State \textbf{return};
+	\ElsIf{$\neg message.timeout \&\& \neg \Call{isValidMisbehaviorProof}{message}$}
+    	\State \textbf{return};
+    \EndIf
+	\State \Call{sendWedgeRequests}{};
+\EndFunction
+\\
+
+\Function{sendWedgeRequests}{}
+  \For{replica in self.currentConfig.replicas}
+          \State $wedgeRequestMessage\gets \{\};$
+          \State $wedgeRequestMessage.client\gets wedgeRequestMessage.client;$
+          \State $signedMessage\gets \Call{sign}{wedgeRequestMessage, self.publicKeys[replica]};$
+          \State $\Call{send}{replica, signedMessage, self};$
+      \EndFor
+      \State $quorumSatisfied\gets |self.replies| == self.currentConfig.t + 1;$
+      \State \Call{wait}{quorumSatisfied};
+\EndFunction
+\\
+
+\Function{isValidMisbehaviorProof}{message} \Comment validate a message containing a proof of misbehavior.
+	\If{$message.misbehaviorProof \&\& message.misbehaviorProof.orderProof$}
+    	\State $\textbf{return} \neq \Call{isValidOrderProof}{message, self.currentConfig.replicas, self.publicKeys};$
+    \EndIf
+    \If{$message.misbehaviorProof \&\& message.misbehaviorProof.invalidResultProof$}
+        \State $\textbf{return} \neg \Call{isValidResult}{message.misbehaviorProof.invalidResultProof};$
+    \EndIf
+	\State $slotOperationPairs\gets \Call {getSlotOperationPairs}{message.h, message.conflictingSlot};$
+	\State $\textbf{return} |slotOperationPairs| > 1$;
+\EndFunction
+\\
+
+\Function{getSlotOperationPairs}{h, slot} \Comment Get the slot operation pairs (s, o) such that s = slot.
+	\State $slotOperationPairs\gets \{\};$
+    \For{orderProof in h}
+    	\If{$orderProof[ORDER\_PROOF\_SLOT\_INDEX] == slot$}
+        	\State $slotOpPair\gets (orderProof[SLOT\_INDEX], orderProof[OPERATION\_INDEX]);$
+        	\State $slotOperationPairs \cup slotOpPair;$
+        \EndIf
+    \EndFor
+\EndFunction
+\\
+
+\Require A quorum of wedged requests is met
+\Function{onWedgedQuorumSatisfied}{messages} \Comment Handle the case when a quorum of wedged responses is satisfied.
+	\State $hist\gets \Call{constructHistorySeed}{messages};$
+    \State \Call{initializeConfiguration}{self.clients, self.currentConfiguration.t, hist};
+\EndFunction
+\\
+
+\Function{sendCatchUp}{messages} \Comment {Prepare and send catch up messages to all replicas in the quorum}
+	\State $longestHistory \gets \Call{getLongestHistory}{message};$
+    \ForAll{message in messages}
+        \State $maxOperationSlot \gets \Call{getMaxOperationSlotFromHistory}{message.history};$
+        \State $catchUpMessage \gets \{\};$
+        \State $catchUpMessage.deltaHistory \gets deltaHistory;$
+        \ForAll{orderProof in longestHistory}
+            \If {$orderProof[SLOT\_INDEX] > maxOperationSlot$}
+                $catchUpMessage.deltaHistory \gets catchUpMessage.deltaHistory \cup orderProof;$
+            \EndIf
+        \EndFor
+        \State \Call{send}{message.replica, catchUpMessage, self};
+    \EndFor
+\EndFunction
+\\
+
+\Function{getLongestHistory}{messages} \Comment {From a list of correct wedged statements get the longest history.}
+    \State $maxOperationSlot \gets -\infty;$
+    \State $minSlot \gets \infty;$
+    \State $longestHistory \gets \{\};$
+	\ForAll{message in messages}
+        \State $maxOperationSlotForReplica \gets \Call{getMaxOperationSlotFromHistory}{message.history};$
+        \If {$maxOperationSlotForReplica > maxOperationSlot$} 
+            \State $longestHistory \gets  message.history;$
+        \EndIf
+    \EndFor
+    \State \textbf{return} longestHistory;
+\EndFunction
+\\
+
+\Function{getMaxOperationSlotFromHistory}{history} \Comment {Returns the maximum slot value from a given a list of order proofs}
+    \State $maxOperationSlot \gets -\infty;$
+    \ForAll{orderProof in message.history}
+        \If{$orderProof[ORDER\_PROOF\_SLOT\_INDEX] > maxOperationSlot$}
+            \State $maxOperationSlot \gets  orderProof[ORDER\_PROOF\_SLOT\_INDEX];$
+         \EndIf
+    \EndFor
+    \State \textbf{return} $maxOperationSlot;$
+\EndFunction
+\\
+
+\Require A caught up message has been received.
+\Function{onCaughtUpMessage}{message, source}
+    \If {source in self.quorumReplicas and \Call{isValidSignature}{message.signature, self.publicKeys[source]}}
+        \State $self.caughtUpMessageCache[message.hash] \gets self.caughtUpMessageCache[message.hash] \cup source;$
+        \ForAll {entry in caughtUpMessageCache}
+            \If {$|entry.values| > t + 1$}
+                \State $self.caughtUpMessageCache \gets \{\}$;
+                \State $self.quorumReplicas \gets \{\};$
+                \State \Call{inithist}{entry.key}
+            \EndIf
+        \EndFor
+    \EndIf
+\EndFunction
+\\
+
+\Require A wedged response has been received.
+\Function{onWedgedResponse}{message, source} \Comment Handle a single wedged response.
+    \If{$\neg \Call{isValidSignature}{message, self.publicKeys[source]}$}
+        \State \textbf{return};
+    \EndIf    
+    \ForAll{orderProof in message.history}
+    	\If{$\neq \Call{isValidOrderProof}{message, self.replicas, self.publicKeys}$}
+        	\State \Call{sendWedgeRequests}{};
+            \State \textbf{return};
+        \EndIf
+    \EndFor
+	\State $self.replies\gets self.replies \cup message;$
+    \If {|self.replies| >= self.t + 1}
+        \State $messages \gets \{\};$
+        \ForAll {reply in replies} 
+            \State $messages \gets messages \cup reply;$
+        \EndFor
+        \State \Call{sendCatchUp}{sendCatchUp};
+    \EndIf
 \EndFunction
 \end{algorithmic}

@@ -1,0 +1,98 @@
+\section{Commons}
+\begin{algorithmic}[1]
+\Function{isValidSignature}{message, publicKey} \Comment Apply the public key to the message's signed hash of the content and check if the result equals the message's content.This is called by all message handlers within the distributed system for checking message authenticity.
+	\State $decryptedContent\gets \Call{decrypt}{message.signedContent, publicKey};$
+	\State \textbf{return} $decryptedContent == message.content;$
+\EndFunction
+\\
+
+\Function{hasSignatureMismatch}{orderProof, source} \Comment Check for any order statement signature invalidity.
+    \ForAll{signedOrderStatement in orderProof.orderStatements}
+    	\If{$\neg \Call{isValidSignature}{signedOrderStatement, self.publicKeys[orderProof.replica]}$}
+    		\State \textbf{return} true;
+    	\EndIf
+    \EndFor
+	\State \textbf{return} false;
+\EndFunction
+\\
+
+\Function{isValidOrderProof}{message, replicas, publicKeys} \Comment Check the validity of order proofs.
+	\State $expectedHash \gets \Call{hash}{message.orderProof};$
+    \State $validOrderProof \gets true;$
+    \State $replicasClone \gets \Call{clone}{replicas};$
+    \ForAll {orderStatement in message.orderProof.orderStatements} 
+        \State $validOrderProof \gets validOrderProof \&\& expectedHash == orderStatement.hash;$
+        \State $pkey \gets self.publicKeys[orderStatement.replica];$
+        \State $validOrderProof \gets validOrderProof \&\& \Call{isValidSignature}{orderStatement, pkey};$
+        \State $replicasClone \gets replicasClone \setminus orderStatement.source;$
+    \EndFor
+    \State $validOrderProof \gets validOrderProof \&\& |replicasClone| == 0;$
+    \State \textbf{return} $validOrderProof \&\& \neg \Call{hasOrderConflict}{message};$
+\EndFunction
+\\
+
+\Function{hasOrderConflict}{message} \Comment Check if there is a conflicting operation for a particular client and slot.
+	\ForAll{orderStatement in message.orderProof.orderStatements}
+        \If{$orderStatement.slot != message.slot || orderStatement.operation != message.operation$}
+            \State \textbf{return} true;
+        \EndIf
+    \EndFor
+    \State \textbf{return} false;
+\EndFunction
+\\
+
+\Function{isValidResult}{message, replicas, publicKeys} \Comment {Checks the validity of the response}
+    \State $expectedHash \gets \Call{hash}{message.result};$
+    \State $validResult \gets true;$
+    \State $replicasClone \gets \Call{clone}{replicas};$
+    \ForAll {resultStatement in message.resultProof} 
+        \State $validResult \gets validResult \&\& expectedHash == resultStatement.hash;$
+        \State $pkey \gets self.publicKeys[resultStatement.replica];$
+        \State $validResult \gets validResult \&\& \Call{isValidSignature}{resultStatement, pkey};$
+        \State $replicasClone \gets replicasClone \setminus resultStatement.source;$
+    \EndFor
+    \State $validResult \gets validResult \&\& |replicasClone| == 0;$
+    \State \textbf{return} $validResult;$
+\EndFunction
+\\
+
+\Function{sign}{message, privateKey} \Comment Computes an internal hash of a message and computes the signed hash of the message using the given private key. Called before sending any message in the system.
+\EndFunction
+\\
+
+\Function{decrypt}{message, publicKey} \Comment Applies a public key to the signed hash within a message.
+\EndFunction
+\\
+
+\Function{processResult}{operation, result} \Comment Pass the result for the corresponding operation to the application.
+\EndFunction
+\\
+
+\Function{generatePublicKeys}{clients, t} \Comment Generate public keys for each client and t no of keys for each replica and one for Olympus.
+\EndFunction
+\\
+
+\Function{generatePrivateKey}{} \Comment Generate a private key.
+\EndFunction
+\\
+
+\Function{update}{object, operation} \Comment Applies the operation to a given object and returns the state of the object after the operation is applied.
+\EndFunction
+\\
+
+\Function{get}{object} \Comment Get the state for the specified object.
+\EndFunction
+\\
+
+\Function{wait}{conditionVariable, timeoutDuration} \Comment Sets up a timer internally with the given duration and begins a blocking wait for the conditionVariable to become true.
+\EndFunction
+\\
+
+\Function{send}{destination, message, source} \Comment Sends the message to the destination from the source.
+\EndFunction
+\\
+
+\Function{hash}{message} \Comment Constructs a hash of a statement.
+\EndFunction
+\\
+\end{algorithmic}
