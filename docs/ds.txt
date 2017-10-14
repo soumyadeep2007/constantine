@@ -1,0 +1,37 @@
+message = {
+    content: {
+        operation: {
+            id:<guid gen by client> ,
+            operation_string: ""
+        }
+    },
+    signed_content: "jasdjlajsncjabscjasnd"
+}
+
+config = {
+    public_keys : {
+        id : key
+    }
+    head_replica_id: id
+    tail_replica_id: id
+    replica_ids : set{}
+    t:
+    num_client:
+    head_timeout:
+    nonhead_timeout:
+    client_timeout:
+    workload = {}
+    failures = [][]
+}
+
+Client:
+
+_pending_requests = {
+    operation_id: message
+}
+
+
+
+
+DistAlgo expected msg parameter: msg=(<tag>, content1, content2, ....)
+msg=("request", message)

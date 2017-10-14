@@ -4,10 +4,10 @@ import log_messages
 from commons import Commons
 
 
-# noinspection PyUnresolvedReferences,PyStatementEffect
+# noinspection PyUnresolvedReferences
 class Client (process):
-    def setup(self, olympus):
-        self._id = 1  # todo
+    def setup(self, olympus, id, private_key):
+        self._id = id  # todo
         self._pending_requests = {}
         self._olympus = olympus
         # todo
@@ -41,7 +41,7 @@ class Client (process):
 
     # On receipt of a keys message
     def receive(self, msg=('keys', message), from_=self._olympus):
-        if not Commons.is_valid_signature(message, self._public_key):
+        if not Commons.is_valid_signature(message, self._public_keys[olympus.id]):
             output(log_messages.INVALID_SIGNATURE, from_, level=logging.ERROR)
             return
         self._private_key = message['private_key']
