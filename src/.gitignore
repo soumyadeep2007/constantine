@@ -1,1 +1,3 @@
 *.py
+!commons.py
+!log_messages.py

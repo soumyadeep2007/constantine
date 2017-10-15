@@ -1,0 +1,18 @@
+# noinspection PyUnresolvedReferences,PyStatementEffect
+from enum import Enum
+
+
+class Direction(Enum):
+    FORWARD = 1
+    BACKWARD = -1
+
+
+class Replica(process):
+    def setup(object):
+        self._object = object
+
+    def __hash__():
+        return hash((self._id))
+
+    def __eq__(other):
+        return self._id == other._id
