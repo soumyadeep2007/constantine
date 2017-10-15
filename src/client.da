@@ -5,43 +5,57 @@ from src.commons import Commons
 
 
 # noinspection PyUnresolvedReferences,PyMethodParameters
-class Client (process):
+class Client(process):
     def setup(client_config):
         self._id = client_config['id']
         self._host = client_config['host']
         self._workload = client_config['workload']
         self._client_timeout = client_config['client_timeout']  # todo: pass this from other side
         self._pending_requests = {}
-        self._olympus = _host  # todo: is this correct?
+        self._olympus = {}  # todo
         # todo
         self._current_config = {}  # todo:remove later
-        self._private_key = ""  # todo:remove later
+        self._private_key = ''  # todo:remove later
         self._public_keys = {}  # todo:remove later
+
+    def run():
+        #  run a timer and call _request_config
+
+        for task in self._workload:
+            operation = self._create_operation()
+            self._issue_request(operation)
 
     def _request_config():
         output(log_messages.REQUESTING_CONFIG, self)
-        send(('config_request', self), to=self._olympus)
+        send(('config_request'), to=self._olympus)
+
         -- config
-        if await(('config', message, olympus)):
-            output(log_messages.CONFIG_FETCHED)
+        if await(('config', config_message)):
+            output(log_messages.CONFIG_FETCHED, config_message)
         elif timeout(self._client_timeout):
             output(log_messages.CONFIG_REQUEST_TIMEOUT)
+            self._request_config()
 
-
-    def _create_operation():
-        pass  # return an operation with given parameters
+    def _create_operation(task):
+        operation = {}  # return an operation with given parameters
+        operation['id'] = self.operation_id_counter
+        output(log_messages.OPERATION_CREATED, operation)
+        self.operation_id_counter += 1
+        return operation
 
     def _issue_request(operation):
         request_message = self._create_request(operation, is_retry=False)
         self._pending_requests[operation['id']] = request_message
-        send(('request', request_message, self), to=self._current_config['head'])
+        send(('request', request_message), to=self._current_config['head'])
+        output(log_messages.REQUEST_MADE)
+
         -- result
         # todo select by operation
-        # check for pending requests before sending
-        # assign pid_head
-        if await(some(received(('result')))):
-            output(log_messages.RESULT_RECEIVED, pid_head)
-        elif timeout(self._current_config["client_timeout"]):
+        # check for pending requests before sending - might not have to do that
+        if await(some(received(('result'), at=result))):
+            output(log_messages.RESULT_RECEIVED, self._current_config['head'])
+        elif timeout(self._current_config['client_timeout']):
+            output(log_messages.REQUEST_TIMEOUT, operation)
             _handle_request_timeout(request_message)
 
     def _create_request(operation, is_retry):
@@ -54,6 +68,14 @@ class Client (process):
         request_message['signed_content'] = Commons.sign(request_message['content'], self._private_key)
         return request_message
 
+    # On receipt of a config message from Olympus
+    def receive(msg=('config', config_message), at=config):
+        if not Commons.is_valid_signature(message, self._public_keys[olympus.id]):
+            output(log_messages.INVALID_SIGNATURE, from_, level=logging.ERROR)
+            return
+
+        self._current_config = config_message['content']['config']
+
     # On receipt of a keys message
     def receive(msg=('keys', message), from_=self._olympus):
         if not Commons.is_valid_signature(message, self._public_keys[olympus.id]):
@@ -64,8 +86,8 @@ class Client (process):
         self._public_keys = message['public_keys']
 
     # On receipt of a result message from a replica
-    def receive(msg=('result', message), from_=self._current_config['replicas']):
-        if not Commons.is_valid_signature(message, self._public_keys[from_["id"]]):
+    def receive(msg=('result', message), from_=self._current_config['replicas'], at=result):
+        if not Commons.is_valid_signature(message, self._public_keys[from_['id']]):
             output(log_messages.INVALID_SIGNATURE, level=logging.ERROR)
             return
 
@@ -79,21 +101,21 @@ class Client (process):
             self._retry_request(message)
 
     # On receipt of an error message from a replica
-    def receive(msg=('error', message), from_=self._current_config['replicas']):
-        if not Commons.is_valid_signature(message, self._public_keys[from_["id"]]):
+    def receive(msg=('error', message), from_=self._current_config['replicas'], at=result):
+        if not Commons.is_valid_signature(message, self._public_keys[from_['id']]):
             return
 
         self._retry_request(message)
 
     def _process_result(operation, result):
-        pass
+        output(log_messages.OPERATION_RESULT_PAIR, operation, result)
 
     def _retry_request(message):
         message['content']['is_retry'] = True
         message['signed_content'] = Commons.sign(message['content'], self._private_key)
+        output(log_messages.RETRANSMISSION, message['content']['operation'])
         for replica in self._current_config['replicas']:
-            pass  # send here to every replica
-        # todo
+            send(('request', message), to=replica)
 
     def _handle_request_timeout(message):
         self._retry_request(message)
