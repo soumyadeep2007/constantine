@@ -10,6 +10,7 @@ class Client (process):
         self._id = client_config['id']
         self._host = client_config['host']
         self._workload = client_config['workload']
+        self._client_timeout = client_config['client_timeout']  # todo: pass this from other side
         self._pending_requests = {}
         self._olympus = _host  # todo: is this correct?
         # todo
@@ -18,9 +19,13 @@ class Client (process):
         self._public_keys = {}  # todo:remove later
 
     def _request_config():
-        pass
-        # send(('config_request'), to=self._olympus)
-        # output(log_messages.CONFIG_FETCHED)
+        output(log_messages.REQUESTING_CONFIG, self)
+        send(('config_request', self), to=self._olympus)
+        -- config
+        if await(('config', message, olympus)):
+            output(log_messages.CONFIG_FETCHED)
+        elif timeout(self._client_timeout):
+            output(log_messages.CONFIG_REQUEST_TIMEOUT)
 
 
     def _create_operation():
@@ -29,7 +34,7 @@ class Client (process):
     def _issue_request(operation):
         request_message = self._create_request(operation, is_retry=False)
         self._pending_requests[operation['id']] = request_message
-        send(('request', request_message), to=self._current_config['head'])
+        send(('request', request_message, self), to=self._current_config['head'])
         -- result
         # todo select by operation
         # check for pending requests before sending

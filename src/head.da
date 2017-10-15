@@ -21,7 +21,7 @@ class Head(Replica):
             output(log_messages.RESULT_PENDING)
             if(await(received(('result', _), pid), at=(result,), from_=self._current_config['replicas'])):
                 #  shouldnt we send result along to client?
-                send(('result', result_message), to=from_)
+                send(('result', result_message, self), to=from_)
                 output(log_messages.RESULT_SENT_AFTER_WAIT, from_)
         else:
             self._process_request(message)
@@ -49,4 +49,4 @@ class Head(Replica):
     def _send_result_shuttle(message, to):
         result_message = self._processed_requests[message["content"]["operation"]["id"]]
         output(log_messages.RESULT_CACHED)
-        send(('result', result_message), to)
+        send(('result', result_message, self), to)
