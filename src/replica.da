@@ -8,11 +8,12 @@ class Direction(Enum):
 
 
 class Replica(process):
-    def setup(object):
-        self._object = object
+    def setup(replica_config):
+        self.config = replica_config
 
-    def __hash__():
-        return hash((self._id))
+        # def __hash__(self):
+        #     return hash((self._id))
 
-    def __eq__(other):
-        return self._id == other._id
+        # def __eq__(self, other):
+        #     return self._id == other._id
+

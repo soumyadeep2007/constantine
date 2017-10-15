@@ -1,14 +1,20 @@
 import logging
+import nacl.utils
+import nacl.encoding
+import nacl.signing
 
-o_client = import_da('client')
+# o_client = import_da('client')
+o_replica = import_da('replica')
 
 # noinspection PyMethodParameters
 class Olympus(process):
     def setup():
         self.config = dict()
         self.clients = []
+        self.replicas = []
 
     def parse_config():
+        output("Parsing config")
         with open('config.txt', 'r') as f:
             for line in f:
                 if line[0] != '#':
@@ -17,7 +23,7 @@ class Olympus(process):
                     if len(sep) != 0:
                         val = val.strip()
                         self.save_config_line(key.strip(), int(val) if str.isdecimal(val) else val)
-        print(self.config)
+        output("Loaded Config: " + str(self.config))
 
     def save_config_line(key, val):
         if key == 'hosts':
@@ -51,20 +57,56 @@ class Olympus(process):
         else:
             self.config[key] = val
 
-    def init_client():
-        workloads = self.config['workloads']
-        for client_id, host in self.config['client_hosts'].items():
-            client_config = {}
-            client_config['id'] = client_id
-            client_config['host'] = host
-            client_config['workload'] = workloads[client_id]
-            # Add keys
-            client = new(Client, args(client_config))
-            self.clients.append(start(client))
+    def generate_keys():
+        output("Generating keys")
+        keys = dict()
+        keys['private_keys'] = dict()
+        keys['public_keys'] = dict()
+        for client_id in self.config['client_hosts'].keys():
+            private_key = nacl.signing.SigningKey.generate()
+            keys['private_keys'][client_id] = private_key
+            keys['public_keys'][client_id] = private_key.verify_key.encode(encoder=nacl.encoding.HexEncoder)
+        for replica_id in self.config['replica_hosts'].keys():
+            private_key = nacl.signing.SigningKey.generate()
+            keys['private_keys'][replica_id] = private_key
+            keys['public_keys'][replica_id] = private_key.verify_key.encode(encoder=nacl.encoding.HexEncoder)
+        self.config['keys'] = keys
+        output("Generated keys.")
+
+    # def init_clients():
+    #     workloads = self.config['workloads']
+    #     for client_id, host in self.config['client_hosts'].items():
+    #         client_config = {}
+    #         client_config['id'] = client_id
+    #         client_config['host'] = host
+    #         client_config['workload'] = workloads[client_id]
+    #         client_config['private_key'] = self.config['keys']['private_keys'][client_id]
+    #         client_config['public_keys'] = self.config['keys']['public_keys']
+    #         client_config['timeout'] = self.config['client_timeout']
+    #         client = new(Client, args(client_config))
+    #         self.clients.append(start(client))
+
+    def init_replicas():
+        for replica_id, host in self.config['replica_hosts'].items():
+            replica_config = {}
+            replica_config['id'] = replica_id
+            replica_config['host'] = host
+            replica_config['private_key'] = self.config['keys']['private_keys'][replica_id]
+            replica_config['public_keys'] = self.config['keys']['public_keys']
+            replica_config['timeout'] = self.config['nonhead_timeout']
+            replica = new(o_replica.Replica, args=())
+            self.replicas.append(replica)
+            start(replica)
 
     def run():
-        parse_config()
-        init_client()
+        output("Initialize config")
+        self.parse_config()
+        self.generate_keys()
+        output("Initialize Replicas")
+        self.init_replicas()
+        output(self.replicas)
+        output("Initialize Clients")
+        # init_client()
 
 
 def main():
