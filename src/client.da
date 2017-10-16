@@ -42,14 +42,14 @@ class Client(process):
         return operation
 
     def _issue_request(operation):
+        self._valid_result_received = False
+
         request_message = self._create_request(operation, is_retry=False)
         self._pending_requests[operation['id']] = request_message
         send(('request', request_message), to=self._current_config['head'])
         output(log_messages.REQUEST_MADE)
 
-        # todo select by operation
-        # check for pending requests before sending - might not have to do that
-        if await(some(received(('result')))):
+        if await(self._valid_result_received):
             output(log_messages.RESULT_RECEIVED, self._current_config['head'])
         elif timeout(self._current_config['client_timeout']):
             output(log_messages.REQUEST_TIMEOUT, operation)
@@ -66,7 +66,7 @@ class Client(process):
         return request_message
 
     # On receipt of a config message from Olympus
-    def receive(msg=('config', config_message)):
+    def receive(msg=('config', config_message), from_=self._olympus):
         if not Commons.is_valid_signature(message, self._public_keys[olympus.id]):
             output(log_messages.INVALID_SIGNATURE, from_, level=logging.ERROR)
             return
@@ -94,6 +94,8 @@ class Client(process):
         if Commons.is_valid_result(message, self._current_config['replicas'], self._public_keys):
             self._pending_requests.pop(message['content']['operation'])
             self._process_result(message['content']['operation'], message['content']['result'])
+            output(log_messages.VALID_RESULT_RECEIVED, message['content']['result'])
+            self._valid_result_received = True
         else:
             self._retry_request(message)
 
