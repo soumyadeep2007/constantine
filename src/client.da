@@ -20,7 +20,6 @@ class Client(process):
 
     def run():
         #  run a timer and call _request_config
-
         for task in self._workload:
             operation = self._create_operation()
             self._issue_request(operation)
@@ -29,7 +28,6 @@ class Client(process):
         output(log_messages.REQUESTING_CONFIG, self)
         send(('config_request'), to=self._olympus)
 
-        -- config
         if await(('config', config_message)):
             output(log_messages.CONFIG_FETCHED, config_message)
         elif timeout(self._client_timeout):
@@ -49,10 +47,9 @@ class Client(process):
         send(('request', request_message), to=self._current_config['head'])
         output(log_messages.REQUEST_MADE)
 
-        -- result
         # todo select by operation
         # check for pending requests before sending - might not have to do that
-        if await(some(received(('result'), at=result))):
+        if await(some(received(('result')))):
             output(log_messages.RESULT_RECEIVED, self._current_config['head'])
         elif timeout(self._current_config['client_timeout']):
             output(log_messages.REQUEST_TIMEOUT, operation)
@@ -69,7 +66,7 @@ class Client(process):
         return request_message
 
     # On receipt of a config message from Olympus
-    def receive(msg=('config', config_message), at=config):
+    def receive(msg=('config', config_message)):
         if not Commons.is_valid_signature(message, self._public_keys[olympus.id]):
             output(log_messages.INVALID_SIGNATURE, from_, level=logging.ERROR)
             return
@@ -86,7 +83,7 @@ class Client(process):
         self._public_keys = message['public_keys']
 
     # On receipt of a result message from a replica
-    def receive(msg=('result', message), from_=self._current_config['replicas'], at=result):
+    def receive(msg=('result', message), from_=self._current_config['replicas']):
         if not Commons.is_valid_signature(message, self._public_keys[from_['id']]):
             output(log_messages.INVALID_SIGNATURE, level=logging.ERROR)
             return
@@ -101,7 +98,7 @@ class Client(process):
             self._retry_request(message)
 
     # On receipt of an error message from a replica
-    def receive(msg=('error', message), from_=self._current_config['replicas'], at=result):
+    def receive(msg=('error', message), from_=self._current_config['replicas']):
         if not Commons.is_valid_signature(message, self._public_keys[from_['id']]):
             return
 
