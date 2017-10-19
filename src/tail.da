@@ -1,0 +1,31 @@
+import commons
+import replica
+
+# noinspection PyUnresolvedReferences
+class Tail(Replica):
+    def setup():
+        super.setup()
+
+    def receive(msg=('shuttle', message), from_=self._clients):
+
+        if not Commons.is_valid_signature(message):  # todo pass in second param
+            output(log_messages.INVALID_SIGNATURE, from_, level=logging.ERROR)
+            return
+
+        if message.slot <= self._last_signed_slot:
+            # todo  log
+            return
+
+        if Commons.has_signature_mismatch(message["content"]["order_proof"]):
+            self._handle_order_statement_sign_mismatch(message)
+        elif Commons.has_order_conflict(message):
+            self._handle_order_conflict(message)
+        else:
+            message['content']['order_proof'] = super.update_order_proof(message)
+            self._history |= message['content']['order_proof']
+            self._last_signed_slot = message['content']['slot']
+            result = update_running_state(message['content']['operation'])
+            message['content']['result_proof'] = super.update_result_proof(message, message['content']['result'])
+            self.result_cache[message['content']['client_id']][message['content']['operation']] = message
+            send_result(message['content']['result_proof'], result)
+            route(message, Direction.BACKWARD)

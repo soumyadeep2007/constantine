@@ -1,7 +1,7 @@
 import logging
 
-from src import log_messages
-from src.commons import Commons
+import log_messages
+import commons
 
 
 # noinspection PyUnresolvedReferences,PyMethodParameters

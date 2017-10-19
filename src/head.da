@@ -6,7 +6,6 @@ from src.replica import Replica
 
 # noinspection PyUnresolvedReferences
 class Head(Replica):
-
     def receive(msg=('request', message), from_=self._clients):
         if not Commons.is_valid_signature(message, self._public_keys[from_["id"]]):
             return
@@ -18,8 +17,7 @@ class Head(Replica):
         elif reply_pending_for_request:
             result_message = self._pending_requests[message["content"]["operation"]["id"]]
             output(log_messages.RESULT_PENDING)
-            if(await(received(('result', _), pid), from_=self._current_config['replicas'])):
-                #  shouldnt we send result along to client?
+            if(await(received(('result', message)), from_=self._current_config['replicas'])):
                 send(('result', result_message), to=from_)
                 output(log_messages.RESULT_SENT_AFTER_WAIT, from_)
         else:
