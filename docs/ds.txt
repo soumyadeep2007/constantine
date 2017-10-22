@@ -30,6 +30,43 @@ _pending_requests = {
     operation_id: message
 }
 
+result_shuttle {
+    order_proof: [
+        order_statements:
+        {
+            replica_id: {
+            order_statement: {
+                slot:
+                operation:
+            }
+            signed_order_statement:
+            }
+        }
+        replica:
+    ]
+    result_proof: [
+        replica_id: {
+            result_statement: {
+                operation:
+                result_hash:
+            }
+            signed_result_statement:
+        }
+    ]
+}
+
+operation: (operation_id, command_string, client_id)
+("1434", "get", "c1")
+
+request_message: {
+    content: {
+        'is_retry': boolean,
+        'operation': operation
+    },
+    signed_content
+}
+
+
 
 
 

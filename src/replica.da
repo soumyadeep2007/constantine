@@ -1,19 +1,173 @@
 # noinspection PyUnresolvedReferences,PyStatementEffect
 from enum import Enum
 
+import commons
+import log_messages
 
 class Direction(Enum):
     FORWARD = 1
     BACKWARD = -1
 
 
+class ReplicaState(Enum):
+    IMMUTABLE = 0
+    ACTIVE = 1
+
+
 class Replica(process):
-    def setup(replica_config):
-        self.config = replica_config
 
-        # def __hash__(self):
-        #     return hash((self._id))
+    def setup(replica_config, object=None):
+        self._config = replica_config
+        self._state = ReplicaState.ACTIVE
+        self._result_cache = dict()
+        self._object = object if object is not None else dict()
+        print("In setup")
 
-        # def __eq__(self, other):
-        #     return self._id == other._id
+    def _update_running_state(operation, key, value=None):
+        if operation == 'put':
+            self._object[key] = value
+            return 'OK'
+        elif operation == 'append':
+            if key in self._object and value is not None:
+                self._object[key] = self._object[key] + value
+                return 'OK'
+            else:
+                return 'fail'
+        elif operation == 'slice':
+            curr_value = self._object[key]
+            if value is None or curr_value is None:
+                return 'fail'
+            colon_index = value.find(':')
+            if colon_index < 0:
+                return 'fail'
+            start_index = None
+            end_index = None
+            if colon_index == 0:
+                start_index = 0
+                if len(value) == 1:
+                    end_index = len(curr_value)
+            elif colon_index == len(curr_value) - 1:
+                end_index = len(curr_value)
+            if start_index is None:
+                if value[0:colon_index].isdigit():
+                    start_index = int(value[0:colon_index])
+                else:
+                    return 'fail'
+            if end_index is None:
+                if value[colon_index + 1:].isdigit():
+                    end_index = int(value[colon_index + 1:])
+                else:
+                    return 'fail'
 
+            start_index = start_index if start_index >= 0 else len(curr_value) + start_index
+            end_index = end_index if end_index >= 0 else len(curr_value) + end_index
+
+            is_valid_op = key in self._object
+            is_valid_op = is_valid_op and 0 <= start_index and start_index < len(curr_value)
+            is_valid_op = is_valid_op and len(curr_value) >= end_index and end_index > start_index
+            if is_valid_op:
+                self._object[key] = curr_value[int(start_index):int(end_index)]
+                return 'OK'
+            else:
+                return 'fail'
+        elif operation == 'get':
+            if key in self._object:
+                return self._object[key]
+            else:
+                return ''
+        else:
+            return 'fail'
+
+    def _perform_operation(operation):
+        if operation is None or not isinstance(operation, str):
+            return 'fail'
+
+        if operation[0:3] == 'get':
+            op = 'get'
+            split_op = operation.split("'")
+            if len(split_op) != 3:
+                return ''
+            key = split_op[1]
+            return self._update_running_state(op, key)
+        elif operation[0:3] == 'put':
+            op = 'put'
+            split_op = operation.split("'")
+            if len(split_op) != 5:
+                return 'fail'
+            key = split_op[1]
+            value = split_op[3]
+            return self._update_running_state(op, key, value)
+        elif operation[0:6] == 'append':
+            op = 'append'
+            split_op = operation.split("'")
+            if len(split_op) != 5:
+                return 'fail'
+            key = split_op[1]
+            value = split_op[3]
+            return self._update_running_state(op, key, value)
+        elif operation[0:5] == 'slice':
+            op = 'slice'
+            split_op = operation.split("'")
+            if len(split_op) != 5:
+                return 'fail'
+            key = split_op[1]
+            value = split_op[3]
+            return self._update_running_state(op, key, value)
+        else:
+            return 'fail'
+
+    # def receive(msg=('request', message), from_=self._config['replicas'][self._config['prev_replica']]):
+    #     if not Commons.is_valid_signature(message, self._config['public_keys'][from_['id']]):
+    #         return
+    #
+    #     self._retry_request(message)
+
+    def receive(msg=('client_request', message, id), from_):
+        if not Commons.is_valid_signature(message, self._config['public_keys']['id']):
+            output(log_messages.INVALID_SIGNATURE, level=logging.ERROR)
+            return
+        if 'is_retry' not in message['contents'].keys():
+            return
+        if self._state == ReplicaState.IMMUTABLE:
+            message = dict()
+            message['content'] = dict()
+            message['content']['type'] = 'ERROR'
+            message['signed_content'] = Commons.sign(message['content'], self._config['private_key'])
+            send(('error', message), to=from_)
+        if message['content']['operation'] in self._result_cache.keys():
+            message = dict()
+            cached_result = self._result_cache[message['content']['operation']]
+            message['content']['result'] = cached_result['result']
+            message['content']['result_proof'] = cached_result['result_proof']
+            message['signed_content'] = Commons.sign(message['content'], self._config['private_key'])
+            return send(('result_message', message), to=from_)
+
+
+    def receive(msg=('shuttle', message, id), from_):
+        if id != self._config['prev_replica'] or from_ != self._config['replicas'][id]:
+            output(log_messages.INVALID_REQUEST_SOURCE, level=logging.ERROR)
+            return
+
+        if not Commons.is_valid_signature(message, self._config['public_keys']['id']):
+            output(log_messages.INVALID_SIGNATURE, level=logging.ERROR)
+            return
+
+        result = perform_operation(message['content']['operation'])
+
+
+
+    def run():
+        pass
+
+    # def receive(msg=('request'), from_="o1"):
+    #     print("message received")
+    #
+    #     # def __hash__(self):
+    #     #     return hash((self._id))
+    #
+    #     # def __eq__(self, other):
+    #     #     return self._id == other._id
+
+def main():
+    replica = new(Replica, args=(dict(),))
+    start(replica)

@@ -1,17 +1,24 @@
 import logging
-import nacl.utils
 import nacl.encoding
 import nacl.signing
+import nacl.utils
 
+import log_messages
+import commons
+
+# from src import log_messages
+# from src.commons import Commons
 # o_client = import_da('client')
 o_replica = import_da('replica')
+
 
 # noinspection PyMethodParameters
 class Olympus(process):
     def setup():
-        self.config = dict()
-        self.clients = []
-        self.replicas = []
+        self._id = "o1"
+        self._config = dict()
+        self._clients = []
+        self._replicas = dict()
 
     def parse_config():
         output("Parsing config")
@@ -23,7 +30,7 @@ class Olympus(process):
                     if len(sep) != 0:
                         val = val.strip()
                         self.save_config_line(key.strip(), int(val) if str.isdecimal(val) else val)
-        output("Loaded Config: " + str(self.config))
+        output("Loaded Config: " + str(self._config))
 
     def save_config_line(key, val):
         if key == 'hosts':
@@ -31,82 +38,123 @@ class Olympus(process):
             id = 0
             for host in val.split("; "):
                 hosts[id] = host
-                id +=1
-            self.config[key] = hosts
+                id += 1
+            self._config[key] = hosts
         elif key == 'client_hosts':
             client_hosts = {}
             id_num = 0
-            hosts = self.config['hosts']
+            hosts = self._config['hosts']
             for client_host_id in val.split("; "):
                 client_hosts['c' + str(id_num)] = hosts[int(client_host_id)]
                 id_num += 1
-            self.config[key] = client_hosts
+            self._config[key] = client_hosts
         elif key == 'replica_hosts':
             replica_hosts = {}
             id_num = 0
-            hosts = self.config['hosts']
+            hosts = self._config['hosts']
             for replica_host in val.split("; "):
                 replica_hosts['r' + str(id_num)] = replica_host
                 id_num += 1
-            self.config[key] = replica_hosts
+            self._config[key] = replica_hosts
         elif "workload[" in key:
-            workloads = self.config['workloads'] if 'workloads' in self.config else {}
+            workloads = self._config['workloads'] if 'workloads' in self._config else {}
             client_id = "c" + key[-2:-1]
             workloads[client_id] = val.split("; ")
-            self.config['workloads'] = workloads
+            self._config['workloads'] = workloads
         else:
-            self.config[key] = val
+            self._config[key] = val
 
     def generate_keys():
         output("Generating keys")
-        keys = dict()
-        keys['private_keys'] = dict()
-        keys['public_keys'] = dict()
-        for client_id in self.config['client_hosts'].keys():
-            private_key = nacl.signing.SigningKey.generate()
-            keys['private_keys'][client_id] = private_key
-            keys['public_keys'][client_id] = private_key.verify_key.encode(encoder=nacl.encoding.HexEncoder)
-        for replica_id in self.config['replica_hosts'].keys():
-            private_key = nacl.signing.SigningKey.generate()
-            keys['private_keys'][replica_id] = private_key
-            keys['public_keys'][replica_id] = private_key.verify_key.encode(encoder=nacl.encoding.HexEncoder)
-        self.config['keys'] = keys
+        self._config['keys'] = dict()
+        self._config['keys']['private_keys'] = dict()
+        self._config['keys']['public_keys'] = dict()
+        # Generate keys for Olympus
+        self.set_keys(self._id, nacl.signing.SigningKey.generate())
+        # Generate keys for Clients
+        for client_id in self._config['client_hosts'].keys():
+            self.set_keys(client_id, nacl.signing.SigningKey.generate())
+        # Generate keys for Replicas
+        for replica_id in self._config['replica_hosts'].keys():
+            self.set_keys(replica_id, nacl.signing.SigningKey.generate())
         output("Generated keys.")
 
+    def set_keys(id, private_key):
+        self._config['keys']['private_keys'][id] = private_key
+        self._config['keys']['public_keys'][id] = private_key.verify_key.encode(encoder=nacl.encoding.HexEncoder)
+
     # def init_clients():
-    #     workloads = self.config['workloads']
-    #     for client_id, host in self.config['client_hosts'].items():
-    #         client_config = {}
-    #         client_config['id'] = client_id
-    #         client_config['host'] = host
-    #         client_config['workload'] = workloads[client_id]
-    #         client_config['private_key'] = self.config['keys']['private_keys'][client_id]
-    #         client_config['public_keys'] = self.config['keys']['public_keys']
-    #         client_config['timeout'] = self.config['client_timeout']
-    #         client = new(Client, args(client_config))
-    #         self.clients.append(start(client))
+    #     workloads = self._config['workloads']
+    #     for client_id, host in self._config['client_hosts'].items():
+    #         client_config = get_client_config(client_id)
+    #         self._clients.append(start(client))
+
+    def get_client_config(client_id):
+        client_config = dict()
+        client_config['id'] = client_id
+        client_config['host'] = self._config['client_hosts'][client_id]
+        client_config['workload'] = self._config['workloads'][client_id]
+        client_config['private_key'] = self._config['keys']['private_keys'][client_id]
+        client_config['public_keys'] = self._config['keys']['public_keys']
+        client_config['timeout'] = self._config['client_timeout']
 
     def init_replicas():
-        for replica_id, host in self.config['replica_hosts'].items():
-            replica_config = {}
+        replica_count = 1
+        prev_replica = None
+        preceding_replica_ids = []
+        self._config['replicas'] = {'r' + str(id_num): new(o_replica.Replica) for id_num in range(0, self._config['num_client'])}
+        id_num = 0
+        for id_num in range(0, self._config['num_client']):
+            replica_config = dict()
+            replica_id = 'r' + str(id_num)
+            replica = self._config['replicas'][replica_id]
             replica_config['id'] = replica_id
-            replica_config['host'] = host
-            replica_config['private_key'] = self.config['keys']['private_keys'][replica_id]
-            replica_config['public_keys'] = self.config['keys']['public_keys']
-            replica_config['timeout'] = self.config['nonhead_timeout']
-            replica = new(o_replica.Replica, args=())
-            self.replicas.append(replica)
+            replica_config['private_key'] = self._config['keys']['private_keys'][replica_id]
+            replica_config['public_keys'] = self._config['keys']['public_keys']
+            replica_config['timeout'] = self._config['nonhead_timeout']
+            replica_config['preceding_replica_ids'] = preceding_replica_ids
+            replica_config['type'] = 'replica'
+            replica_config['prev_replica'] = prev_replica
+            next_replica_id = 'r' + str(id_num + 1)
+            self._config['next_replica'] = self._config['replicas'][next_replica_id] \
+                if next_replica_id in self._config['replicas'].keys() else None
+            if id_num == 0:
+                replica_config['type'] = 'head'
+                replica_config['timeout'] = self._config['head_timeout']
+                self._config['head'] = replica_id
+            elif id_num == self._config['num_client'] - 1:
+                replica_config['type'] = 'tail'
+                replica_config['next_replica_id'] = None
+                self._config['tail'] = replica_id
+            else:
+                self._config['next_replica'] = self._config['replicas']['r' + str(id_num + 1)]
+            prev_replica = replica
+            preceding_replica_ids.append(replica_id)
+            id_num += 1
+            setup(replica, args=(replica_config,))
             start(replica)
 
     def run():
-        output("Initialize config")
+        output("Initialize _config")
         self.parse_config()
         self.generate_keys()
         output("Initialize Replicas")
+        send('request', message, 'r1')
         self.init_replicas()
-        output(self.replicas)
+        output(self._replicas)
         output("Initialize Clients")
         # init_client()
+
+    # On receipt of a config_request from Olympus
+    def receive(msg=('config_request', config_request), from_=self._config['clients']):
+        if not Commons.is_valid_signature(config_message, self._config['clients']['public_keys'][from_.id]):
+            output(log_messages.INVALID_SIGNATURE, from_, level=logging.ERROR)
+            return
+        config_message = dict()
+        config_message['content']['config'] = get_client_config(from_.id)
+        config_message['signed_content'] = Commons.sign(config_message['content'],
+                                                        self._config['keys']['private_keys'][self._id])
+        #send
 
 
 def main():

@@ -1,49 +1,50 @@
-from src import log_messages
-from src.commons import Commons
-from src.replica import Direction
-from src.replica import Replica
+import log_messages
+from commons import Commons
+from commons import ReplicaState
+
+o_replica = import_da('replica')
 
 
 # noinspection PyUnresolvedReferences
-class Head(Replica):
-    def receive(msg=('request', message), from_=self._clients):
-        if not Commons.is_valid_signature(message, self._public_keys[from_["id"]]):
-            return
-
-        reply_cached_for_request = message["content"]["operation"]["id"] in self._processed_requests
-        reply_pending_for_request = message["content"]["operation"]["id"] in self._pending_requests
-        if reply_cached_for_request:
-            self._send_result_shuttle(message)
-        elif reply_pending_for_request:
-            result_message = self._pending_requests[message["content"]["operation"]["id"]]
-            output(log_messages.RESULT_PENDING)
-            if(await(received(('result', message)), from_=self._current_config['replicas'])):
-                send(('result', result_message), to=from_)
-                output(log_messages.RESULT_SENT_AFTER_WAIT, from_)
-        else:
-            self._process_request(message)
-
-    def _process_request(message):
-        if not Commons.is_valid_signature(message, self._public_keys[from_["id"]]):
-            return
-
-        # todo
+class Head(o_replica.Replica,process):
+    def setup(replica_config, object=None):
+        print('::::::::::::::::::::::::::::::::::::::::::::::::::::::::::')
         pass
 
-    def _handle_update(update_message):
-        slot = _get_slot()
-        message = create_shuttle(updateMessage, slot)
-        message["content"]["order_proof"] = update_order_proof(message)
-        r = update_running_state(self.object, update_message["content"]["operation"])
-        message["content"]["result_proof"] = update_result_proof(message["content"]["result_proof"], r)
-        route(message, Direction.FORWARD)
+        self._current_slot = 0
+        self._pending_requests = set()
 
-    def _handle_read(message, to):
-        reply_cached_for_request = message["content"]["operation"]["id"] in self._processed_requests
+    def receive(msg=('request', message, client_id), from_=super._config['clients'].values()):
+        if not Commons.is_valid_signature(message['signed_content'], super._config['public_keys'][client_id]):
+            return
+
+        request_key = (message['content']['operation']['id'], message['content']['operation']['client_id'])
+        reply_cached_for_request = request_key in super._result_cache
+        reply_pending_for_request = request_key in super._pending_requests
         if reply_cached_for_request:
-            self._send_result_shuttle(message, to)
+            output(log_messages.RESULT_CACHED, client_id)
+            result_shuttle = super._result_cache[request_key]
+            super._send_result(result_shuttle)
+        elif reply_pending_for_request:
+            output(log_messages.RESULT_PENDING)
+            if await(request_key not in super._pending_requests):
+                output(log_messages.RESULT_SENT_AFTER_WAIT, client_id)
+                result_shuttle = super._result_cache[request_key]
+                super._send_result(result_shuttle)
+            elif timeout(super._config['head_timeout']):
+                pass  # todo send reconfig request
+        else:
+            shuttle = self._process_request(message)
+            self._pending_requests.append(request_key)
+            shuttle['signed_content'] = Commons.sign(shuttle['content'], super._config['private_key'])
+            send(('shuttle', shuttle, super._id), to=super._config['next_replica'])
 
-    def _send_result_shuttle(message, to):
-        result_message = self._processed_requests[message["content"]["operation"]["id"]]
-        output(log_messages.RESULT_CACHED)
-        send(('result', result_message), to)
+            if message['content']['is_retry']:
+                if await(request_key not in super._pending_requests):
+                    output(log_messages.RESULT_SENT_AFTER_WAIT, client_id)
+                    result_shuttle = super._result_cache[request_key]
+                    super._send_result(result_shuttle)
+                elif timeout(super._config['head_timeout']):
+                    pass  # todo send reconfig request
+
+
