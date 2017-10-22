@@ -16,6 +16,7 @@ class Client(process):
         self._public_keys = client_config['public_keys']
         self._replicas = client_config['replicas']
         self._head_id = client_config['head_id']
+        self._t = client_config['t']
 
         self._config_received = False
         self._operation_id_counter = 0
@@ -41,7 +42,7 @@ class Client(process):
         elif timeout(self._client_timeout):
             output(log_messages.CONFIG_REQUEST_TIMEOUT)
             self._request_config()
-            
+
     def _create_config_request_message():
         config_request_message = {'content': {}}
         config_request_message['content']['client_id'] = self._id
@@ -100,11 +101,12 @@ class Client(process):
         self._public_keys = client_config['public_keys']
         self._replicas = client_config['replicas']
         self._head_id = client_config['head_id']
+        self._t = client_config['t']
+
         output(log_messages.CONFIG_FETCHED, message['content'])
 
     # On receipt of a result message from a replica
     def receive(msg=('result', message, replica_id), from_=self._replicas.values()):
-
         if not Commons.is_valid_signature(message['signed_content'], self._public_keys[replica_id]):
             output(log_messages.INVALID_SIGNATURE, level=logging.ERROR)
             return
@@ -114,12 +116,15 @@ class Client(process):
             output('Not a pending request', pending_requests_key)
             return
 
-        if Commons.is_valid_result(message, self._replicas, self._public_keys):
+        if self.is_valid_result(message, self._replicas, self._public_keys):
             self._pending_requests.pop(pending_requests_key)
             self._process_result(message['content']['operation'], message['content']['result'])
-            output(log_messages.VALID_RESULT_RECEIVED, message['content']['result'])
+            output(log_messages.VALID_RESULT_RECEIVED, message['content']['result'],
+                   message['content']['operation'])
             self._valid_result_received = True
         else:
+            output(log_messages.INVALID_RESULT_RECEIVED, message['content']['result'],
+                   message['content']['operation'])
             self._retry_request(message)
 
     # On receipt of an error message from a replica
@@ -127,6 +132,7 @@ class Client(process):
         if not Commons.is_valid_signature(message['signed_content'], self._public_keys[replica_id]):
             return
 
+        output(log_messages.ERROR_MESSAGE_RECEIVED, replica_id)
         self._request_config()
         self._retry_request(message)
 
@@ -141,3 +147,23 @@ class Client(process):
         output(log_messages.RETRANSMISSION, message['content']['operation'])
         for replica in self._replicas:
             send(('request', message), to=replica)
+
+    def is_valid_result(result_shuttle, replicas, public_keys):
+        expected_hash = Commons.hash(result_shuttle["content"]["result"])
+        hash_match_count = 0
+        for replica_id in replicas:
+            replica_missing = replica_id not in result_shuttle['content']['result_proof']
+            if replica_missing:
+                return False
+
+            result_stmt = result_shuttle['content']['result_proof'][replica_id]
+            if not Commons.is_valid_signature(result_stmt['signed_result_statement'], public_keys[replica_id]):
+                continue
+
+            if expected_hash == result_stmt['result_statement']['result_hash']:
+                hash_match_count += 1
+
+        if hash_match_count >= self._t + 1:
+            return True
+        else:
+            return False
