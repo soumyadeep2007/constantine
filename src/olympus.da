@@ -5,6 +5,7 @@ import log_messages
 from commons import Commons
 import random
 from random_tasks import random_tasks
+import traceback
 
 o_client = import_da('client')
 o_replica = import_da('replica')
@@ -12,16 +13,18 @@ o_replica = import_da('replica')
 # noinspection PyMethodParameters
 class Olympus(process):
     def setup(process_id):
-        self._id = "o1"
-        self._process_id = process_id
-        self._config = {}
-        self._config['clients'] = {}
-        self._config['replicas'] = {}
+        try:
+            self._id = "o1"
+            self._process_id = process_id
+            self._config = {}
+            self._config['clients'] = {}
+            self._config['replicas'] = {}
 
-        self._current_config = 0
-        self.initialize()
+            self._current_config = 0
+            self.initialize()
 
-        self._random_tasks = random_tasks.random_tasks
+        except:
+            traceback.print_exc()
 
     def parse_config():
         output("Parsing config")
@@ -47,7 +50,10 @@ class Olympus(process):
             client_hosts = {}
             id_num = 0
             hosts = self._config['hosts']
-            for client_host_id in val.split("; "):
+            for client_host_id in val.split(";"):
+                client_host_id = client_host_id.strip()
+                if client_host_id == '':
+                    break
                 client_hosts['c' + str(id_num)] = hosts[int(client_host_id)]
                 id_num += 1
             self._config[key] = client_hosts
@@ -67,10 +73,10 @@ class Olympus(process):
                 seed_end_index = val.index(')')
                 seed_n_pair = val[seed_start_index:seed_end_index]
                 seed_n_pair = seed_n_pair.split(',')
-                seed, n = seed_n_pair[0], seed_n_pair[1]
+                seed, n = int(seed_n_pair[0].strip()), int(seed_n_pair[1].strip())
 
                 random.seed(seed)
-                workloads[client_id] = [random.choice(self._random_tasks) for i in range(n)]
+                workloads[client_id] = [random.choice(random_tasks) for i in range(n)]
             else:
                 workloads[client_id] = val.split("; ")
 
@@ -223,6 +229,9 @@ class Olympus(process):
 
 def main():
     olympus = new(Olympus)
-    setup(olympus, args=(olympus,))
-    start(olympus)
+    try:
+        setup(olympus, args=(olympus,))
+        start(olympus)
+    except:
+        traceback
     await(False)
