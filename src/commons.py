@@ -25,17 +25,17 @@ class Commons:
 
     @staticmethod
     def is_valid_result(result_shuttle, replicas, public_keys):
-        expected_hash = Commons.hash(message["content"]["result"])
+        expected_hash = Commons.hash(result_shuttle["content"]["result"])
         for replica_id in replicas:
             replica_missing = replica_id not in result_shuttle['content']['result_proof']
             if replica_missing:
                 return False
 
             result_stmt = result_shuttle['content']['result_proof'][replica_id]
-            if not Commons.is_valid_signature(result_stmt['signed_content'], public_keys[replica_id]):
+            if not Commons.is_valid_signature(result_stmt['signed_result_statement'], public_keys[replica_id]):
                 return False
 
-            if expected_hash != result_stmt['content']['result_hash']:
+            if expected_hash != result_stmt['result_statement']['result_hash']:
                 return False
 
         return True
@@ -43,11 +43,7 @@ class Commons:
     @staticmethod
     def hash(obj):
         obj_bytes = bytes(str(obj), 'utf-8')
-        hash_result = {
-            'digest': sha256(obj_bytes, encoder=HexEncoder),
-            'encoded_message': HexEncoder.encode(obj_bytes)
-        }
-        return hash_result
+        return sha256(obj_bytes, encoder=HexEncoder)
 
     @staticmethod
     def is_valid_order_proof(shuttle, replicas, public_keys):
@@ -57,12 +53,12 @@ class Commons:
             replica_missing = replica_id not in shuttle['content']['order_proof']
             if replica_missing:
                 return False
-
             order_stmt = shuttle['content']['order_proof'][replica_id]
-            if not Commons.is_valid_signature(order_stmt['signed_content'], public_keys[replica_id]):
+            if not Commons.is_valid_signature(order_stmt['signed_order_statement'], public_keys[replica_id]):
                 return False
 
-            order_conflict = slot != order_stmt['slot'] or operation != order_stmt['operation']
+            order_conflict = slot != order_stmt['order_statement']['slot'] \
+                             or operation != order_stmt['order_statement']['operation']
             if order_conflict:
                 return False
 

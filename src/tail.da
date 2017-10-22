@@ -1,31 +1,46 @@
-import commons
-import replica
+from commons import Commons
+
+o_replica = import_da('replica')
+
 
 # noinspection PyUnresolvedReferences
-class Tail(Replica):
-    def setup():
-        super.setup()
+class Tail(o_replica.Replica, process):
+    def setup(replica_config, object=None):
+        pass # super.setup(replica_config, object)
 
-    def receive(msg=('shuttle', message), from_=self._clients):
-
-        if not Commons.is_valid_signature(message):  # todo pass in second param
-            output(log_messages.INVALID_SIGNATURE, from_, level=logging.ERROR)
+    def receive(msg=('shuttle', shuttle, replica_id), from_=super._config['prev_replica']):
+        if not Commons.is_valid_signature(shuttle['signed_content'], super._config['public_keys'][replica_id]):
+            output(log_messages.INVALID_SIGNATURE, level=logging.ERROR)
             return
 
-        if message.slot <= self._last_signed_slot:
-            # todo  log
+        slot_skipped = shuttle['content']['slot'] != super._last_signed_slot + 1
+        if slot_skipped:
+            output(log_messages.INVALID_SLOT, level=logging.ERROR)
             return
 
-        if Commons.has_signature_mismatch(message["content"]["order_proof"]):
-            self._handle_order_statement_sign_mismatch(message)
-        elif Commons.has_order_conflict(message):
-            self._handle_order_conflict(message)
+        valid_order_proof = Commons.is_valid_order_proof(shuttle, super._config['prev_replica_ids'],
+                                                         super._config['public_keys'])
+        if valid_order_proof:
+            result = super._perform_operation(shuttle['content']['operation'])
+            super._update_order_proof(shuttle)
+            super._update_result_proof(shuttle, result)
+
+            valid_result_proof = Commons.is_valid_result(shuttle, super._config['replicas'], super._config['public_keys'])
+            if not valid_result_proof:
+                super._state = ReplicaState.IMMUTABLE
+                #  todo phase 3 send reconfig request
+                return
+
+            result_cache_key = (shuttle['content']['operation']['id'],
+                                shuttle['content']['operation']['client_id'])
+            super._result_cache[result_cache_key] = shuttle
+
+            shuttle['signed_content'] = Commons.sign(shuttle['content'], super._config['private_key'])
+            send(('result_shuttle', shuttle, super._id), to=super._config['prev_replica'])
+            send_result(shuttle)
+
+            super._last_signed_slot = shuttle['content']['slot']
         else:
-            message['content']['order_proof'] = super.update_order_proof(message)
-            self._history |= message['content']['order_proof']
-            self._last_signed_slot = message['content']['slot']
-            result = update_running_state(message['content']['operation'])
-            message['content']['result_proof'] = super.update_result_proof(message, message['content']['result'])
-            self.result_cache[message['content']['client_id']][message['content']['operation']] = message
-            send_result(message['content']['result_proof'], result)
-            route(message, Direction.BACKWARD)
+            super._state = ReplicaState.IMMUTABLE
+
+            # todo send reconfig request
