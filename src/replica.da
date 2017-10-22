@@ -17,6 +17,7 @@ class Replica(process):
         self._client_requests = {
         client_id: {'forwarded_request': -1, 'client_request': -1, 'shuttle': -1, 'result_shuttle': -1} \
             for client_id in self._config['clients']}
+        self._failure_trigger = None
         # =================================================================================
 
         # ======================HEAD SECTION===============================================
@@ -83,6 +84,7 @@ class Replica(process):
             shuttle['signed_content'] = Commons.sign(shuttle['content'], self._config['private_key'])
 
             if self._config['type'] != 'head':
+                self._apply_failure(shuttle, 'result_shuttle')
                 send(('result_shuttle', shuttle, self._id), to=self._config['prev_replica'])
         else:
             self._handle_invalid_result_proof(shuttle)
@@ -104,12 +106,12 @@ class Replica(process):
             else:
                 return 'fail'
         elif operation == 'slice':
-            curr_value = self._object[key]
-            if value is None or curr_value is None:
+            if value is None or key not in self._object:
                 return 'fail'
             colon_index = value.find(':')
             if colon_index < 0:
                 return 'fail'
+            curr_value = self._object[key]
             start_index = None
             end_index = None
             if colon_index == 0:
@@ -222,28 +224,30 @@ class Replica(process):
         client_id = shuttle['content']['operation']['client_id']
         send(('result', result_message, self._id), to=self._config['clients'][client_id])
 
-    def get_failure_trigger(client_id, message_type):
+    def _update_failure_trigger(client_id, message_type):
         if message_type in self._client_requests[client_id]:
             self._client_requests[client_id][message_type] += 1
             message_num = self._client_requests[client_id][message_type]
             if client_id in self._config['failures']:
                 if message_type in self._config['failures'][client_id]:
                     if message_num in self._config['failures'][client_id][message_type]:
-                        return self._config['failures'][client_id][message_type][message_num]
+                        self._failure_trigger = self._config['failures'][client_id][message_type][message_num]
 
-        return None
+    def _apply_failure(shuttle, shuttle_type):
+        if self._failure_trigger is not None:
+            if self._failure_trigger[0] == 'change_operation' and shuttle_type == 'shuttle':
+                shuttle['content']['operation']['command_string'] = "get('x')"
+                self._failure_trigger = None
+            elif self._failure_trigger[0] == 'change_result' and shuttle_type == 'result_shuttle':
+                shuttle['content']['result_proof'][self._id]['result_statement']['result_hash'] = Commons.hash('OK')
+                shuttle['content']['result_proof'][self._id]['signed_result_statement'] = \
+                    Commons.sign(shuttle['content']['result_proof'][self._id]['result_statement'], self._config['private_key'])
+                self._failure_trigger = None
+            elif self._failure_trigger[0] == 'dump_result_stmt' and shuttle_type == 'result_shuttle':
+                shuttle['content']['result_proof'].pop(self._id)
+                self._failure_trigger = None
+            shuttle['signed_content'] = Commons.sign(shuttle['content'], self._config['private_key'])
 
-    def apply_failure(failure, shuttle):
-        if failure[0] == 'change_operation':
-            shuttle['content']['operation']['command_string'] = "get('x')"
-        elif failure[0] == 'change_result':
-            shuttle['content']['result_proof'][self._id]['result_statement']['result_hash'] = Commons.hash('OK')
-            shuttle['content']['result_proof'][self._id]['signed_result_statement'] = \
-                Commons.sign(shuttle['content']['result_proof'][self._id]['result_statement'], self._config['private_key'])
-        elif failure[0] == 'dump_result_stmt':
-            shuttle['content']['result_proof'].pop(self._id)
-
-        shuttle['signed_content'] = Commons.sign(shuttle['content'], self._config['private_key'])
         return shuttle
 
     # =================================================================================
@@ -264,14 +268,15 @@ class Replica(process):
                             message['content']['operation']['client_id'])
         if result_cache_key in self._result_cache:
             result_shuttle = self._result_cache[result_cache_key]
+            self._apply_failure(result_shuttle, 'result_shuttle')
             self._send_result(result_shuttle)
         else:
             send(('request', message, client_id), to=self._config['prev_replica'])
 
     def _handle_shuttle_at_replica(shuttle):
         shuttle['signed_content'] = Commons.sign(shuttle['content'], self._config['private_key'])
+        self._apply_failure(shuttle, 'shuttle')
         send(('shuttle', shuttle, self._id), to=self._config['next_replica'])
-
 
     # =================================================================================
 
@@ -283,12 +288,14 @@ class Replica(process):
         if reply_cached_for_request:
             output(log_messages.RESULT_CACHED, client_id)
             result_shuttle = self._result_cache[request_key]
+            self._apply_failure(result_shuttle, 'result_shuttle')
             self._send_result(result_shuttle)
         elif reply_pending_for_request:
             output(log_messages.RESULT_PENDING)
             if await(request_key not in self._pending_requests):
                 output(log_messages.RESULT_SENT_AFTER_WAIT, client_id)
                 result_shuttle = self._result_cache[request_key]
+                self._apply_failure(result_shuttle, 'result_shuttle')
                 self._send_result(result_shuttle)
             elif timeout(self._config['head_timeout']):
                 pass  # todo send reconfig request
@@ -297,12 +304,14 @@ class Replica(process):
             self._pending_requests.add(request_key)
             shuttle['signed_content'] = Commons.sign(shuttle['content'], self._config['private_key'])
 
+            self._apply_failure(shuttle, 'shuttle')
             send(('shuttle', shuttle, self._id), to=self._config['next_replica'])
 
             if message['content']['is_retry']:
                 if await(request_key not in self._pending_requests):
                     output(log_messages.RESULT_SENT_AFTER_WAIT, client_id)
                     result_shuttle = self._result_cache[request_key]
+                    self._apply_failure(result_shuttle, 'result_shuttle')
                     self._send_result(result_shuttle)
                 elif timeout(self._config['head_timeout']):
                     pass  # todo send reconfig request
@@ -345,6 +354,7 @@ class Replica(process):
         self._result_cache[result_cache_key] = shuttle
 
         shuttle['signed_content'] = Commons.sign(shuttle['content'], self._config['private_key'])
+        self._apply_failure(shuttle, 'result_shuttle')
 
         send(('result_shuttle', shuttle, self._id), to=self._config['prev_replica'])
         self._send_result(shuttle)
