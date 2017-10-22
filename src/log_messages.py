@@ -5,11 +5,12 @@ INVALID_SIGNATURE = 'A signature mismatch occurred from source:'
 PARSED_CONFIG = "Parsed config:"
 GENERATED_KEYS = 'Generated keys:'
 CONFIG_REQUEST_RECEIVED = 'Config request received from client='
+CONFIG_SENT = 'Config has been sent to client='
 
 # Client messages
 REQUESTING_CONFIG = 'Config requested from Olympus by client='
 CONFIG_REQUEST_TIMEOUT = 'Config request timed out...retrying...'
-CONFIG_FETCHED = 'The _config was fetched from Olympus:'
+CONFIG_FETCHED = 'The config was fetched from Olympus:'
 OPERATION_CREATED = 'The following operation was created:'
 REQUEST_MADE = 'A request for an operation was made'
 RESULT_SENT = 'A result was sent replica, client='

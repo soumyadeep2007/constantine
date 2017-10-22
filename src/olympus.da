@@ -141,7 +141,7 @@ class Olympus(process):
             'workload': self._config['workloads'][client_id],
             'private_key': self._config['keys']['private_keys'][client_id],
             'public_keys': self._config['keys']['public_keys'],
-            'client_timeout': self._config['client_timeout'],
+            'client_timeout': self._config['client_timeout'] / 1000,
             'olympus': {'id': self._id, 'process_id': self._process_id},
             'replicas': self._config['replicas'],
             'head_id': self._config['head_id']
@@ -162,7 +162,7 @@ class Olympus(process):
                 'clients': self._config['clients'],
                 'private_key': self._config['keys']['private_keys'][replica_id],
                 'public_keys': self._config['keys']['public_keys'],
-                'timeout': self._config['nonhead_timeout'],
+                'timeout': self._config['nonhead_timeout'] / 1000,
                 'prev_replica_ids': preceding_replica_ids,
                 'type': 'replica',
                 'current_config': self._current_config,
@@ -179,7 +179,7 @@ class Olympus(process):
 
             if id_num == 0:
                 replica_config['type'] = 'head'
-                replica_config['timeout'] = self._config['head_timeout']
+                replica_config['timeout'] = self._config['head_timeout'] / 1000
                 self._config['head_id'] = replica_id
             elif id_num == len(self._config['replica_hosts']) - 1:
                 replica_config['type'] = 'tail'
@@ -199,19 +199,23 @@ class Olympus(process):
         self.init_clients()
 
     def run():
-        pass
+        await(False)
 
-    # On receipt of a config_request from Olympus
-    def receive(msg=('config_request', message, client_id), from_=self._config['clients']):
-        if not Commons.is_valid_signature(message['signed_content'], self._config['clients']['public_keys'][client_id]):
+    # On receipt of a config_request from a client
+    def receive(msg=('config_request', message, client_id), from_=self._config['clients'].values()):
+        if not Commons.is_valid_signature(message['signed_content'], self._config['keys']['public_keys'][client_id]):
             output(log_messages.INVALID_SIGNATURE, client_id, level=logging.ERROR)
             return
-        config_message = {}
-        config_message['content']['config'] = get_client_config(client_id)
+
+        output(log_messages.CONFIG_REQUEST_RECEIVED, client_id)
+
+        config_message = {
+            'content': get_client_config(client_id)
+        }
         config_message['signed_content'] = Commons.sign(config_message['content'],
                                                         self._config['keys']['private_keys'][self._id])
-        output(log_messages.CONFIG_REQUEST_RECEIVED, client_id)
-        # todo: send
+        # send(('config', config_message), to=self._config['clients'][client_id])
+        output(log_messages.CONFIG_SENT, client_id)
 
     def create_clients():
         for client_id, host in self._config['client_hosts'].items():
@@ -219,10 +223,8 @@ class Olympus(process):
 
 
 def main():
+    config(channel={'reliable', 'fifo'})
     olympus = new(Olympus)
-    try:
-        setup(olympus, args=(olympus,))
-        start(olympus)
-    except:
-        traceback
+    setup(olympus, args=(olympus,))
+    start(olympus)
     await(False)
