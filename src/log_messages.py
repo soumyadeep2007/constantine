@@ -26,6 +26,9 @@ ERROR_MESSAGE_RECEIVED = 'An error message was received from replica='
 
 # Replica messages
 INVALID_SLOT = 'Shuttle received with invalid request slot'
+INVALID_ORDER_PROOF_REPLICA_MISSING = 'Invalid order proof because order statement missing for replica '
+INVALID_ORDER_PROOF_REPLICA_SIGNATURE_MISMATCH = 'Invalid order proof because order statement signature mismatch for replica '
+INVALID_ORDER_PROOF_REPLICA_SLOT_MISMATCH = 'Invalid order proof because operation mismatch for replica '
 
 # Head messages
 RESULT_CACHED = 'Result was cached, returning result from cache to='
