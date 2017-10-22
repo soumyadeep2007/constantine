@@ -15,11 +15,13 @@ OPERATION_CREATED = 'The following operation was created:'
 REQUEST_MADE = 'A request for an operation was made'
 RESULT_SENT = 'A result was sent replica, client='
 RESULT_RECEIVED = 'A result was received from replica='
-VALID_RESULT_RECEIVED = 'The result received is valid:'
-OPERATION_RESULT_PAIR = '>>>>>>>>>>>>The operation result pair is='
+VALID_RESULT_RECEIVED = 'The result received is valid:(result, operation)='
+INVALID_RESULT_RECEIVED = 'The result received is valid:(result, operation)='
+OPERATION_RESULT_PAIR = 'The operation result pair is='
 REQUEST_TIMEOUT = 'Wait for result timed out for operation='
 RETRANSMISSION = 'Retransmitting request to all _replicas for operation='
 INVALID_REQUEST_SOURCE = 'Request received from invalid source'
+ERROR_MESSAGE_RECEIVED = 'An error message was received from replica='
 
 
 # Replica messages

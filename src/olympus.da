@@ -144,7 +144,8 @@ class Olympus(process):
             'client_timeout': self._config['client_timeout'] / 1000,
             'olympus': {'id': self._id, 'process_id': self._process_id},
             'replicas': self._config['replicas'],
-            'head_id': self._config['head_id']
+            'head_id': self._config['head_id'],
+            't': self._config['t']
         }
         return client_config
 
@@ -214,7 +215,7 @@ class Olympus(process):
         }
         config_message['signed_content'] = Commons.sign(config_message['content'],
                                                         self._config['keys']['private_keys'][self._id])
-        # send(('config', config_message), to=self._config['clients'][client_id])
+        send(('config', config_message), to=self._config['clients'][client_id])
         output(log_messages.CONFIG_SENT, client_id)
 
     def create_clients():
