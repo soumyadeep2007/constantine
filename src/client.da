@@ -47,6 +47,12 @@ class Client(process):
         config_request_message['signed_content'] = Commons.sign(config_request_message['content'], self._private_key)
         return config_request_message
 
+    def _create_config_request_message():
+        config_request_message = {'content': {}}
+        config_request_message['content']['client_id'] = self._id
+        config_request_message['signed_content'] = Commons.sign(config_request_message['content'], self._private_key)
+        return config_request_message
+
     def _create_operation(task):
         operation = {
             'id': self._operation_id_counter,
@@ -112,6 +118,7 @@ class Client(process):
 
     # On receipt of a result message from a replica
     def receive(msg=('result', message, replica_id), from_=self._replicas.values()):
+
         if not Commons.is_valid_signature(message['signed_content'], self._public_keys[replica_id]):
             output(log_messages.INVALID_SIGNATURE, level=logging.ERROR)
             return

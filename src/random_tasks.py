@@ -1,0 +1,35 @@
+random_tasks = ["put('movie','star')",
+                "append('movie',' wars')",
+                "get('movie')",
+                "slice('jedi2', '0:4')",
+                "get('jedi2')",
+                "put('movie2','star2')",
+                "append('movie3',' wars3')",
+                "get('movie4')",
+                "slice('jedi45', '0:4')",
+                "get('jedi123')"
+                "put('movie11','s223tar')",
+                "append('modfdfvie',' wa123rs')",
+                "get('movieere')",
+                "slice('jed2i', '0:4')",
+                "get('jedi1')"
+                "put('movi2e','star')",
+                "append('movie3',' wars')",
+                "get('movie2')",
+                "slice('jed1i', '0:4')",
+                "get('jedi1')"
+                "put('movi2e','star')",
+                "append('movi4e',' wars')",
+                "get('movie4')",
+                "slice('jed23i', '0:4')",
+                "get('jedi44w')"
+                "put('movie123','star')",
+                "append('movi12e',' wars')",
+                "get('movie12dcee')",
+                "slice('jedisd2', '0:4')",
+                "get('jed333i')"
+                "put('movie23','star')",
+                "append('movi1123e',' wars')",
+                "get('movidfcdce')",
+                "slice('jeasdddi', '0:4')",
+                "get('jeasdsaddi')"]

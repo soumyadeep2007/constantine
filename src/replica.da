@@ -5,7 +5,6 @@ from commons import ReplicaState
 import log_messages
 import traceback
 
-
 class Replica(process):
     def setup(replica_config, object=None):
         # ======================REPLICA SECTION===============================================
@@ -270,7 +269,6 @@ class Replica(process):
         else:
             send(('request', message, client_id), to=self._config['prev_replica'])
 
-
     def _handle_shuttle_at_replica(shuttle):
         shuttle['signed_content'] = Commons.sign(shuttle['content'], self._config['private_key'])
         send(('shuttle', shuttle, self._id), to=self._config['next_replica'])
@@ -356,7 +354,6 @@ class Replica(process):
 
     def run():
         await(False)
-
 
 def main():
     replica = new(Replica, args=({},))

@@ -3,6 +3,8 @@ from nacl.encoding import HexEncoder
 from nacl.signing import SigningKey
 import log_messages
 from commons import Commons
+import random
+from random_tasks import random_tasks
 
 o_client = import_da('client')
 o_replica = import_da('replica')
@@ -15,8 +17,11 @@ class Olympus(process):
         self._config = {}
         self._config['clients'] = {}
         self._config['replicas'] = {}
+
         self._current_config = 0
         self.initialize()
+
+        self._random_tasks = random_tasks.random_tasks
 
     def parse_config():
         output("Parsing config")
@@ -57,7 +62,18 @@ class Olympus(process):
         elif "workload[" in key:
             workloads = self._config['workloads'] if 'workloads' in self._config else {}
             client_id = "c" + key[-2:-1]
-            workloads[client_id] = val.split("; ")
+            if (val.startswith('pseudorandom')):
+                seed_start_index = val.index('(') + 1
+                seed_end_index = val.index(')')
+                seed_n_pair = val[seed_start_index:seed_end_index]
+                seed_n_pair = seed_n_pair.split(',')
+                seed, n = seed_n_pair[0], seed_n_pair[1]
+
+                random.seed(seed)
+                workloads[client_id] = [random.choice(self._random_tasks) for i in range(n)]
+            else:
+                workloads[client_id] = val.split("; ")
+
             self._config['workloads'] = workloads
         elif "failures[" in key:
             failures = self._config['failures'] if 'failures' in self._config else {}
@@ -159,6 +175,7 @@ class Olympus(process):
             if self._current_config in self._config['failures']:
                 if replica_id in self._config['failures'][self._current_config]:
                     replica_config['failures'] = self._config['failures'][self._current_config][replica_id]
+
             if id_num == 0:
                 replica_config['type'] = 'head'
                 replica_config['timeout'] = self._config['head_timeout']
@@ -166,6 +183,7 @@ class Olympus(process):
             elif id_num == len(self._config['replica_hosts']) - 1:
                 replica_config['type'] = 'tail'
                 self._config['tail_id'] = replica_id
+
             prev_replica = replica
             preceding_replica_ids.append(replica_id)
             id_num += 1
