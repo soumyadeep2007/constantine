@@ -10,24 +10,20 @@ import traceback
 o_client = import_da('client')
 o_replica = import_da('replica')
 
+
 # noinspection PyMethodParameters
 class Olympus(process):
     def setup(process_id):
-        try:
-            self._id = "o1"
-            self._process_id = process_id
-            self._config = {}
-            self._config['clients'] = {}
-            self._config['replicas'] = {}
+        self._id = "o1"
+        self._process_id = process_id
+        self._config = {}
+        self._config['clients'] = {}
+        self._config['replicas'] = {}
 
-            self._current_config = 0
-            self.initialize()
-
-        except:
-            traceback.print_exc()
+        self._current_config = 0
+        self.initialize()
 
     def parse_config():
-        output("Parsing config")
         with open('config.txt', 'r') as f:
             for line in f:
                 if line[0] != '#':
@@ -36,7 +32,7 @@ class Olympus(process):
                     if len(sep) != 0:
                         val = val.strip()
                         self.save_config_line(key.strip(), int(val) if str.isdecimal(val) else val)
-        output("Loaded Config: " + str(self._config))
+        output(log_messages.PARSED_CONFIG, self._config)
 
     def save_config_line(key, val):
         if key == 'hosts':
@@ -114,7 +110,6 @@ class Olympus(process):
         return parsed_failure_triggers
 
     def generate_keys():
-        output("Generating keys")
         self._config['keys'] = {}
         self._config['keys']['private_keys'] = {}
         self._config['keys']['public_keys'] = {}
@@ -126,7 +121,7 @@ class Olympus(process):
         # Generate keys for Replicas
         for replica_id in self._config['replica_hosts'].keys():
             self.set_keys(replica_id, SigningKey.generate())
-        output("Generated keys.")
+        output(log_messages.GENERATED_KEYS, self._config['keys'])
 
     def set_keys(id, private_key):
         self._config['keys']['private_keys'][id] = private_key
@@ -197,15 +192,10 @@ class Olympus(process):
             start(replica)
 
     def initialize():
-        output("Initialize _config")
         self.parse_config()
         self.generate_keys()
-        output("Initialize Replicas")
-        # send(msg=('request', message, 'r1'))
         self.create_clients()
         self.init_replicas()
-        output(self._config['replicas'])
-        output("Initialize Clients")
         self.init_clients()
 
     def run():
@@ -220,7 +210,8 @@ class Olympus(process):
         config_message['content']['config'] = get_client_config(client_id)
         config_message['signed_content'] = Commons.sign(config_message['content'],
                                                         self._config['keys']['private_keys'][self._id])
-        # send
+        output(log_messages.CONFIG_REQUEST_RECEIVED, client_id)
+        # todo: send
 
     def create_clients():
         for client_id, host in self._config['client_hosts'].items():

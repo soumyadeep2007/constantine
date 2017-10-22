@@ -21,6 +21,8 @@ class Client(process):
         self._operation_id_counter = 0
         self._valid_result_received = False
 
+        output(self._id, ' initialized with config=', client_config)
+
     def run():
         #  run a timer and call _request_config
         for task in self._workload:
@@ -41,12 +43,6 @@ class Client(process):
             output(log_messages.CONFIG_REQUEST_TIMEOUT)
             self._request_config()
             
-    def _create_config_request_message():
-        config_request_message = {'content': {}}
-        config_request_message['content']['client_id'] = self._id
-        config_request_message['signed_content'] = Commons.sign(config_request_message['content'], self._private_key)
-        return config_request_message
-
     def _create_config_request_message():
         config_request_message = {'content': {}}
         config_request_message['content']['client_id'] = self._id
@@ -156,9 +152,3 @@ class Client(process):
 
     def _handle_request_timeout(message):
         self._retry_request(message)
-
-    def __hash__():
-        return hash((self._id))
-
-    def __eq__(other):
-        return self._id == other._id
