@@ -20,6 +20,11 @@ into buffer constraints.
 1. If head changes the operation, the system cannot handle it.
 2. For result validation simplicity in the client for phase 2 we have assumed that the keys used for each client's workload
 is segregated on a per client basis.
+3. We have adopted the mechanism to sign every message in the system exchanged via the send and receive mechaninsm
+to authenticate the sender of each message at the receiver. This extra functionality is giving rise to signature
+mismatches currently. We will fix this in Phase 3.
+4. Multi-host execution is not supported.
+
 
 ## WORKLOAD GENERATION
 The workload is being generated from a file containing some random request strings with each
