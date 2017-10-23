@@ -14,12 +14,20 @@ Example: python -m da --message-buffer-size 100000 --logfile --logfilename ../lo
 Please note: Enter a significantly large buffer size in bytes, like the size in the example above to avoid running
 into buffer constraints.
 
-## CONTRIBUTIONS 
+## CONTRIBUTIONS
+1. Client, Olympus, logs, documentation - Soumyadeep
+2. Replica, config files, testing - Tushar
 
 ## BUGS AND LIMITATIONS
 1. If head changes the operation, the system cannot handle it.
 2. For result validation simplicity in the client for phase 2 we have assumed that the keys used for each client's workload
 is segregated on a per client basis.
+3. We have adopted the mechanism to sign every message in the system exchanged via the send and receive mechaninsm
+to authenticate the sender of each message at the receiver. This extra functionality is giving rise to signature
+mismatches currently. We will fix this in Phase 3.
+4. Multi-host execution is not supported.
+5. Test for: test_operation_change_fwd_request_t2_multi_client.csv is failing intermittently
+
 
 ## WORKLOAD GENERATION
 The workload is being generated from a file containing some random request strings with each
