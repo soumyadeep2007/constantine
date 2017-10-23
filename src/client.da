@@ -140,10 +140,6 @@ class Client(process):
     def receive(msg=('result', message, replica_id), from_=self._replicas.values()):
         output(log_messages.RESULT_RECEIVED, replica_id)
 
-        if not Commons.is_valid_signature(message['content'], message['signed_content'], self._public_keys[replica_id]):
-            output(log_messages.INVALID_SIGNATURE, level=logging.ERROR)
-            return
-
         pending_requests_key = (message['content']['operation']['id'], message['content']['operation']['client_id'])
         if pending_requests_key not in self._pending_requests:
             output('Not a pending request', pending_requests_key)
@@ -162,8 +158,6 @@ class Client(process):
 
     # On receipt of an error message from a replica
     def receive(msg=('error', message, replica_id), from_=self._replicas.values()):
-        if not Commons.is_valid_signature(message['content'], message['signed_content'], self._public_keys[replica_id]):
-            return
 
         output(log_messages.ERROR_MESSAGE_RECEIVED, replica_id)
         # todo in phase 3 fetch new config and retry
