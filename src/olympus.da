@@ -1,4 +1,5 @@
 import logging
+import sys
 from nacl.encoding import HexEncoder
 from nacl.signing import SigningKey
 import log_messages
@@ -13,19 +14,20 @@ o_replica = import_da('replica')
 
 # noinspection PyMethodParameters
 class Olympus(process):
-    def setup(process_id):
+    def setup(process_id, file_path):
         self._id = "o1"
         self._process_id = process_id
         self._config = {}
         self._config['clients'] = {}
         self._config['replicas'] = {}
         self._config['failures'] = {}
+        self.file_path = file_path
 
         self._current_config = 0
         self.initialize()
 
     def parse_config():
-        with open('../test_cases/test_operation_change_fwd_request_t1_single_client.csv', 'r') as f:
+        with open(self.file_path, 'r') as f:
             for line in f:
                 if line[0] != '#':
                     (key, sep, val) = line.partition('=')
@@ -228,6 +230,6 @@ class Olympus(process):
 def main():
     config(channel={'reliable', 'fifo'})
     olympus = new(Olympus)
-    setup(olympus, args=(olympus,))
+    setup(olympus, args=(olympus, sys.argv[1]))
     start(olympus)
     await(False)
