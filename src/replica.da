@@ -89,6 +89,11 @@ class Replica(process):
         else:
             self._handle_invalid_result_proof(shuttle)
 
+    def receive(msg=('shared_object_request', client_id), from_=(self._config['clients'].values())):
+        output("Received shared_object_request from client=", client_id)
+
+        send(('shared_object', self._object), to=self._config['clients'][client_id])
+
     # =================================================================================
 
     # ========================HANDLERS=============================================

@@ -24,6 +24,8 @@ class Client(process):
 
         self._object = {}
 
+        self._shared_object_received = False
+
         output(self._id, ' initialized with config=', client_config)
 
     def run():
@@ -35,6 +37,7 @@ class Client(process):
             self._issue_request(operation)
 
         output("~~~~~~~~~~Final state:", self._object)
+        self._request_shared_object()
         await(False)
 
     def _request_config():
@@ -48,6 +51,29 @@ class Client(process):
         elif timeout(self._client_timeout):
             output(log_messages.CONFIG_REQUEST_TIMEOUT)
             self._request_config()
+
+    def _request_shared_object():
+        output("Requesting shared object from head:")
+        self._shared_object_received = False
+        send(('shared_object_request', self._id), to=self._replicas[self._head_id])
+        if await(self._shared_object_received):
+            pass
+
+    def receive(msg=('shared_object', shared_object), from_=self._olympus['process_id']):
+        output("Received shared object from head = ", shared_object)
+        self._shared_object_received = True
+        if self._is_final_result_consistent(self._object, shared_object):
+            output('Final results are consistent')
+        else:
+            output('Final results are NOT consistent')
+
+    def _is_final_result_consistent(client_object, shared_object):
+        for client_object_key in client_object.keys():
+            if client_object_key not in shared_object or client_object[client_object_key] != shared_object[
+                        client_object_key]:
+                return False
+
+        return True
 
     def _create_config_request_message():
         config_request_message = {'content': {}}
