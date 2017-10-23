@@ -10,12 +10,12 @@ class ReplicaState(Enum):
     ACTIVE = 1
 
 class Commons:
+
     @staticmethod
-    def is_valid_signature(signed_content, public_key):
+    def is_valid_signature(expected_value, signed_value, public_key):
         public_key_deserialized = VerifyKey(public_key, encoder=HexEncoder)
         try:
-            public_key_deserialized.verify(signed_content)
-            return True
+            return bytes(str(expected_value), 'utf-8') == public_key_deserialized.verify(signed_value)
         except BadSignatureError:
             return False
 

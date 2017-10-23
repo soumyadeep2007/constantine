@@ -2,6 +2,7 @@ import logging
 
 import log_messages
 from commons import Commons
+import traceback
 
 
 # noinspection PyUnresolvedReferences,PyMethodParameters
@@ -69,7 +70,7 @@ class Client(process):
         output(log_messages.REQUEST_MADE, request_message)
 
         if await(self._valid_result_received):
-            output(log_messages.RESULT_RECEIVED, self._head_id)
+            pass
         elif timeout(self._client_timeout):
             output(log_messages.REQUEST_TIMEOUT, operation)
             self._retry_request(request_message)
@@ -78,7 +79,7 @@ class Client(process):
         request_message = {
             'content': {
                 'is_retry': is_retry,
-                'operation': operation
+                'operation': dict(operation)
             }
         }
         request_message['signed_content'] = Commons.sign(request_message['content'], self._private_key)
@@ -86,28 +87,28 @@ class Client(process):
 
     # On receipt of a config message from Olympus
     def receive(msg=('config', message), from_=self._olympus['process_id']):
-        if not Commons.is_valid_signature(message['signed_content'], self._public_keys[self._olympus['id']]):
-            output(log_messages.INVALID_SIGNATURE, self._olympus['id'], level=logging.ERROR)
-            return
-
+        # if not Commons.is_valid_signature(message['content'], message['signed_content'], self._public_keys[self._olympus['id']]):
+        #     output(log_messages.INVALID_SIGNATURE, self._olympus['id'], level=logging.ERROR)
+        #     return
+        #
+        # self._config_received = True
+        # client_config = message['content']
+        # self._id = client_config['id']
+        # self._client_timeout = client_config['client_timeout']
+        # self._olympus = client_config['olympus']
+        # self._private_key = client_config['private_key']
+        # self._public_keys = client_config['public_keys']
+        # self._replicas = client_config['replicas']
+        # self._head_id = client_config['head_id']
+        # self._t = client_config['t']
         self._config_received = True
-        client_config = message['content']
-        self._id = client_config['id']
-        self._workload = client_config['workload']
-        self._client_timeout = client_config['client_timeout']
-        self._pending_requests = {}
-        self._olympus = client_config['olympus']
-        self._private_key = client_config['private_key']
-        self._public_keys = client_config['public_keys']
-        self._replicas = client_config['replicas']
-        self._head_id = client_config['head_id']
-        self._t = client_config['t']
-
         output(log_messages.CONFIG_FETCHED, message['content'])
 
     # On receipt of a result message from a replica
     def receive(msg=('result', message, replica_id), from_=self._replicas.values()):
-        if not Commons.is_valid_signature(message['signed_content'], self._public_keys[replica_id]):
+        output(log_messages.RESULT_RECEIVED, replica_id)
+
+        if not Commons.is_valid_signature(message['content'], message['signed_content'], self._public_keys[replica_id]):
             output(log_messages.INVALID_SIGNATURE, level=logging.ERROR)
             return
 
@@ -129,12 +130,13 @@ class Client(process):
 
     # On receipt of an error message from a replica
     def receive(msg=('error', message, replica_id), from_=self._replicas.values()):
-        if not Commons.is_valid_signature(message['signed_content'], self._public_keys[replica_id]):
+        if not Commons.is_valid_signature(message['content'], message['signed_content'], self._public_keys[replica_id]):
             return
 
         output(log_messages.ERROR_MESSAGE_RECEIVED, replica_id)
-        self._request_config()
-        self._retry_request(message)
+        # todo in phase 3 fetch new config and retry
+        # self._request_config()
+        # self._retry_request(message)
 
     def _process_result(operation, result):
         output(log_messages.OPERATION_RESULT_PAIR, operation, result)
@@ -145,8 +147,14 @@ class Client(process):
         message['content']['is_retry'] = True
         message['signed_content'] = Commons.sign(message['content'], self._private_key)
         output(log_messages.RETRANSMISSION, message['content']['operation'])
-        for replica in self._replicas:
-            send(('request', message), to=replica)
+        for replica in self._replicas.values():
+            send(('request', message, self._id), to=replica)
+
+        if await(self._valid_result_received):
+            pass
+        elif timeout(self._client_timeout):
+            output(log_messages.REQUEST_TIMEOUT, message['content']['operation'])
+            self._retry_request(message)
 
     def is_valid_result(result_shuttle, replicas, public_keys):
         expected_hash = Commons.hash(result_shuttle["content"]["result"])
@@ -157,7 +165,7 @@ class Client(process):
                 return False
 
             result_stmt = result_shuttle['content']['result_proof'][replica_id]
-            if not Commons.is_valid_signature(result_stmt['signed_result_statement'], public_keys[replica_id]):
+            if not Commons.is_valid_signature(result_stmt['result_statement'], result_stmt['signed_result_statement'], public_keys[replica_id]):
                 continue
 
             if expected_hash == result_stmt['result_statement']['result_hash']:
