@@ -30,5 +30,5 @@ workload[0] = put('movie','star'); get('movie')
 workload[1] = put('jedi','luke skywalker'); slice('jedi','0:4'); get('jedi')
 
 # FAILURE SCENARIO
-failures[0,2] = shuttle(0,0), change_result()
+failures[0,1] = shuttle(0,0), change_result()
 

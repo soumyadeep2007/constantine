@@ -29,7 +29,7 @@ replica_hosts = 0; 0; 0
 workload[0] = put('movie','star'); get('movie')
 
 # FAILURE SCENARIO
-failures[0,2] = shuttle(0,0), change_result()
+failures[0,1] = shuttle(0,0), change_result()
 
 # ----------------EXPECTED RESULT----------------------
 # <copy log here> expected_result -> 'star', hash mismatched
