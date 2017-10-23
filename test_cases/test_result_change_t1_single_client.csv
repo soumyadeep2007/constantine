@@ -21,7 +21,7 @@ nonhead_timeout = 3000
 hosts = localhost;
 # host on which each client runs.  in this example, client 0 runs
 # on host 1, clients 1 and 2 run on host 0.
-client_hosts = 0; 0; 0
+client_hosts = 0;
 # host on which each replica runs.  same in all configurations.
 replica_hosts = 0; 0; 0
 
@@ -29,7 +29,7 @@ replica_hosts = 0; 0; 0
 workload[0] = put('movie','star'); get('movie')
 
 # FAILURE SCENARIO
-failures[0,0] = client_request(0,0), change_result()
+failures[0,2] = shuttle(0,0), change_result()
 
 # ----------------EXPECTED RESULT----------------------
 # <copy log here> expected_result -> 'star', hash mismatched
