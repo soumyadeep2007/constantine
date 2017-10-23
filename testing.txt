@@ -1,0 +1,14 @@
+A note on test cases, found in the test_cases folder:
+
+The name of each test case found in the directory follows the following format:
+
+Failure cases: test_<failure>_<t>_<[single_client|multi_client]>.csv
+or
+Happy path: test_happy_path_<t>_<[single_client|multi_client]>.csv
+or
+Stress: test_stress.csv
+
+Thus the test conditions are signified by the file name itself.
+Additionally, there is one test case labelled test_stress.csv which is a stress test featuring 10 clients and
+100 operations selected at random from our repository of random operations.
+

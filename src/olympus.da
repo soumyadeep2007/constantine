@@ -19,6 +19,7 @@ class Olympus(process):
         self._config = {}
         self._config['clients'] = {}
         self._config['replicas'] = {}
+        self._config['failures'] = {}
 
         self._current_config = 0
         self.initialize()
