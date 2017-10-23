@@ -14,7 +14,9 @@ Example: python -m da --message-buffer-size 100000 --logfile --logfilename ../lo
 Please note: Enter a significantly large buffer size in bytes, like the size in the example above to avoid running
 into buffer constraints.
 
-## CONTRIBUTIONS 
+## CONTRIBUTIONS
+1. Client, Olympus, logs, documentation - Soumyadeep
+2. Replica, config files, testing - Tushar
 
 ## BUGS AND LIMITATIONS
 1. If head changes the operation, the system cannot handle it.
