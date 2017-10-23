@@ -22,13 +22,19 @@ class Client(process):
         self._operation_id_counter = 0
         self._valid_result_received = False
 
+        self._object = {}
+
         output(self._id, ' initialized with config=', client_config)
 
     def run():
         for task in self._workload:
             operation = self._create_operation(task)
+
+            output("return_value=", Commons.perform_operation(operation['command_string'], self._object))
+
             self._issue_request(operation)
 
+        output("~~~~~~~~~~Final state:", self._object)
         await(False)
 
     def _request_config():

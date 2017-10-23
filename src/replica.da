@@ -57,7 +57,7 @@ class Replica(process):
             self._state = ReplicaState.IMMUTABLE
             # todo send reconfig request
 
-        result = self._perform_operation(shuttle['content']['operation']['command_string'])
+        result = Commons.perform_operation(shuttle['content']['operation']['command_string'], self._object)
         self._update_order_proof(shuttle)
         self._update_result_proof(shuttle, result)
         self._last_signed_slot = shuttle['content']['slot']
@@ -94,99 +94,6 @@ class Replica(process):
     # ========================HANDLERS=============================================
     def _handle_invalid_result_proof(shuttle):
         pass  # todo phase 3
-
-    def _update_running_state(operation, key, value=None):
-        if operation == 'put':
-            self._object[key] = value
-            return 'OK'
-        elif operation == 'append':
-            if key in self._object and value is not None:
-                self._object[key] = self._object[key] + value
-                return 'OK'
-            else:
-                return 'fail'
-        elif operation == 'slice':
-            if value is None or key not in self._object:
-                return 'fail'
-            colon_index = value.find(':')
-            if colon_index < 0:
-                return 'fail'
-            curr_value = self._object[key]
-            start_index = None
-            end_index = None
-            if colon_index == 0:
-                start_index = 0
-                if len(value) == 1:
-                    end_index = len(curr_value)
-            elif colon_index == len(curr_value) - 1:
-                end_index = len(curr_value)
-            if start_index is None:
-                if value[0:colon_index].isdigit():
-                    start_index = int(value[0:colon_index])
-                else:
-                    return 'fail'
-            if end_index is None:
-                if value[colon_index + 1:].isdigit():
-                    end_index = int(value[colon_index + 1:])
-                else:
-                    return 'fail'
-
-            start_index = start_index if start_index >= 0 else len(curr_value) + start_index
-            end_index = end_index if end_index >= 0 else len(curr_value) + end_index
-
-            is_valid_op = key in self._object
-            is_valid_op = is_valid_op and 0 <= start_index and start_index < len(curr_value)
-            is_valid_op = is_valid_op and len(curr_value) >= end_index and end_index > start_index
-            if is_valid_op:
-                self._object[key] = curr_value[int(start_index):int(end_index)]
-                return 'OK'
-            else:
-                return 'fail'
-        elif operation == 'get':
-            if key in self._object:
-                return self._object[key]
-            else:
-                return ''
-        else:
-            return 'fail'
-
-    def _perform_operation(operation):
-        if operation is None or not isinstance(operation, str):
-            return 'fail'
-
-        if operation[0:3] == 'get':
-            op = 'get'
-            split_op = operation.split("'")
-            if len(split_op) != 3:
-                return ''
-            key = split_op[1]
-            return self._update_running_state(op, key)
-        elif operation[0:3] == 'put':
-            op = 'put'
-            split_op = operation.split("'")
-            if len(split_op) != 5:
-                return 'fail'
-            key = split_op[1]
-            value = split_op[3]
-            return self._update_running_state(op, key, value)
-        elif operation[0:6] == 'append':
-            op = 'append'
-            split_op = operation.split("'")
-            if len(split_op) != 5:
-                return 'fail'
-            key = split_op[1]
-            value = split_op[3]
-            return self._update_running_state(op, key, value)
-        elif operation[0:5] == 'slice':
-            op = 'slice'
-            split_op = operation.split("'")
-            if len(split_op) != 5:
-                return 'fail'
-            key = split_op[1]
-            value = split_op[3]
-            return self._update_running_state(op, key, value)
-        else:
-            return 'fail'
 
     def _update_order_proof(shuttle):
         order_statement = {
@@ -354,7 +261,7 @@ class Replica(process):
         slot = _get_slot()
         shuttle = self._create_shuttle(message, slot)
         self._update_order_proof(shuttle)
-        result = self._perform_operation(shuttle['content']['operation']['command_string'])
+        result = Commons.perform_operation(shuttle['content']['operation']['command_string'], self._object)
         self._update_result_proof(shuttle, result)
         return shuttle
 
