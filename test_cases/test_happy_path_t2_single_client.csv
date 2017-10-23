@@ -1,4 +1,4 @@
-test_case_name = test_happy_path_t1_single_client
+test_case_name = test_happy_path_t2_single_client
 
 # number of failures to tolerate.  number of replicas is 2t+1.
 t = 2

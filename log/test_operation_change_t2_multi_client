@@ -1,0 +1,218 @@
+[2017-10-23 16:49:27,434] da.api<MainProcess>:INFO: <Node_:bcc01> initialized at 127.0.0.1:(UdpTransport=25853, TcpTransport=13296).
+[2017-10-23 16:49:27,434] da.api<MainProcess>:INFO: Starting program <module 'olympus' from '/home/ubuntu/synced_async/constantine/src/olympus.py'>...
+[2017-10-23 16:49:27,435] da.api<MainProcess>:INFO: Running iteration 1 ...
+[2017-10-23 16:49:27,436] da.api<MainProcess>:INFO: Waiting for remaining child processes to terminate...(Press "Ctrl-C" to force kill)
+[2017-10-23 16:49:27,476] olympus.Olympus<Olympus:08802>:OUTPUT: Parsed config: {'head_timeout': 3000, 'test_case_name': 'test_operation_change_t2_multi_client', 'nonhead_timeout': 3000, 't': 2, 'replicas': {}, 'client_hosts': {'c0': 'localhost;', 'c1': 'localhost;', 'c2': 'localhost;'}, 'clients': {}, 'workloads': {'c0': ["put('movie','star')", "put('movie', 'star2')", "get('movie')"], 'c1': ["put('jedi','luke skywalker')", "slice('jedi','0:4')", "get('jedi')"]}, 'client_timeout': 3000, 'num_client': 2, 'replica_hosts': {'r3': '0', 'r0': '0', 'r4': '0', 'r1': '0', 'r2': '0'}, 'failures': {0: {'r0': {'c0': {'client_request': {'1': ['change_operation', '']}}}}}, 'hosts': {0: 'localhost;'}}
+[2017-10-23 16:49:27,502] olympus.Olympus<Olympus:08802>:OUTPUT: Generated keys: {'private_keys': {'r3': <nacl.signing.SigningKey object at 0x7f950efa3d30>, 'r0': <nacl.signing.SigningKey object at 0x7f950efa3da0>, 'r2': <nacl.signing.SigningKey object at 0x7f950efa3ef0>, 'c0': <nacl.signing.SigningKey object at 0x7f950efa3860>, 'r4': <nacl.signing.SigningKey object at 0x7f950efa3e10>, 'c1': <nacl.signing.SigningKey object at 0x7f950efa3be0>, 'c2': <nacl.signing.SigningKey object at 0x7f950efa3c88>, 'r1': <nacl.signing.SigningKey object at 0x7f950efa3e80>, 'o1': <nacl.signing.SigningKey object at 0x7f950efa38d0>}, 'public_keys': {'r3': b'de12b407b1bb4406b031db513e6ec0d50de2e0f7a11531808c74fffaa7c36deb', 'r0': b'f19d2f7337cc29441edbf72a14474491ddf84b097425a82e09d6ebc412fc1292', 'r2': b'6d19aeedaeb762470e5a39c28c72ffa26d6f834f3b958562c51470bb9e8d013b', 'c0': b'acbeb2bf1d7e9719b9c203c3a634cfc01893b80171052177e6b3faf75da791c7', 'r4': b'fc3c294356fc978140b33782e33e914f0005f4476d8736272e4ad835b3cf77e4', 'c1': b'26171dbb2c9f035876358f05efcb7584daa57f933a85f383a3be2782d360c673', 'c2': b'b116c4c5cb068887cdd04af53d5a37f5ddcb3424fda9ca7164bcf90af0a3e03f', 'r1': b'02528db562e5918d5b29eb6e8956e9706629273b8a9bcafb6df475de788ff8b6', 'o1': b'e2ba8527a10a4972999be56ce4b14f572f2fc24c94019f4e7a08f26a6271d0af'}}
+[2017-10-23 16:49:27,649] client.Client<Client:08803>:OUTPUT: c0  initialized with config= {'id': 'c0', 'public_keys': {'r3': b'de12b407b1bb4406b031db513e6ec0d50de2e0f7a11531808c74fffaa7c36deb', 'c1': b'26171dbb2c9f035876358f05efcb7584daa57f933a85f383a3be2782d360c673', 'r0': b'f19d2f7337cc29441edbf72a14474491ddf84b097425a82e09d6ebc412fc1292', 'c0': b'acbeb2bf1d7e9719b9c203c3a634cfc01893b80171052177e6b3faf75da791c7', 'r4': b'fc3c294356fc978140b33782e33e914f0005f4476d8736272e4ad835b3cf77e4', 'r2': b'6d19aeedaeb762470e5a39c28c72ffa26d6f834f3b958562c51470bb9e8d013b', 'c2': b'b116c4c5cb068887cdd04af53d5a37f5ddcb3424fda9ca7164bcf90af0a3e03f', 'r1': b'02528db562e5918d5b29eb6e8956e9706629273b8a9bcafb6df475de788ff8b6', 'o1': b'e2ba8527a10a4972999be56ce4b14f572f2fc24c94019f4e7a08f26a6271d0af'}, 'private_key': <nacl.signing.SigningKey object at 0x7f950efaa9b0>, 'olympus': {'id': 'o1', 'process_id': <Olympus:08802>}, 'workload': ["put('movie','star')", "put('movie', 'star2')", "get('movie')"], 'head_id': 'r0', 'client_timeout': 3.0, 'replicas': {'r3': <Replica:08808>, 'r4': <Replica:08809>, 'r2': <Replica:08807>, 'r1': <Replica:08806>, 'r0': <Replica:08805>}, 't': 2}
+[2017-10-23 16:49:27,650] client.Client<Client:08803>:OUTPUT: The following operation was created: {'id': 0, 'command_string': "put('movie','star')", 'client_id': 'c0'}
+[2017-10-23 16:49:27,651] client.Client<Client:08803>:OUTPUT: return_value= OK
+[2017-10-23 16:49:27,653] client.Client<Client:08803>:OUTPUT: A request for an operation was made {'content': {'is_retry': False, 'operation': {'id': 0, 'command_string': "put('movie','star')", 'client_id': 'c0'}}, 'signed_content': b'<\x9dD;.L\xd9\x04\xa0\xd7\xe4\xe9G\x19=\xd6N\xd4\x0f\t\x157kR$[\xf4\xe8\x13\xa9\r\xbe\xfau\x9a\x95\xb6\xdd\xdb\x9c\xc2\xf06N\x87\x86\t\x07\xcc\xe8\xa9\x8d\x88\x80\x1c\x0c\xd1%\xeeX\x0bM\xe6\x01{\'is_retry\': False, \'operation\': {\'id\': 0, \'command_string\': "put(\'movie\',\'star\')", \'client_id\': \'c0\'}}'}
+[2017-10-23 16:49:27,655] client.Client<Client:08804>:OUTPUT: c1  initialized with config= {'id': 'c1', 'public_keys': {'r3': b'de12b407b1bb4406b031db513e6ec0d50de2e0f7a11531808c74fffaa7c36deb', 'c1': b'26171dbb2c9f035876358f05efcb7584daa57f933a85f383a3be2782d360c673', 'r0': b'f19d2f7337cc29441edbf72a14474491ddf84b097425a82e09d6ebc412fc1292', 'c0': b'acbeb2bf1d7e9719b9c203c3a634cfc01893b80171052177e6b3faf75da791c7', 'r4': b'fc3c294356fc978140b33782e33e914f0005f4476d8736272e4ad835b3cf77e4', 'r2': b'6d19aeedaeb762470e5a39c28c72ffa26d6f834f3b958562c51470bb9e8d013b', 'c2': b'b116c4c5cb068887cdd04af53d5a37f5ddcb3424fda9ca7164bcf90af0a3e03f', 'r1': b'02528db562e5918d5b29eb6e8956e9706629273b8a9bcafb6df475de788ff8b6', 'o1': b'e2ba8527a10a4972999be56ce4b14f572f2fc24c94019f4e7a08f26a6271d0af'}, 'private_key': <nacl.signing.SigningKey object at 0x7f9506740630>, 'olympus': {'id': 'o1', 'process_id': <Olympus:08802>}, 'workload': ["put('jedi','luke skywalker')", "slice('jedi','0:4')", "get('jedi')"], 'head_id': 'r0', 'client_timeout': 3.0, 'replicas': {'r3': <Replica:08808>, 'r4': <Replica:08809>, 'r2': <Replica:08807>, 'r1': <Replica:08806>, 'r0': <Replica:08805>}, 't': 2}
+[2017-10-23 16:49:27,656] replica.Replica<Replica:08805>:OUTPUT: Head is processing request (operation_id, client_id) (0, 'c0')
+[2017-10-23 16:49:27,657] client.Client<Client:08804>:OUTPUT: The following operation was created: {'id': 0, 'command_string': "put('jedi','luke skywalker')", 'client_id': 'c1'}
+[2017-10-23 16:49:27,659] client.Client<Client:08804>:OUTPUT: return_value= OK
+[2017-10-23 16:49:27,660] replica.Replica<Replica:08806>:OUTPUT: Received shuttle (source, client_id, operation_id, self_id)  r0 c0 0 r1
+[2017-10-23 16:49:27,664] replica.Replica<Replica:08805>:OUTPUT: Received request message (source, client_id, operation_id, self_id)  c1 c1 0 r0
+[2017-10-23 16:49:27,666] replica.Replica<Replica:08805>:OUTPUT: Head is processing request (operation_id, client_id) (0, 'c1')
+[2017-10-23 16:49:27,665] client.Client<Client:08804>:OUTPUT: A request for an operation was made {'content': {'is_retry': False, 'operation': {'id': 0, 'command_string': "put('jedi','luke skywalker')", 'client_id': 'c1'}}, 'signed_content': b'\x07\xa2\xef\xd5n\xf0\xc7E(6*}k\xecb\xf3\xa9\xe5j\x10ky<Xr\xbe4\xac\x08\xf4l\x95m7\xa4\xc9\xb5T\xb1\xe8\xb3\xb3\xb7\x1cS\xec\xdc\x1e\x99\x05\x12\xcb\xcf\xc9\xc8[\xadX1\xac\xc1\x15\x11\x00{\'is_retry\': False, \'operation\': {\'id\': 0, \'command_string\': "put(\'jedi\',\'luke skywalker\')", \'client_id\': \'c1\'}}'}
+[2017-10-23 16:49:27,665] replica.Replica<Replica:08807>:OUTPUT: Received shuttle (source, client_id, operation_id, self_id)  r1 c0 0 r2
+[2017-10-23 16:49:27,672] replica.Replica<Replica:08808>:OUTPUT: Received shuttle (source, client_id, operation_id, self_id)  r2 c0 0 r3
+[2017-10-23 16:49:27,671] replica.Replica<Replica:08806>:OUTPUT: Received shuttle (source, client_id, operation_id, self_id)  r0 c1 0 r1
+[2017-10-23 16:49:27,678] replica.Replica<Replica:08807>:OUTPUT: Received shuttle (source, client_id, operation_id, self_id)  r1 c1 0 r2
+[2017-10-23 16:49:27,679] replica.Replica<Replica:08809>:OUTPUT: Received shuttle (source, client_id, operation_id, self_id)  r3 c0 0 r4
+[2017-10-23 16:49:27,681] replica.Replica<Replica:08808>:OUTPUT: Received shuttle (source, client_id, operation_id, self_id)  r2 c1 0 r3
+[2017-1[2017-10-23 16:49:27,689] client.Client<Client:08803>:OUTPUT: A result was received from replica= r4
+[2017-10-23 16:49:27,691] client.Client<Client:08803>:OUTPUT: The operation result pair is= {'id': 0, 'command_string': "put('movie','star')", 'client_id': 'c0'} OK
+[2017-10-23 16:49:27,692] client.Client<Client:08803>:OUTPUT: The result received is valid:(result, operation)= OK {'id': 0, 'command_string': "put('movie','star')", 'client_id': 'c0'}
+[2017-10-23 16:49:27,693] client.Client<Client:08803>:OUTPUT: The following operation was created: {'id': 1, 'command_string': "put('movie', 'star2')", 'client_id': 'c0'}
+[2017-10-23 16:49:27,693] client.Client<Client:08803>:OUTPUT: return_value= OK
+[2017-10-23 16:49:27,696] client.Client<Client:08803>:OUTPUT: A request for an operation was made {'content': {'is_retry': False, 'operation': {'id': 1, 'command_string': "put('movie', 'star2')", 'client_id': 'c0'}}, 'signed_content': b'\xbf,\xdeD\t\xdb\xb31\xc9H\x8dX\xccU\x0cX\x93U\x0b\x8dj\xef\x1b\xbb\xa8\x82\xe4R\xf7y\t\xd4@M\xc8\x0bV\x88\xe9"\x07\x8d\x88\x7f\xf7z\xa4G\xf9\xa40\xed\xf4\xda\xbc\xa1p\xb6i\x91\xe85`\x03{\'is_retry\': False, \'operation\': {\'id\': 1, \'command_string\': "put(\'movie\', \'star2\')", \'client_id\': \'c0\'}}'}
+[2017-10-23 16:49:27,697] replica.Replica<Replica:08805>:OUTPUT: Received request message (source, client_id, operation_id, self_id)  c0 c0 1 r0
+[2017-10-23 16:49:27,698] replica.Replica<Replica:08805>:OUTPUT: Head is processing request (operation_id, client_id) (1, 'c0')
+[2017-10-23 16:49:27,699] replica.Replica<Replica:08805>:OUTPUT: Failure trigger updated (failure_trigger, failure, replica_id) client_request ['change_operation', ''] r0
+[2017-10-23 16:49:27,701] replica.Replica<Replica:08806>:OUTPUT: Received result shuttle (source, client_id, operation_id, self_id)  r2 c0 0 r1
+[2017-10-23 16:[2017-10-23 16:49:27,711] client.Client<Client:08804>:OUTPUT: A result was received from replica= r4
+[2017-10-23 16:49:27,713] client.Client<Client:08804>:OUTPUT: The operation result pair is= {'id': 0, 'command_string': "put('jedi','luke skywalker')", 'client_id': 'c1'} OK
+[2017-10-23 16:49:27,714] client.Client<Client:08804>:OUTPUT: The result received is valid:(result, operation)= OK {'id': 0, 'command_string': "put('jedi','luke skywalker')", 'client_id': 'c1'}
+[2017-10-23 16:49:27,714] client.Client<Client:08804>:OUTPUT: The following operation was created: {'id': 1, 'command_string': "slice('jedi','0:4')", 'client_id': 'c1'}
+[2017-10-23 16:49:27,715] client.Client<Client:08804>:OUTPUT: return_value= OK
+[2017-10-23 16:49:27,715] replica.Replica<Replica:08807>:OUTPUT: Received result shuttle (source, client_id, operation_id, self_id)  r3 c1 0 r2
+[2017-10-23 16:49:27,716] client.Client<Client:08804>:OUTPUT: A request for an operation was made {'content': {'is_retry': False, 'operation': {'id': 1, 'command_string': "slice('jedi','0:4')", 'client_id': 'c1'}}, 'signed_content': b'\xf4\xa1\xcf\xb0B\x13S{\xbcr\x9d=O v\xfb\n\xfc\xdf\xc5\xb4\xc1.L=\xab\xf9\x1ePE\x07\xea&\x06\x05\xe9\xa9_z\xa32\xab_\xb7\xa0\x8c-\x00\xd2\x89\xad8\x92]qT\xf7\xf5\xc9W\r\x17b\x04{\'is_retry\': False, \'operation\': {\'id\': 1, \'command_string\': "slice(\'jedi\',\'0:4\')", \'client_id\': \'c1\'}}'}
+[2017-10-23 16:49:27,717] replica.Replica<Replica:08805>:OUTPUT: Received request message (source, client_id, operation_id, self_id)  c1 c1 1 r0
+[2017-10-23 16:49:27,717] replica.Replica<Replica:08805>:OUTPUT: Head is processing request (operation_id, client_id) (1, 'c1')
+[2017-10-23 16:49:27,718] replica.Replica<Replica:08805>:OUTPUT: Failure 'change_operation' applied for (operation, replica_id)  {'id': 1, 'command_string': "get('x')", 'client_id': 'c1'} r0
+[2017-10-23 16:49:27,720] replica.Replica<Replica:08807>:OUTPUT: Received shuttle (source, client_id, operation_id, self_id)  r1 c0 1 r2
+[2017-10-23 16:49:27,720] replica.Replica<Replica:08806>:OUTPUT: Received result shuttle (source, client_id, operation_id, self_id)  r2 c1 0 r1
+[2017-10-23 16:49:27,723] replica.Replica<Replica:08808>:OUTPUT: Received shuttle (source, client_id, operation_id, self_id)  r2 c0 1 r3
+[2017-10-23 16:49:27,724] replica.Replica<Replica:08805>:OUTPUT: Received result shuttle (source, client_id, operation_id, self_id)  r1 c1 0 r0
+[2017-10-23 16:49:27,726] replica.Replica<Replica:08809>:OUTPUT: Received shuttle (source, client_id, operation_id, self_id)  r3 c0 1 r4
+[2017-10-23 16:49:27,729] client.Client<Client:08803>:OUTPUT: A result was received from replica= r4
+[2017-10-23 16:49:27,729] replica.Replica<Replica:08806>:OUTPUT: Received shuttle (source, client_id, operation_id, self_id)  r0 c1 1 r1
+[2017-10-23 16:49:27,730] replica.Replica<Replica:08[2017-10-23 16:49:27,731] client.Client<Client:08803>:OUTPUT: The operation result pair is= {'id': 1, 'command_string': "put('movie', 'star2')", 'client_id': 'c0'} OK
+[2017-10-23 16:49:27,731] client.Client<Client:08803>:OUTPUT: The result received is valid:(result, operation)= OK {'id': 1, 'command_string': "put('movie', 'star2')", 'client_id': 'c0'}
+[2017-10-23 16:49:27,731] client.Client<Client:08803>:OUTPUT: The following operation was created: {'id': 2, 'command_string': "get('movie')", 'client_id': 'c0'}
+[2017-10-23 16:49:27,732] client.Client<Client:08803>:OUTPUT: return_value= star2
+[2017-10-23 16:49:27,732] client.Client<Client:08803>:OUTPUT: A request for an operation was made {'content': {'is_retry': False, 'operation': {'id': 2, 'command_string': "get('movie')", 'client_id': 'c0'}}, 'signed_content': b'\xbe\xc8\xb7\x03+\xf5\x0e\xbe\xc6S\xd3\x85\x98\xea`\xe2\xe2_\x06\xb8\xe7d\xc7]\x85E\x11p\x11\xfb5\xf2\xc4V\xc9\xf6\\\xc1\x19\xbaD\x8b^\x10p7\xc1\xe1\x87\x83\xc5\xbcU\xb5\xcb\x00jZ\x8e\xee\x8bvR\x01{\'is_retry\': False, \'operation\': {\'id\': 2, \'command_string\': "get(\'movie\')", \'client_id\': \'c0\'}}'}
+[2017-10-23 16:49:27,733] replica.Replica<Replica:08805>:OUTPUT: Received request message (source, client_id, operation_id, self_id)  c0 c0 2 r0
+[2017-10-23 16:49:27,733] replica.Replica<Replica:08805>:OUTPUT: Head is processing request (operation_id, client_id) (2, 'c0')
+[2017-10-23 16:49:27,735] replica.Replica<Replica:08806>:ERROR: Shuttle received with invalid request slot
+[2017-10-23 16:49:27,745] replica.Replica<Replica:08808>:OUTPUT: Received result shuttle (source, client_id, operation_id, self_id)  r4 c0 1 r3
+[2017-10-23 16:49:27,748] replica.Replica<Replica:08807>:OUTPUT: Received result shuttle (source, client_id, operation_id, self_id)  r3 c0 1 r2
+[2017-10-23 16:49:27,759] replica.Replica<Replica:08806>:OUTPUT: Received result shuttle (source, client_id, operation_id, self_id)  r2 c0 1 r1
+[2017-10-23 16:49:27,765] replica.Replica<Replica:08805>:OUTPUT: Received result shuttle (source, client_id, operation_id, self_id)  r1 c0 1 r0
+[2017-10-23 16:49:30,718] client.Client<Client:08804>:OUTPUT: Wait for result timed out for operation= {'id': 1, 'command_string': "slice('jedi','0:4')", 'client_id': 'c1'}
+[2017-10-23 16:49:30,720] client.Client<Client:08804>:OUTPUT: Config requested from Olympus by client= c1
+[2017-10-23 16:49:30,724] olympus.Olympus<Olympus:08802>:OUTPUT: Config request received from client= c1
+[2017-10-23 16:49:30,729] olympus.Olympus<Olympus:08802>:OUTPUT: Config has been sent to client= c1
+[2017-10-23 16:49:30,732] client.Client<Client:08804>:OUTPUT: The config was fetched from Olympus: {'id': 'c1', 'head_id': 'r0', 'private_key': <nacl.signing.SigningKey object at 0x7f9506740cf8>, 'olympus': {'id': 'o1', 'process_id': <Olympus:08802>}, 'workload': ["put('jedi','luke skywalker')", "slice('jedi','0:4')", "get('jedi')"], 'public_keys': {'r3': b'de12b407b1bb4406b031db513e6ec0d50de2e0f7a11531808c74fffaa7c36deb', 'r0': b'f19d2f7337cc29441edbf72a14474491ddf84b097425a82e09d6ebc412fc1292', 'r2': b'6d19aeedaeb762470e5a39c28c72ffa26d6f834f3b958562c51470bb9e8d013b', 'c0': b'acbeb2bf1d7e9719b9c203c3a634cfc01893b80171052177e6b3faf75da791c7', 'r4': b'fc3c294356fc978140b33782e33e914f0005f4476d8736272e4ad835b3cf77e4', 'c1': b'26171dbb2c9f035876358f05efcb7584daa57f933a85f383a3be2782d360c673', 'c2': b'b116c4c5cb068887cdd04af53d5a37f5ddcb3424fda9ca7164bcf90af0a3e03f', 'r1': b'02528db562e5918d5b29eb6e8956e9706629273b8a9bcafb6df475de788ff8b6', 'o1': b'e2ba8527a10a4972999be56ce4b14f572f2fc24c94019f4e7a08f26a6271d0af'}, 'client_timeout': 3.0, 'replicas': {'r3': <Replica:08808>, 'r2': <Replica:08807>, 'r0': <Replica:08805>, 'r1': <Replica:08806>, 'r4': <Replica:08809>}, 't': 2}
+[2017-10-23 16:49:30,733] client.Client<Client:08803>:OUTPUT: Wait for result timed out for operation= {'id': 2, 'command_string': "get('movie')", 'client_id': 'c0'}
+[2017-10-23 16:49:30,734] client.Client<Client:08803>:OUTPUT: Config requested from Olympus by client= c0
+[2017-10-23 16:49:30,740] client.Client<Client:08804>:OUTPUT: Retransmitting request to all replicas for operation= {'id': 1, 'command_string': "slice('jedi','0:4')", 'client_id': 'c1'}
+[2017-10-23 16:49:30,744] olympus.Olympus<Olympus:08802>:OUTPUT: Config has been sent to client= c0
+[2017-10-23 16:49:30,749] client.Client<Client:08803>:OUTPUT: The config was fetched from Olympus: {'id': 'c0', 'head_id': 'r0', 'private_key': <nacl.signing.SigningKey object at 0x7f950efb53c8>, 'olympus': {'id': 'o1', 'process_id': <Olympus:08802>}, 'workload': ["put('movie','star')", "put('movie', 'star2')", "get('movie')"], 'public_keys': {'r3': b'de12b407b1bb4406b031db513e6ec0d50de2e0f7a11531808c74fffaa7c36deb', 'r0': b'f19d2f7337cc29441edbf72a14474491ddf84b097425a82e09d6ebc412fc1292', 'r2': b'6d19aeedaeb762470e5a39c28c72ffa26d6f834f3b958562c51470bb9e8d013b', 'c0': b'acbeb2bf1d7e9719b9c203c3a634cfc01893b80171052177e6b3faf75da791c7', 'r4': b'fc3c294356fc978140b33782e33e914f0005f4476d8736272e4ad835b3cf77e4', 'c1': b'26171dbb2c9f035876358f05efcb7584daa57f933a85f383a3be2782d360c673', 'c2': b'b116c4c5cb068887cdd04af53d5a37f5ddcb3424fda9ca7164bcf90af0a3e03f', 'r1': b'02528db562e5918d5b29eb6e8956e9706629273b8a9bcafb6df475de788ff8b6', 'o1': b'e2ba8527a10a4972999be56ce4b14f572f2fc24c94019f4e7a08f26a6271d0af'}, 'client_timeout': 3.0, 'replicas': {'r3': <Replica:08808>, 'r2': <Replica:08807>, 'r0': <Replica:08805>, 'r1': <Replica:08806>, 'r4': <Replica:08809>}, 't': 2}
+[2017-10-23 16:49:30,751] client.Client<Client:08803>:OUTPUT: Retransmitting request to all replicas for operation= {'id': 2, 'command_string': "get('movie')", 'client_id': 'c0'}
+[2017-10-23 16:49:30,759] replica.Replica<Replica:08808>:OUTPUT: Received request message (source, client_id, operation_id, self_id)  c1 c1 1 r3
+[2017-10-23 16:49:30,769] replica.Replica<Replica:08809>:OUTPUT: Received request message (source, client_id, operation_id, self_id)  c1 c1 1 r4
+[2017-10-23 16:49:30,778] replica.Replica<Replica:08807>:OUTPUT: Received request message (source, client_id, operation_id, self_id)  r3 c1 1 r2
+[2017-10-23 16:49:30,787] replica.Replica<Replica:08807>:OUTPUT: Received request message (source, client_id, operation_id, self_id)  c1 c1 1 r2
+[2017-10-23 16:49:30,789] replica.Replica<Replica:08806>:OUTPUT: Received request message (source, client_id, operation_id, self_id)  r2 c1 1 r1
+[2017-10-23 16:49:30,791] replica.Replica<Replica:08806>:OUTPUT: Sending error message (client_id, replica_id) c1 r1
+[2017-10-23 16:49:30,793] replica.Replica<Replica:08808>:OUTPUT: Received request message (source, client_id, operation_id, self_id)  r4 c1 1 r3
+[2017-10-23 16:49:30,800] replica.Replica<Replica:08807>:OUTPUT: Received request message (source, client_id, operation_id, self_id)  r3 c1 1 r2
+[2017-10-23 16:49:30,804] replica.Replica<Replica:08808>:OUTPUT: Received request message (source, client_id, operation_id, self_id)  c0 c0 2 r3
+[2017-10-23 16:49:30,823] replica.Replica<Replica:08809>:OUTPUT: Received request message (source, client_id, operation_id, self_id)  c0 c0 2 r4
+[2017-10-23 16:49:30,823] replica.Replica<Replica:08805>:OUTPUT: Received request message (source, client_id, operation_id, self_id)  r1 c1 1 r0
+[2017-10-23 16:49:30,830] replica.Replica<Replica:08805>:OUTPUT: Awaiting result shuttle from downstream _replicas
+[2017-10-23 16:49:30,834] replica.Replica<Replica:08805>:OUTPUT: Received request message (source, client_id, operation_id, self_id)  c1 c1 1 r0
+[2017-10-23 16:49:30,827] client.Client<Client:08804>:OUTPUT: An error message was received from replica= r1
+licas
+[2017-10-23 16:49:30,820] replica.Replica<Replica:08806>:OUTPUT: Received request message (source, client_id, operation_id, self_id)  r2 c1 1 r1
+[2017-10-23 16:49:30,837] replica.Replica<Replica:08807>:OUTPUT: Received request message (source, client_id, operation_id, self_id)  r3 c0 2 r2
+[2017-10-23 16:49:30,842] replica.Replica<Replica:08805>:OUTPUT: Received request message (source, client_id, operation_id, self_id)  r1 c1 1 r0
+[2017-10-23 16:49:30,844] replica.Replica<Replica:08805>:OUTPUT: Awaiting result shuttle from downstream _replicas
+[2017-10-23 16:49:30,841] replica.Replica<Replica:08807>:OUTPUT: Received request message (source, client_id, operation_id, self_id)  c0 c0 2 r2
+[2017-10-23 16:49:30,840] replica.Replica<Replica:08808>:OUTPUT: Received request message (source, client_id, operation_id, self_id)  r4 c0 2 r3
+[2017-10-23 16:49:30,849] replica.Replica<Replica:08805>:OUTPUT: Received request message (source, client_id, operation_id, self_id)  c0 c0 2 r0
+[2017-10-23 16:49:30,850] replica.Replica<Replica:08805>:OUTPUT: Awaiting result shuttle from downstream _replicas
+[2017-10-23 16:49:30,842] replica.Replica<Replica:08806>:OUTPUT: Received request message (source, client_id, operation_id, self_id)  r2 c1 1 r1
+[2017-10-23 16:49:30,851] replica.Replica<Replica:08807>:OUTPUT: Received request message (source, client_id, operation_id, self_id)  r3 c0 2 r2
+[2017-10-23 16:49:30,853] replica.Replica<Replica:08806>:OUTPUT: Received request message (source, client_id, operation_id, self_id)  c1 c1 1 r1
+[2017-10-23 16:49:30,853] replica.Replica<Replica:08805>:OUTPUT: Received request message (source, client_id, operation_id, self_id)  r1 c1 1 r0
+[2017-10-23 16:49:30,853] replica.Replica<Replica:08805>:OUTPUT: Awaiting result shuttle from downstream _replicas
+[2017-10-23 16:49:30,855] replica.Replica<Replica:08806>:OUTPUT: Received request message (source, client_id, operation_id, self_id)  r2 c0 2 r1
+[2017-10-23 16:49:30,855] replica.Replica<Replica:08805>:OUTPUT: Received request message (source, client_id, operation_id, self_id)  r1 c1 1 r0
+[2017-10-23 16:49:30,855] replica.Replica<Replica:08805>:OUTPUT: Awaiting result shuttle from downstream _replicas
+[2017-10-23 16:49:30,857] replica.Replica<Replica:08805>:OUTPUT: Received request message (source, client_id, operation_id, self_id)  r1 c0 2 r0
+[2017-10-23 16:49:30,857] replica.Replica<Replica:08806>:OUTPUT: Received request message (source, client_id, operation_id, self_id)  c0 c0 2 r1
+[2017-10-23 16:49:30,857] replica.Replica<Replica:08805>:OUTPUT: Awaiting result shuttle from downstream _replicas
+[2017-10-23 16:49:30,859] replica.Replica<Replica:08806>:OUTPUT: Received request message (source, client_id, operation_id, self_id)  r2 c0 2 r1
+[2017-10-23 16:49:30,859] replica.Replica<Replica:08805>:OUTPUT: Received request message (source, client_id, operation_id, self_id)  r1 c0 2 r0
+[2017-10-23 16:49:30,859] replica.Replica<Replica:08805>:OUTPUT: Awaiting result shuttle from downstream _replicas
+[2017-10-23 16:49:30,861] replica.Replica<Replica:08805>:OUTPUT: Received request message (source, client_id, operation_id, self_id)  r1 c0 2 r0
+[2017-10-23 16:49:30,861] replica.Replica<Replica:08806>:OUTPUT: Received request message (source, client_id, operation_id, self_id)  r2 c0 2 r1
+[2017-10-23 16:49:30,861] replica.Replica<Replica:08805>:OUTPUT: Awaiting result shuttle from downstream _replicas
+[2017-10-23 16:49:30,863] replica.Replica<Replica:08805>:OUTPUT: Received request message (source, client_id, operation_id, self_id)  r1 c0 2 r0
+[2017-10-23 16:49:30,863] replica.Replica<Replica:08805>:OUTPUT: Awaiting result shuttle from downstream _replicas
+[2017-10-23 16:49:33,837] client.Client<Client:08804>:OUTPUT: Wait for result timed out for operation= {'id': 1, 'command_string': "slice('jedi','0:4')", 'client_id': 'c1'}
+[2017-10-23 16:49:33,839] client.Client<Client:08804>:OUTPUT: Config requested from Olympus by client= c1
+[2017-10-23 16:49:33,843] olympus.Olympus<Olympus:08802>:OUTPUT: Config request received from client= c1
+[2017-10-23 16:49:33,846] olympus.Olympus<Olympus:08802>:OUTPUT: Config has been sent to client= c1
+[2017-10-23 16:49:33,849] client.Client<Client:08803>:OUTPUT: Wait for result timed out for operation= {'id': 2, 'command_string': "get('movie')", 'client_id': 'c0'}
+[2017-10-23 16:49:33,850] client.Client<Client:08804>:OUTPUT: The config was fetched from Olympus: {'id': 'c1', 'head_id': 'r0', 'private_key': <nacl.signing.SigningKey object at 0x7f9506752470>, 'olympus': {'id': 'o1', 'process_id': <Olympus:08802>}, 'workload': ["put('jedi','luke skywalker')", "slice('jedi','0:4')", "get('jedi')"], 'public_keys': {'r3': b'de12b407b1bb4406b031db513e6ec0d50de2e0f7a11531808c74fffaa7c36deb', 'r0': b'f19d2f7337cc29441edbf72a14474491ddf84b097425a82e09d6ebc412fc1292', 'r2': b'6d19aeedaeb762470e5a39c28c72ffa26d6f834f3b958562c51470bb9e8d013b', 'c0': b'acbeb2bf1d7e9719b9c203c3a634cfc01893b80171052177e6b3faf75da791c7', 'r4': b'fc3c294356fc978140b33782e33e914f0005f4476d8736272e4ad835b3cf77e4', 'c1': b'26171dbb2c9f035876358f05efcb7584daa57f933a85f383a3be2782d360c673', 'c2': b'b116c4c5cb068887cdd04af53d5a37f5ddcb3424fda9ca7164bcf90af0a3e03f', 'r1': b'02528db562e5918d5b29eb6e8956e9706629273b8a9bcafb6df475de788ff8b6', 'o1': b'e2ba8527a10a4972999be56ce4b14f572f2fc24c94019f4e7a08f26a6271d0af'}, 'client_timeout': 3.0, 'replicas': {'r3': <Replica:08808>, 'r2': <Replica:08807>, 'r0': <Replica:08805>, 'r1': <Replica:08806>, 'r4': <Replica:08809>}, 't': 2}
+[2017-10-23 16:49:33,850] client.Client<Client:08803>:OUTPUT: Config requested from Olympus by client= c0
+[2017-10-23 16:49:33,852] client.Client<Client:08804>:OUTPUT: Retransmitting request to all replicas for operation= {'id': 1, 'command_string': "slice('jedi','0:4')", 'client_id': 'c1'}
+[2017-10-23 16:49:33,859] replica.Replica<Replica:08808>:OUTPUT: Received request message (source, client_id, operation_id, self_id)  c1 c1 1 r3
+[2017-10-23 16:49:33,860] replica.Replica<Replica:08809>:OUTPUT: Received request message (source, client_id, operation_id, self_id)  c1 c1 1 r4
+[2017-10-23 16:49:33,865] replica.Replica<Replica:08807>:OUTPUT: Received request message (source, client_id, operation_id, self_id)  r3 c1 1 r2
+[2017-10-23 16:49:33,871] replica.Replica<Replica:08807>:OUTPUT: Received request message (source, client_id, operation_id, self_id)  c1 c1 1 r2
+[2017-10-23 16:49:33,873] olympus.Olympus<Olympus:08802>:OUTPUT: Config request received from client= c0
+[2017-10-23 16:49:33,873] replica.Replica<Replica:08808>:OUTPUT: Received request message (source, client_id, operation_id, self_id)  r4 c1 1 r3
+[2017-10-23 16:49:33,854] replica.Replica<Replica:08805>:OUTPUT: Reconfiguration request sent to Olympus from head:  r0
+[2017-10-23 16:49:33,879] replica.Replica<Replica:08805>:OUTPUT: Timeout in head
+[2017-10-23 16:49:33,881] replica.Replica<Replica:08805>:OUTPUT: Reconfiguration request sent to Olympus from head:[2017-10-23 16:49:33,888] client.Client<Client:08803>:OUTPUT: The config was fetched from Olympus: {'id': 'c0', 'head_id': 'r0', 'private_key': <nacl.signing.SigningKey object at 0x7f950efb5828>, 'olympus': {'id': 'o1', 'process_id': <Olympus:08802>}, 'workload': ["put('movie','star')", "put('movie', 'star2')", "get('movie')"], 'public_keys': {'r3': b'de12b407b1bb4406b031db513e6ec0d50de2e0f7a11531808c74fffaa7c36deb', 'r0': b'f19d2f7337cc29441edbf72a14474491ddf84b097425a82e09d6ebc412fc1292', 'r2': b'6d19aeedaeb762470e5a39c28c72ffa26d6f834f3b958562c51470bb9e8d013b', 'c0': b'acbeb2bf1d7e9719b9c203c3a634cfc01893b80171052177e6b3faf75da791c7', 'r4': b'fc3c294356fc978140b33782e33e914f0005f4476d8736272e4ad835b3cf77e4', 'c1': b'26171dbb2c9f035876358f05efcb7584daa57f933a85f383a3be2782d360c673', 'c2': b'b116c4c5cb068887cdd04af53d5a37f5ddcb3424fda9ca7164bcf90af0a3e03f', 'r1': b'02528db562e5918d5b29eb6e8956e9706629273b8a9bcafb6df475de788ff8b6', 'o1': b'e2ba8527a10a4972999be56ce4b14f572f2fc24c94019f4e7a08f26a6271d0af'}, 'client_timeout': 3.0, 'replicas': {'r3': <Replica:08808>, 'r2': <Replica:08807>, 'r0': <Replica:08805>, 'r1': <Replica:08806>, 'r4': <Replica:08809>}, 't': 2}
+[2017-10-23 16:49:33,890] client.Client<Client:08803>:OUTPUT: Retransmitting request to all replicas for operation= {'id': 2, 'command_string': "get('movie')", 'client_id': 'c0'}
+[2017-10-23 16:49:33,889] replica.Replica<Replica:08807>:OUTPUT: Received request message (source, client_id, operation_id, self_id)  r3 c1 1 r2
+[2017-10-23 16:49:33,894] replica.Replica<Replica:08805>:OUTPUT: Received request message (source, client_id, operation_id, self_id)  c1 c1 1 r0
+[2017-10-23 16:49:33,895] replica.Replica<Replica:08805>:OUTPUT: Head is processing request (operation_id, client_id) (1, 'c1')
+[2017-10-23 16:49:33,898] replica.Replica<Replica:08806>:OUTPUT: Received request message (source, client_id, operation_id, self_id)  r2 c1 1 r1
+[2017-10-23 16:49:33,903] replica.Replica<Replica:08809>:OUTPUT: Received request message (source, client_id, operation_id, self_id)  c0 c0 2 r4
+[2017-10-23 16:49:33,905] replica.Replica<Replica:08808>:OUTPUT: Received request message (source, client_id, operation_id, self_id)  c0 c0 2 r3
+[2017-10-23 16:49:33,905] replica.Replica<Replica:08805>:OUTPUT: Received request message (source, client_id, operation_id, self_id)  r1 c1 1 r0
+[2017-10-23 16:49:33,913] replica.Replica<Replica:08805>:OUTPUT: Awaiting result shuttle from downstream _replicas
+[2017-10-23 16:49:33,912] replica.Replica<Replica:08808>:OUTPUT: Received request message (source, client_id, operation_id, self_id)  r4 c0 2 r3
+[2017-10-23 16:49:33,910] replica.Replica<Replica:08807>:OUTPUT: Received request message (source, client_id, operation_id, self_id)  r3 c0 2 r2
+[2017-10-23 16:49:33,917] replica.Replica<Replica:08806>:OUTPUT: Received request message (source, client_id, operation_id, self_id)  r2 c1 1 r1
+[2017-10-23 16:49:33,919] replica.Replica<Replica:08805>:OUTPUT: Received request message (source, client_id, operation_id, self_id)  c0 c0 2 r0
+[2017-10-23 16:49:33,919] replica.Replica<Replica:08805>:OUTPUT: Head is processing request (operation_id, client_id) (2, 'c0')
+[2017-10-23 16:49:33,922] replica.Replica<Replica:08807>:OUTPUT: Received request message (source, client_id, operation_id, self_id)  c0 c0 2 r2
+[2017-10-23 16:49:33,923] replica.Replica<Replica:08805>:OUTPUT: Received request message (source, client_id, operation_id, self_id)  r1 c1 1 r0
+[2017-10-23 16:49:33,923] replica.Replica<Replica:08806>:OUTPUT: Received request message (source, client_id, operation_id, self_id)  r2 c1 1 r1
+[2017-10-23 16:49:33,924] replica.Replica<Replica:08805>:OUTPUT: Awaiting result shuttle from downstream _replicas
+[2017-10-23 16:49:33,927] replica.Replica<Replica:08805>:OUTPUT: Received request message (source, client_id, operation_id, self_id)  r1 c1 1 r0
+[2017-10-23 16:49:33,928] replica.Replica<Replica:08805>:OUTPUT: Awaiting result shuttle from downstream _replicas
+[2017-10-23 16:49:33,927] replica.Replica<Replica:08806>:OUTPUT: Received shuttle (source, client_id, operation_id, self_id)  r0 c1 1 r1
+[2017-10-23 16:49:33,929] replica.Replica<Replica:08805>:OUTPUT: Received request message (source, client_id, operation_id, self_id)  r1 c1 1 r0
+[2017-10-23 16:49:33,930] replica.Replica<Replica:08805>:OUTPUT: Awaiting result shuttle from downstream _replicas
+[2017-10-23 16:49:33,931] replica.Replica<Replica:08807>:OUTPUT: Received request message (source, client_id, operation_id, self_id)  r3 c0 2 r2
+[2017-10-23 16:49:33,935] replica.Replica<Replica:08806>:OUTPUT: Received request message (source, client_id, operation_id, self_id)  c0 c0 2 r1
+[2017-10-23 16:49:33,937] replica.Replica<Replica:08807>:OUTPUT: Received shuttle (source, client_id, operation_id, self_id)  r1 c1 1 r2
+[2017-10-23 16:49:33,939] replica.Replica<Replica:08805>:OUTPUT: Received request message (source, client_id, operation_id, self_id)  r1 c0 2 r0
+[2017-10-23 16:49:33,939] replica.Replica<Replica:08806>:OUTPUT: Received request message (source, client_id, operation_id, self_id)  r2 c0 2 r1
+[2017-10-23 16:49:33,940] replica.Replica<Replica:08805>:OUTPUT: Awaiting result shuttle from downstream _replicas
+[2017-10-23 16:49:33,941] replica.Replica<Replica:08805>:OUTPUT: Received request message (source, client_id, operation_id, self_id)  r1 c0 2 r0
+[2017-10-23 16:49:33,942] replica.Replica<Replica:08805>:OUTPUT: Awaiting result shuttle from downstream _replicas
+[2017-10-23 16:49:33,942] replica.Replica<Replica:08806>:OUTPUT: Received shuttle (source, client_id, operation_id, self_id)  r0 c0 2 r1
+[2017-10-23 16:49:33,943] replica.Replica<Replica:08808>:OUTPUT: Received shuttle (source, client_id, operation_id, self_id)  r2 c1 1 r3
+[2017-10-23 16:49:33,945] replica.Replica<Replica:08806>:OUTPUT: Received request message (source, client_id, operation_id, self_id)  r2 c0 2 r1
+[2017-10-23 16:49:33,948] replica.Replica<Replica:08809>:OUTPUT: Received shuttle (source, client_id, operation_id, self_id)  r3 c1 1 r4
+[2017-10-23 16:49:33,949] replica.Replica<Replica:08805>:OUTPUT: Received request message (source, client_id, operation_id, self_id)  r1 c0 2 r0
+[2017-10-23 16:49:33,950] replica.Replica<Replica:08805>:OUTPUT: Awaiting result shuttle from downstream _replicas
+[2017-10-23 16:49:33,948] replica.Replica<Replica:08806>:OUTPUT: Received request message (source, client_id, operation_id, self_id)  r2 c0 2 r1
+[2017-10-23 16:49:33,946] replica.Replica<Replica:08807>:OUTPUT: Received shuttle (source, client_id, o[2017-10-23 16:49:33,957] client.Client<Client:08804>:OUTPUT: A result was received from replica= r4
+ceived request[2017-10-23 16:49:33,959] client.Client<Client:08804>:OUTPUT: The operation result pair is= {'id': 1, 'command_string': "slice('jedi','0:4')", 'client_id': 'c1'} OK
+[2017-10-23 16:49:33,959] client.Client<Client:08804>:OUTPUT: The result received is valid:(result, operation)= OK {'id': 1, 'command_string': "slice('jedi','0:4')", 'client_id': 'c1'}
+[2017-10-23 16:49:33,960] client.Client<Client:08804>:OUTPUT: The following operation was created: {'id': 2, 'command_string': "get('jedi')", 'client_id': 'c1'}
+[2017-10-23 16:49:33,960] client.Client<Client:08804>:OUTPUT: return_value= luke
+[2017-10-23 16:49:33,960] client.Client<Client:08804>:OUTPUT: A request for an operation was made {'content': {'is_retry': False, 'operation': {'id': 2, 'command_string': "get('jedi')", 'client_id': 'c1'}}, 'signed_content': b'\xb4\xe1\xc6\xf9\xc6\xbf3\xc2&\r\xfc\rB\x00\xc6\xbb\x89\xd8uR-\x8d\xf6\xdb\xe8\xba~\x1a\xd5\x05\x12\x19L\xe6\x1c\xd3\xd8nv~y\x80"P<=5J1\xa5\xf9\xe62@\xec\xe2\xbcn?%\xd4\x8bh\x04{\'is_retry\': False, \'operation\': {\'id\': 2, \'command_string\': "get(\'jedi\')", \'client_id\': \'c1\'}}'}
+[2017-10-23 16:49:33,962] replica.Replica<Replica:08805>:OUTPUT: Received request message (source, client_id, operation_id, self_id)  c1 c1 2 r0
+[2017-10-23 16:49:33,964] replica.Replica<Replica:08805>:OUTPUT: Head is processing request (operation_id, client_id) (2, 'c1')
+[2017-10-23 16:49:33,963] replica.Replica<Replica:08808>:OUTPUT: Received shuttle (source, client_id, operation_id, self_id)  r2 c0 2 r3
+[2017-10-23 16:49:33,966] replica.Replica<Replica:08806>:OUTPUT: Received shuttle (source, client_id, operation_id, self_id)  r0 c1 2 r1
+[2017-10-23 16:49:33,970] replica.Replica<Replica:08807>:OUTPUT: Received result shuttle (source, client_id, operation_id, self_id)  r3 c1 1 r2
+[2017-10-23 16:49:33,971] replica.Replica<Replica:08809>:OUTPUT: Received shuttle (source, client_id, operation_id, self_id)  r3 c0 2 r4
+[2017-10-23 16:49:33,975] client.Client<Client:08803>:OUTPUT: A result was received from replica= r4
+[2017-10-23 16:49:33,976] client.Client<Client:08803>:OUTPUT: The operation result pair is= {'id': 2, 'command_string': "get('movie')", 'client_id': 'c0'} star2
+[2017-10-23 16:49:33,977] client.Client<Client:08803>:OUTPUT: The result received is valid:(result, operation)= star2 {'id': 2, 'command_string': "get('movie')", 'client_id': 'c0'}
+[2017-10-23 16:49:33,977] client.Client<Client:08803>:OUTPUT: ~~~~~~~~~~Final state: {'movie': 'star2'}
+[2017-10-23 16:49:33,978] client.Client<Client:08803>:OUTPUT: Requesting shared object from head:
+[2017-10-23 16:49:33,979] replica.Replica<Replica:08805>:OUTPUT: Received shared_object_request from client= c0
+[2017-10-23 16:49:33,980] replica.Replica<Replica:08807>:OUTPUT: Received shuttle (source, client_id, operation_id, self_id)  r1 c1 2 r2
+[2017-10-23 16:49:33,978] replica.Replica<Replica:08808>:OUTPUT: Received result shuttle (source, client_id, operation_id, self_id)  r4 c0 2 r3
+[2017-10-23 16:49:33,982] client.Client<Client:08803>:OUTPUT: Received shared object from head =  {'jedi': 'luke', 'movie': 'star2'}
+[2017-10-23 16:49:33,982] client.Client<Client:08803>:OUTPUT: Final results are consistent
+[2017-10-23 16:49:33,983] replica.Replica<Replica:08806>:OUTPUT: Received result shuttle (source, client_id, operation_id, self_id)  r2 c1 1 r1
+[2017-10-23 16:49:33,987] replica.Replica<Replica:08807>:OUTPUT: Received result shuttle (source, client_id, operation_id, self_id)  r3 c0 2 r2
+[2017-10-23 16:49:33,990] replica.Replica<Replica:08805>:OUTPUT: Received result shuttle (source, client_id, operation_id, self_id)  r1 c1 1 r0
+[2017-10-23 16:49:33,988] replica.Replica<Replica:08808>:OUTPUT: Received shuttle (source, client_id, operation_id, self_id)  r2 c1 2 r3
+[2017-10-23 16:49:33,994] replica.Replica<Replica:08809>:OUTPUT: Received shuttle (source, client_id, operation_id, self_id)  r3 c1 2 r4
+[2017-10-23 16:49:33,994] replica.Replica<Replica:08806>:OUTPUT: Received result shuttle (source, client_id, operation_id, self_id)  r2 c0 2 r1
+[2017-10-23 16:49:33,999] replica.Replica<Replica:08808>:OUTPUT: Received result shuttle (source, client_id, operation_id, self_id)  r4 c1 2 r3
+[2017-10-23 16:49:33,999] replica.Replica<Replica:08805>:OUTPUT: Received result shuttle (source, client_id, operation_id, self_id)  r1 c0 2 r0
+[2017-10-23 16:49:34,001] client.Client<Client:08804>:OUTPUT: A result was received from replica= r4
+[2017-10-23 16:49:34,003] client.Client<Client:08804>:OUTPUT: The operation result pair is= {'id': 2, 'command_string': "get('jedi')", 'client_id': 'c1'} luke
+[2017-10-23 16:49:34,003] client.Client<Client:08804>:OUTPUT: The result received is valid:(result, operation)= luke {'id': 2, 'command_string': "get('jedi')", 'client_id': 'c1'}
+[2017-10-23 16:49:34,004] client.Client<Client:08804>:OUTPUT: ~~~~~~~~~~Final state: {'jedi': 'luke'}
+[2017-10-23 16:49:34,004] client.Client<Client:08804>:OUTPUT: Requesting shared object from head:
+[2017-10-23 16:49:34,005] replica.Replica<Replica:08805>:OUTPUT: Result received at head, now forwarding to client= c1
+[2017-10-23 16:49:34,007] replica.Replica<Replica:08807>:OUTPUT: Received result shuttle (source, client_id, operation_id, self_id)  r3 c1 2 r2
+[2017-10-23 16:49:34,010] client.Client<Client:08804>:OUTPUT: A result was received from replica= r0
+[2017-10-23 16:49:34,010] client.Client<Client:08804>:OUTPUT: Not a pending request (1, 'c1')
+[2017-10-23 16:49:34,012] replica.Replica<Replica:08805>:OUTPUT: Received shared_object_request from client= c1
+[2017-10-23 16:49:34,013] client.Client<Client:08804>:OUTPUT: Received shared object from head =  {'jedi': 'luke', 'movie': 'star2'}
+r2 c1 2 r1
+[2017-10-23 16:49:34,014] client.Client<Client:08804>:OUTPUT: Final results are consistent
+[2017-10-23 16:49:34,017] replica.Replica<Replica:08805>:OUTPUT: Received result shuttle (source, client_id, operation_id, self_id)  r1 c1 2 r0
+[2017-10-23 16:49:34,023] client.Client<Client:08803>:OUTPUT: A result was received from replica= r0
+[2017-10-23 16:49:34,024] client.Client<Client:08803>:OUTPUT: Not a pending request (2, 'c0')
+[2017-10-23 16:49:36,467] da.api<MainProcess>:WARNING: Received keyboard interrupt. 

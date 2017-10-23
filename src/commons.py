@@ -64,7 +64,7 @@ class Commons:
                 return 'fail'
             key = split_op[1]
             value = split_op[3]
-            return Commons.update_running_state(op, key, value)
+            return Commons.update_running_state(op, key, object, value)
         else:
             return 'fail'
 
@@ -80,6 +80,7 @@ class Commons:
             else:
                 return 'fail'
         elif command_type_name == 'slice':
+
             if value is None or key not in object:
                 return 'fail'
             colon_index = value.find(':')

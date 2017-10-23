@@ -1,4 +1,4 @@
-test_case_name = test_result_change_t1_multi_client
+test_case_name = test_result_change_t2_multi_client
 
 # number of failures to tolerate.  number of replicas is 2t+1.
 t = 2
