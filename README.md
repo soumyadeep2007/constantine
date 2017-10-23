@@ -5,7 +5,7 @@ An implementation of the Byzantine Chain Replication protocol
 1. DistAlgo 1.0.9
 2. Python 3.6.2
 3. Windows 10 Education
-4. Multi-host execution with Ubuntu 16.0.4 on VirtualBox with Vagrant as aid
+4. Ubuntu 16.0.4 on VirtualBox with vagrant
 
 ## INSTRUCTIONS
 1. To run the system, navigate to the src directory and type in the following in a command prompt
@@ -30,7 +30,7 @@ src/random_tasks.py - Contains randomized workload as specified above
 
 ## CODE SIZE
 1. LOC =
-2. 
+2. N
 
 ## LANGUAGE_FEATURE USAGE
 1. List comprehensions =   
