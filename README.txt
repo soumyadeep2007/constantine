@@ -10,7 +10,7 @@ An implementation of the Byzantine Chain Replication protocol
 ## INSTRUCTIONS
 1. To run the system, navigate to the src directory and type in the following command:
 python -m da --message-buffer-size {size_in_bytes} --logfile --logfilename {log_file_path_with_name} olympus.da {test-case-path}
-Example: python -m da --message-buffer-size 100000 --logfile --logfilename ../log/testcase1 olympus.da ../test_cases/test_operation_change_fwd_request_t1_single_client.csv
+Example: python -m da --message-buffer-size 100000 -F output --logfile --logfilename ../log/testcase1 olympus.da ../test_cases/test_operation_change_fwd_request_t1_single_client.csv
 Please note: Enter a significantly large buffer size in bytes, like the size in the example above to avoid running
 into buffer constraints.
 
