@@ -32,6 +32,10 @@ INVALID_ORDER_PROOF_REPLICA_SLOT_MISMATCH = 'Invalid order proof because operati
 INVALID_RESULT_PROOF_REPLICA_MISSING = 'Invalid result proof because order statement missing for replica (replica_id, self._id)'
 INVALID_RESULT_PROOF_REPLICA_SIGNATURE_MISMATCH = 'Invalid result proof because result statement signature mismatch for replica (replica_id, self._id)'
 INVALID_RESULT_PROOF_REPLICA_HASH_MISMATCH = 'Invalid result proof because hash mismatch for replica (replica_id, self._id)'
+INVALID_CHECKPOINT_PROOF_REPLICA_MISSING = 'Invalid checkpoint proof because order statement missing for replica (replica_id, self._id)'
+INVALID_CHECKPOINT_PROOF_REPLICA_SIGNATURE_MISMATCH = 'Invalid checkpoint proof because checkpoint statement signature mismatch for replica (replica_id, self._id)'
+INVALID_CHECKPOINT_PROOF_REPLICA_HASH_MISMATCH = 'Invalid checkpoint proof because hash mismatch for replica (replica_id, self._id)'
+INVALID_CHECKPOINT_PROOF_REPLICA_SLOT_MISMATCH = 'Invalid checkpoint proof because slot mismatch for replica (replica_id, self._id)'
 
 # Head messages
 RESULT_CACHED = 'Result was cached, returning result from cache to='

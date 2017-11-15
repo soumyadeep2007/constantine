@@ -147,12 +147,12 @@ class Client(process):
 
         if self.is_valid_result(message, self._replicas, self._public_keys):
             self._pending_requests.pop(pending_requests_key)
-            self._process_result(message['content']['operation'], message['content']['result'])
-            output(log_messages.VALID_RESULT_RECEIVED, message['content']['result'],
+            self._process_result(message['content']['operation'], message['content']['result_proof']['result'])
+            output(log_messages.VALID_RESULT_RECEIVED, message['content']['result_proof']['result'],
                    message['content']['operation'])
             self._valid_result_received = True
         else:
-            output(log_messages.INVALID_RESULT_RECEIVED, message['content']['result'],
+            output(log_messages.INVALID_RESULT_RECEIVED, message['content']['result_proof']['result'],
                    message['content']['operation'])
             self._retry_request(message)
 
@@ -183,15 +183,16 @@ class Client(process):
             self._retry_request(message)
 
     def is_valid_result(result_shuttle, replicas, public_keys):
-        expected_hash = Commons.hash(result_shuttle["content"]["result"])
+        expected_hash = Commons.hash(result_shuttle["content"]["result_proof"]["result"])
         hash_match_count = 0
         for replica_id in replicas:
-            replica_missing = replica_id not in result_shuttle['content']['result_proof']
+            replica_missing = replica_id not in result_shuttle['content']['result_proof']["result_statements"]
             if replica_missing:
                 return False
 
-            result_stmt = result_shuttle['content']['result_proof'][replica_id]
-            if not Commons.is_valid_signature(result_stmt['result_statement'], result_stmt['signed_result_statement'], public_keys[replica_id]):
+            result_stmt = result_shuttle['content']['result_proof']['result_statements'][replica_id]
+            if not Commons.is_valid_signature(result_stmt['result_statement'], result_stmt['signed_result_statement'],
+                                              public_keys[replica_id]):
                 continue
 
             if expected_hash == result_stmt['result_statement']['result_hash']:

@@ -17,14 +17,16 @@ class Olympus(process):
     def setup(process_id, file_path):
         self._id = "o1"
         self._process_id = process_id
-        self._config = {}
-        self._config['clients'] = {}
-        self._config['replicas'] = {}
-        self._config['failures'] = {}
+        self._config = {'clients': {}, 'replicas': {}, 'failures': {}}
+        self._replicas = []
         self.file_path = file_path
+        self._num_wedged_responses = 0
 
         self._current_config = 0
-        self.initialize()
+        try:
+            self.initialize()
+        except:
+            traceback.print_exc()
 
     def parse_config():
         with open(self.file_path, 'r') as f:
@@ -122,9 +124,13 @@ class Olympus(process):
         for client_id in self._config['client_hosts'].keys():
             self.set_keys(client_id, SigningKey.generate())
         # Generate keys for Replicas
+        self.generate_keys_for_replicas()
+
+        output(log_messages.GENERATED_KEYS, self._config['keys'])
+
+    def generate_keys_for_replicas():
         for replica_id in self._config['replica_hosts'].keys():
             self.set_keys(replica_id, SigningKey.generate())
-        output(log_messages.GENERATED_KEYS, self._config['keys'])
 
     def set_keys(id, private_key):
         self._config['keys']['private_keys'][id] = private_key
@@ -153,6 +159,7 @@ class Olympus(process):
         return client_config
 
     def init_replicas():
+        self._replicas = []
         prev_replica = None
         preceding_replica_ids = []
         self._config['replicas'] = {}
@@ -171,7 +178,9 @@ class Olympus(process):
                 'type': 'replica',
                 'current_config': self._current_config,
                 'prev_replica': prev_replica,
-                'replicas': self._config['replicas']
+                'checkpt_interval': self._config['checkpt_interval'],
+                'replicas': self._config['replicas'],
+                'olympus': {'id': self._id, 'process_id': self._process_id}
             }
             next_replica_id = 'r' + str(id_num + 1)
             replica_config['next_replica'] = self._config['replicas'][next_replica_id] \
@@ -193,7 +202,64 @@ class Olympus(process):
             id_num += 1
             setup(replica, args=(replica_config,))
             start(replica)
+            self._replicas.append(replica_id)
             preceding_replica_ids.append(replica_id)
+
+    def receive(msg=('reconfig_request', message, sender_id), from_=self._config['replicas'].values()):
+        if not Commons.is_valid_signature(message['content'], message['signed_content'],
+                                          self._config['keys']['public_keys'][sender_id]):
+            output(log_messages.INVALID_SIGNATURE, sender_id, level=logging.ERROR)
+            return
+
+        output("Received reconfig request from: ", sender_id)
+
+        if not message['content'].get('result_shuttle_timeout', False) \
+                and not self._is_valid_misbehavior_proof(message['content'].get('misbehavior_proof', None), sender_id):
+            output('Received invalid reconfiguration request from: ', sender_id)
+            return
+
+        output('Received valid reconfiguration request from: ', sender_id)
+        for replica in self._config['replicas'].items():
+            wedge_request_message = {
+                'content': {
+                    'requested_by_id': sender_id
+                }
+            }
+            wedge_request_message['signed_content'] = Commons.sign(wedge_request_message['content'],
+                                                                   self._config['keys']['private_keys'][self._id])
+
+            send(('wedge', wedge_request_message), to=replica[1])
+            output("Sent wedge request to: ", replica[0])
+
+        if await(self._num_wedged_responses >= (self._config['t'] + 1)):
+            pass
+            # todo : handle wedged_quorum_unsatisified (timeout)
+
+    def receive(msg=('wedged', message, replica_id), from_=self._config['replicas'].values()):
+        output('Received wedged message from replica:', replica_id)
+        output(self._config['keys']['public_keys'])
+        output(self._config['keys']['public_keys'][replica_id])
+        # if not Commons.is_valid_signature(message['content'], message['signed_content'],
+        #                                   self._config['keys']['public_keys'][replica_id]):
+        #     output(log_messages.INVALID_SIGNATURE, replica_id, level=logging.ERROR)
+        #     return
+
+        validation_result = True
+        for order_proof in message["content"]["history"]:
+            replica_ids = []
+            for index in range(0, self._replicas.index(replica_id)):
+                replica_ids.append(self._replicas[index])
+            validation_output = Commons.is_valid_order_proof(order_proof, replica_ids,
+                                                             self._config['keys']['public_keys'], self._id)
+            if not validation_output[0]:
+                output(validation_output[1])
+                output('Received invalid order proof: ', order_proof, " from=", replica_id)
+                validation_result = False
+                break
+
+        if validation_result:
+            self._num_wedged_responses += 1
+            output('Validated order proof successfully: ', order_proof, ' from=', replica_id)
 
     def initialize():
         self.parse_config()
@@ -202,16 +268,33 @@ class Olympus(process):
         self.init_replicas()
         self.init_clients()
 
+    def reconfigure_cluster():
+        self._terminate_replicas()
+        self.generate_keys_for_replicas()
+        self.init_replicas()
+
+    def _terminate_replicas():
+        for replica in self._config['replicas'].values():
+            message = {
+                'content': {
+                    'terminate': True
+                }
+            }
+            message['signed_content'] = Commons.sign(message['content'],
+                                                     self._config['keys']['private_keys'][self._id])
+            send(('abort', message), to=replica[1])
+            output('Sent abort command to replica :', replica[0])
+
     def run():
         await(False)
 
     # On receipt of a config_request from a client
     def receive(msg=('config_request', message, client_id), from_=self._config['clients'].values()):
-        if not Commons.is_valid_signature(message['content'], message['signed_content'], self._config['keys']['public_keys'][client_id]):
+        output(log_messages.CONFIG_REQUEST_RECEIVED, client_id)
+        if not Commons.is_valid_signature(message['content'], message['signed_content'],
+                                          self._config['keys']['public_keys'][client_id]):
             output(log_messages.INVALID_SIGNATURE, client_id, level=logging.ERROR)
             return
-
-        output(log_messages.CONFIG_REQUEST_RECEIVED, client_id)
 
         config_message = {
             'content': get_client_config(client_id)
@@ -225,6 +308,21 @@ class Olympus(process):
     def create_clients():
         for id_num in range(self._config['num_client']):
             self._config['clients']['c' + str(id_num)] = new(o_client.Client)
+
+    def _is_valid_misbehavior_proof(misbehavior_proof, reported_by_id):
+        if misbehavior_proof is None:
+            return False
+        if 'order_proof' in misbehavior_proof:
+            replica_ids = []
+            for index in range(0, self._replicas.index(reported_by_id)):
+                replica_ids.append(self._replicas[index])
+            return not Commons.is_valid_order_proof(misbehavior_proof['order_proof'], replica_ids,
+                                                    self._config['keys']['public_keys'], self._id)[0]
+        elif 'result_proof' in misbehavior_proof:
+            return not Commons.is_valid_result_proof(misbehavior_proof['result_proof'], self._config['replicas'],
+                                                     self._config['keys']['public_keys'], self._id)[0]
+
+        return False
 
 
 def main():
