@@ -119,20 +119,21 @@ class Client(process):
 
     # On receipt of a config message from Olympus
     def receive(msg=('config', message), from_=self._olympus['process_id']):
-        # if not Commons.is_valid_signature(message['content'], message['signed_content'], self._public_keys[self._olympus['id']]):
-        #     output(log_messages.INVALID_SIGNATURE, self._olympus['id'], level=logging.ERROR)
-        #     return
-        #
-        # self._config_received = True
-        # client_config = message['content']
-        # self._id = client_config['id']
-        # self._client_timeout = client_config['client_timeout']
-        # self._olympus = client_config['olympus']
-        # self._private_key = client_config['private_key']
-        # self._public_keys = client_config['public_keys']
-        # self._replicas = client_config['replicas']
-        # self._head_id = client_config['head_id']
-        # self._t = client_config['t']
+        if not Commons.is_valid_signature(message['content'], message['signed_content'],
+                                          self._public_keys[self._olympus['id']]):
+            output(log_messages.INVALID_SIGNATURE, self._olympus['id'], level=logging.ERROR)
+            return
+
+        self._config_received = True
+        client_config = message['content']
+        self._id = client_config['id']
+        self._client_timeout = client_config['client_timeout']
+        self._olympus = client_config['olympus']
+        self._private_key = client_config['private_key']
+        self._public_keys = client_config['public_keys']
+        self._replicas = client_config['replicas']
+        self._head_id = client_config['head_id']
+        self._t = client_config['t']
         self._config_received = True
         output(log_messages.CONFIG_FETCHED, message['content'])
 
@@ -158,11 +159,8 @@ class Client(process):
 
     # On receipt of an error message from a replica
     def receive(msg=('error', message, replica_id), from_=self._replicas.values()):
-
         output(log_messages.ERROR_MESSAGE_RECEIVED, replica_id)
-        # todo in phase 3 fetch new config and retry
-        # self._request_config()
-        # self._retry_request(message)
+        self._retry_request(message)
 
     def _process_result(operation, result):
         output(log_messages.OPERATION_RESULT_PAIR, operation, result)

@@ -7,6 +7,7 @@ import copy
 import traceback
 
 
+# TODO : add client request in shuttle and validate
 class Replica(process):
     def setup(replica_config, object=None):
         self._terminate = False
@@ -28,6 +29,9 @@ class Replica(process):
         self._cp_running_state = None
         self._latest_cp_slot = 0
         self._latest_valid_cp = None
+        self._latest_result_stmt_cache = {}
+        self._clone_object = None
+        # todo add client request to shuttle and verify
         # =================================================================================
 
         # ======================HEAD SECTION===============================================
@@ -42,7 +46,21 @@ class Replica(process):
     # ========================RECEIVERS=============================================
     def receive(msg=('request', message, sender_id),
                 from_=(self._config['clients'].values() + self._config['next_replica'])):  # todo: resolve
+        output("Received request message (source, client_id, operation_id, self_id) ",
+               sender_id, message['content']['operation']['client_id'], message['content']['operation']['id'], self._id)
+
         client_id = message['content']['operation']['client_id']
+
+        if self._state == ReplicaState.IMMUTABLE:
+            if sender_id == client_id:
+                output(log_messages.SENDING_ERROR_MESSAGE, client_id, self._id)
+                message['signed_content'] = Commons.sign(message['content'], self._config['private_key'])
+                send(('error', message, self._id), to=self._config['clients'][client_id])
+            else:
+                output("Discarded request from ", sender_id, " in Replica: ", self._id,
+                       " as Replica is in immutable state")
+            return
+
         if not Commons.is_valid_signature(message['content'], message['signed_content'],
                                           self._config['public_keys'][sender_id]):
             output(log_messages.INVALID_SIGNATURE, sender_id)
@@ -51,16 +69,6 @@ class Replica(process):
             else:
                 self._update_failure_trigger(client_id, 'forwarded_request')
             return
-        output("Received request message (source, client_id, operation_id, self_id) ",
-               sender_id, message['content']['operation']['client_id'], message['content']['operation']['id'], self._id)
-
-        if self._state == ReplicaState.IMMUTABLE or self._send_error:
-            output(log_messages.SENDING_ERROR_MESSAGE, client_id, self._id)
-            message['signed_content'] = Commons.sign(message['content'], self._config['private_key'])
-            send(('error', message, self._id), to=self._config['clients'][client_id])
-            # Since no reconfig in phase 2 we need to reset the state to ACTIVE todo change in phase 3
-            self._send_error = False
-            # todo return
 
         if self._config['type'] != 'head':
             self._handle_request_at_replica(message, sender_id)
@@ -72,10 +80,31 @@ class Replica(process):
         if self._config['type'] == 'head':
             return
 
+        output("Received shuttle (source, client_id, operation_id, self_id) ",
+               replica_id, shuttle['content']['operation']['client_id'], shuttle['content']['operation']['id'],
+               self._id)
+
+        if self._state == ReplicaState.IMMUTABLE:
+            output("Discarded shuttle from ", replica_id, " in Replica: ", self._id,
+                   " as Replica is in immutable state")
+            return
+
         if not Commons.is_valid_signature(shuttle['content'], shuttle['signed_content'],
                                           self._config['public_keys'][replica_id]):
             output(log_messages.INVALID_SIGNATURE, replica_id)
             self._update_failure_trigger(shuttle['content']['operation']['client_id'], 'shuttle')
+            return
+
+        validation_output = Commons.is_valid_shuttle_header(shuttle, self._config['public_keys'],
+                                                            self._config['clients'], self._id)
+        if not validation_output[0]:
+            output(validation_output[1])
+            reason = {
+                'misbehavior_proof': {
+                    'invalid_client_request_shuttle': shuttle
+                }
+            }
+            self._send_reconfig_request(reason)
             return
 
         slot_skipped = shuttle['content']['slot'] != self._last_signed_slot + 1
@@ -83,9 +112,6 @@ class Replica(process):
             output(log_messages.INVALID_SLOT, level=logging.ERROR)  # todo check if reconfig required
             self._update_failure_trigger(shuttle['content']['operation']['client_id'], 'shuttle')
             return
-        output("Received shuttle (source, client_id, operation_id, self_id) ",
-               replica_id, shuttle['content']['operation']['client_id'], shuttle['content']['operation']['id'],
-               self._id)
 
         valid_order_proof = Commons.is_valid_order_proof(shuttle['content']['order_proof'],
                                                          self._config['prev_replica_ids'],
@@ -95,7 +121,6 @@ class Replica(process):
             output(valid_order_proof[1])
             self._update_failure_trigger(shuttle['content']['operation']['client_id'], 'shuttle')
             self._send_error = True
-            # todo confirm self._state = ReplicaState.IMMUTABLE
             reason = {
                 'misbehavior_proof': {
                     'order_proof': shuttle['content']['order_proof']
@@ -131,15 +156,20 @@ class Replica(process):
         if self._config['type'] == 'tail':
             return
 
+        output("Received result shuttle (source, client_id, operation_id, self_id) ",
+               replica_id, shuttle['content']['operation']['client_id'], shuttle['content']['operation']['id'],
+               self._id)
+
+        if self._state == ReplicaState.IMMUTABLE:
+            output("Discarded result shuttle from ", replica_id, " in Replica: ", self._id,
+                   " as Replica is in immutable state")
+            return
+
         if not Commons.is_valid_signature(shuttle['content'], shuttle['signed_content'],
                                           self._config['public_keys'][replica_id]):
             output(log_messages.INVALID_SIGNATURE, replica_id)
             self._update_failure_trigger(shuttle['content']['operation']['client_id'], 'result_shuttle')
             return
-
-        output("Received result shuttle (source, client_id, operation_id, self_id) ",
-               replica_id, shuttle['content']['operation']['client_id'], shuttle['content']['operation']['id'],
-               self._id)
 
         valid_result_proof = Commons.is_valid_result_proof(shuttle['content']['result_proof'], self._config['replicas'],
                                                            self._config['public_keys'], self._id)
@@ -188,13 +218,16 @@ class Replica(process):
             output(log_messages.INVALID_SIGNATURE, self._olympus['id'])
             return
 
+        self._state = ReplicaState.IMMUTABLE
         wedged_message = {
             'content': {
+                'reconfig_id': wedge_request_message['content']['reconfig_id'],
                 'replica_id': self._id,
-                'history': self._history
+                'history': self._history,
+                'checkpoint_proof': self._latest_valid_cp
             }
         }
-        wedged_message['signed_content'] = Commons.sign(wedged_message, self._config['private_key'])
+        wedged_message['signed_content'] = Commons.sign(wedged_message['content'], self._config['private_key'])
 
         send(('wedged', wedged_message, self._id), to=self._olympus['process_id'])
         output('Sent Wedged message to Olympus from replica: ', self._id)
@@ -213,6 +246,12 @@ class Replica(process):
             return
 
         output('Received checkpoint shuttle from, in =', sender_id, self._id)
+
+        if self._state == ReplicaState.IMMUTABLE:
+            output("Discarded checkpoint shuttle from ", sender_id, " in Replica: ", self._id,
+                   " as Replica is in immutable state")
+            return
+
         if not Commons.is_valid_signature(checkpoint_shuttle['content'], checkpoint_shuttle['signed_content'],
                                           self._config['public_keys'][sender_id]):
             output(log_messages.INVALID_SIGNATURE, sender_id)
@@ -236,7 +275,6 @@ class Replica(process):
                    checkpoint_shuttle['content']['checkpoint_proof']['slot'], " from: ", self._id)
             return
 
-
         send(('checkpoint', checkpoint_shuttle, self._id), to=self._config['next_replica'])
         output("Replica sent checkpoint shuttle for slot :",
                checkpoint_shuttle['content']['checkpoint_proof']['slot'], " from: ", self._id)
@@ -246,6 +284,11 @@ class Replica(process):
             return
 
         output('Received complete checkpoint shuttle from, in =', sender_id, self._id)
+
+        if self._state == ReplicaState.IMMUTABLE:
+            output("Discarded complete checkpoint shuttle from ", sender_id, " in Replica: ", self._id,
+                   " as Replica is in immutable state")
+            return
         if not Commons.is_valid_signature(checkpoint_shuttle['content'], checkpoint_shuttle['signed_content'],
                                           self._config['public_keys'][sender_id]):
             output(log_messages.INVALID_SIGNATURE, sender_id)
@@ -269,6 +312,53 @@ class Replica(process):
         output("Replica sent complete checkpoint shuttle for slot :",
                checkpoint_shuttle['content']['checkpoint_proof']['slot'], " from: ", self._id)
 
+    def receive(msg=('catch_up', catch_up_message), from_=(self._olympus['process_id'])):
+        output('Received catch up message from Olympus in =', self._id)
+        if not Commons.is_valid_signature(catch_up_message['content'], catch_up_message['signed_content'],
+                                          self._config['public_keys'][self._olympus['id']]):
+            output(log_messages.INVALID_SIGNATURE, 'Olympus')
+            return
+
+        self._clone_object = copy.copy(self._object)
+        for order_proof in catch_up_message['content']['delta_history']:
+            result = Commons.perform_operation(order_proof['operation']['command_string'], self._clone_object)
+            result_statement = {
+                'operation': dict(order_proof['operation']),
+                'result_hash': Commons.hash(result)
+            }
+
+            self._latest_result_stmt_cache[order_proof['operation']['client_id']] = result_statement
+
+        caught_up_message = {
+            'content': {
+                'running_state_hash': Commons.hash(self._clone_object),
+                'latest_result_stmts': self._latest_result_stmt_cache,
+                'reconfig_id': catch_up_message['content']['reconfig_id']
+            }
+        }
+        output('Sending caught up message to Olympus from replica: ', self._id)
+        caught_up_message['signed_content'] = Commons.sign(caught_up_message['content'], self._config['private_key'])
+
+        send(('caught_up', caught_up_message, self._id), to=self._olympus['process_id'])
+
+    def receive(msg=('get_running_state', get_running_state_message), from_=(self._olympus['process_id'])):
+        output('Received get running state message from Olympus, in =', self._id)
+        if not Commons.is_valid_signature(get_running_state_message['content'],
+                                          get_running_state_message['signed_content'],
+                                          self._config['public_keys'][self._olympus['id']]):
+            output(log_messages.INVALID_SIGNATURE, 'Olympus')
+            return
+
+        running_state_message = {
+            'content': {
+                'running_state': self._clone_object
+            }
+        }
+        running_state_message['signed_content'] = Commons.sign(running_state_message['content'],
+                                                               self._config['private_key'])
+
+        output('Sending running state message to Olympus from: ', self._id)
+        send(('running_state', running_state_message), to=self._olympus['process_id'])
 
     # =================================================================================
 
@@ -315,6 +405,8 @@ class Replica(process):
             'result_statement': result_statement,
             'signed_result_statement': signed_result_statement
         }
+
+        self._latest_result_stmt_cache[shuttle['content']['operation']['client_id']] = result_statement
 
     def _send_result(shuttle):
         result_message = {
@@ -487,6 +579,7 @@ class Replica(process):
     def _create_shuttle(message, slot):
         return {
             'content': {
+                'client_request_message': message,
                 'slot': slot,
                 'is_retry': message['content']['is_retry'],
                 'operation': message['content']['operation'],
@@ -523,7 +616,8 @@ class Replica(process):
         checkpoint_shuttle['signed_content'] = Commons.sign(checkpoint_shuttle['content'], self._config['private_key'])
         send(('checkpoint', checkpoint_shuttle, self._id), to=self._config['next_replica'])
         output("Head initiated checkpointing and sent checkpoint shuttle for slot :",
-               checkpoint_shuttle['content']['checkpoint_proof']['slot'], " from: ", self._id, " to:", self._config['next_replica'])
+               checkpoint_shuttle['content']['checkpoint_proof']['slot'], " from: ", self._id, " to:",
+               self._config['next_replica'])
 
     # =================================================================================
 
@@ -535,8 +629,12 @@ class Replica(process):
         if not valid_result_proof:
             self._send_error = True
             output("Send reconfiguration request because invalid result proof detected at the tail ", self._id)
-            #  todo phase 3 send reconfig request
-            # self._state = ReplicaState.IMMUTABLE
+            reason = {
+                'misbehavior_proof': {
+                    'result_proof': shuttle['content']['result_proof']
+                }
+            }
+            self._send_reconfig_request(reason)
             return
 
         result_cache_key = (shuttle['content']['operation']['id'],

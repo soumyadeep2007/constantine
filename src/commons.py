@@ -1,10 +1,13 @@
+import traceback
 from enum import Enum
+
+import log_messages
+from nacl.encoding import HexEncoder
 from nacl.exceptions import BadSignatureError
 from nacl.hash import sha256
-from nacl.encoding import HexEncoder
 from nacl.signing import VerifyKey
-import log_messages
-
+from nacl.signing import SigningKey
+import pickle
 
 class ReplicaState(Enum):
     IMMUTABLE = 0
@@ -24,13 +27,20 @@ class Commons:
     def is_valid_signature(expected_value, signed_value, public_key):
         public_key_deserialized = VerifyKey(public_key, encoder=HexEncoder)
         try:
-            return bytes(str(expected_value), 'utf-8') == public_key_deserialized.verify(signed_value)
+            verified_value_bytes = public_key_deserialized.verify(signed_value)
+            actual_value = pickle.loads(verified_value_bytes, encoding='utf-8')
+            if expected_value == actual_value:
+                return True
+            else:
+                return False
         except BadSignatureError:
             return False
 
     @staticmethod
     def sign(content, private_key):
-        return private_key.sign(bytes(str(content), 'utf-8'))
+        private_key_reconstructed = SigningKey(private_key, encoder=HexEncoder)
+        content_pickle_bytes = pickle.dumps(content)
+        return private_key_reconstructed.sign(content_pickle_bytes)
 
     @staticmethod
     def hash(obj):
@@ -207,3 +217,16 @@ class Commons:
 
         return True, None
 
+    @staticmethod
+    def is_valid_shuttle_header(shuttle, public_keys, clients, validator_id):
+        client_id = shuttle['content']['client_request_message']['content']['operation']['client_id']
+        if client_id in clients and \
+                not Commons.is_valid_signature(shuttle['content']['client_request_message']['content'],
+                                               shuttle['content']['client_request_message']['signed_content'],
+                                               public_keys[client_id]):
+            return False, "Invalid client request message(signature mismatch) received in: " + validator_id
+
+        if shuttle['content']['operation'] != shuttle['content']['client_request_message']['content']['operation']:
+            return False, "Invalid client request message(operation mismatch) received in: " + validator_id
+
+        return True, None

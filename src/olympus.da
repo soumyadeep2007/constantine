@@ -7,10 +7,15 @@ from commons import Commons
 import random
 from random_tasks import random_tasks
 import traceback
+import uuid
 
 o_client = import_da('client')
 o_replica = import_da('replica')
 
+
+# todo: add client validation
+# todo: add failures
+# todo: sent last result shuttle to client from olympus
 
 # noinspection PyMethodParameters
 class Olympus(process):
@@ -20,9 +25,18 @@ class Olympus(process):
         self._config = {'clients': {}, 'replicas': {}, 'failures': {}}
         self._replicas = []
         self.file_path = file_path
-        self._num_wedged_responses = 0
+        self._timeout = 5000
+        self._reconfig_id = None
 
-        self._current_config = 0
+        self._wedged_responses = []
+        self._num_caught_up_messages = 0
+        self._reconfig_in_progress = False
+        self._running_state_requested_replica_id = None
+        self._expected_running_state_hash = None
+        self._valid_running_state_received = False
+
+        self._current_config = -1
+
         try:
             self.initialize()
         except:
@@ -133,7 +147,7 @@ class Olympus(process):
             self.set_keys(replica_id, SigningKey.generate())
 
     def set_keys(id, private_key):
-        self._config['keys']['private_keys'][id] = private_key
+        self._config['keys']['private_keys'][id] = private_key.encode(encoder=HexEncoder)
         self._config['keys']['public_keys'][id] = private_key.verify_key.encode(encoder=HexEncoder)
 
     def init_clients():
@@ -158,7 +172,10 @@ class Olympus(process):
         }
         return client_config
 
-    def init_replicas():
+    def init_hist(running_state=None):
+        self._current_config += 1
+        output('Initializing cluster with configuration version: ', self._current_config)
+
         self._replicas = []
         prev_replica = None
         preceding_replica_ids = []
@@ -200,12 +217,18 @@ class Olympus(process):
 
             prev_replica = replica
             id_num += 1
-            setup(replica, args=(replica_config,))
+            setup(replica, args=(replica_config, running_state,))
             start(replica)
             self._replicas.append(replica_id)
             preceding_replica_ids.append(replica_id)
 
+            self._reconfig_in_progress = False
+
     def receive(msg=('reconfig_request', message, sender_id), from_=self._config['replicas'].values()):
+        if self._reconfig_in_progress:
+            output('Reconfiguration in progress, ignoring reconfig request from:', sender_id)
+            return
+
         if not Commons.is_valid_signature(message['content'], message['signed_content'],
                                           self._config['keys']['public_keys'][sender_id]):
             output(log_messages.INVALID_SIGNATURE, sender_id, level=logging.ERROR)
@@ -219,33 +242,35 @@ class Olympus(process):
             return
 
         output('Received valid reconfiguration request from: ', sender_id)
-        for replica in self._config['replicas'].items():
-            wedge_request_message = {
-                'content': {
-                    'requested_by_id': sender_id
-                }
-            }
-            wedge_request_message['signed_content'] = Commons.sign(wedge_request_message['content'],
-                                                                   self._config['keys']['private_keys'][self._id])
-
-            send(('wedge', wedge_request_message), to=replica[1])
-            output("Sent wedge request to: ", replica[0])
-
-        if await(self._num_wedged_responses >= (self._config['t'] + 1)):
-            pass
-            # todo : handle wedged_quorum_unsatisified (timeout)
+        self._send_wedge_requests_and_wait()
 
     def receive(msg=('wedged', message, replica_id), from_=self._config['replicas'].values()):
         output('Received wedged message from replica:', replica_id)
-        output(self._config['keys']['public_keys'])
-        output(self._config['keys']['public_keys'][replica_id])
-        # if not Commons.is_valid_signature(message['content'], message['signed_content'],
-        #                                   self._config['keys']['public_keys'][replica_id]):
-        #     output(log_messages.INVALID_SIGNATURE, replica_id, level=logging.ERROR)
-        #     return
+        if not Commons.is_valid_signature(message['content'], message['signed_content'],
+                                          self._config['keys']['public_keys'][replica_id]):
+            output(log_messages.INVALID_SIGNATURE, replica_id, level=logging.ERROR)
+            return
 
-        validation_result = True
+        if message['content']['reconfig_id'] != self._reconfig_id:
+            output("Wedged message received for stale reconfiguration attempt: ",
+                   message['content']['reconfig_id'], " from: ", replica_id, ". Ignoring....")
+
+        if 'checkpoint_proof' in message['content'] and message['content']['checkpoint_proof'] is not None:
+            validation_output = Commons.is_valid_checkpoint_proof(message["content"]["checkpoint_proof"],
+                                                                  self._config['replicas'],
+                                                                  self._config['keys']['public_keys'], self._id)
+            if not validation_output[0]:
+                output(validation_output[1])
+                output('Received invalid checkpoint proof: ', message["content"]["checkpoint_proof"], " from=",
+                       replica_id)
+                return
+
+        prev_slot = -1
         for order_proof in message["content"]["history"]:
+            if prev_slot != -1 and prev_slot + 1 != order_proof['slot']:
+                output('Received history with holes: ', order_proof, " from=", replica_id)
+                return
+            prev_slot = order_proof['slot']
             replica_ids = []
             for index in range(0, self._replicas.index(replica_id)):
                 replica_ids.append(self._replicas[index])
@@ -254,27 +279,85 @@ class Olympus(process):
             if not validation_output[0]:
                 output(validation_output[1])
                 output('Received invalid order proof: ', order_proof, " from=", replica_id)
-                validation_result = False
-                break
+                return
 
-        if validation_result:
-            self._num_wedged_responses += 1
-            output('Validated order proof successfully: ', order_proof, ' from=', replica_id)
+        self._wedged_responses.append(message)
+        output('Validated history successfully for wedged message from: ', replica_id)
+
+    def receive(msg=('caught_up', caught_up_message, replica_id), from_=self._config['replicas'].values()):
+        # todo handle result statements and send to client
+        output('Received caught up message from replica:', replica_id)
+        if not Commons.is_valid_signature(caught_up_message['content'], caught_up_message['signed_content'],
+                                          self._config['keys']['public_keys'][replica_id]):
+            output(log_messages.INVALID_SIGNATURE, replica_id, level=logging.ERROR)
+            return
+
+        if not caught_up_message['content']['reconfig_id'] == self._reconfig_id:
+            output("Caught up message received for stale reconfiguration attempt: ",
+                   caught_up_message['content']['reconfig_id'], " from: ", replica_id, ". Ignoring....")
+
+        if not self._is_replica_in_quorum(replica_id):
+            return
+
+        if self._expected_running_state_hash is None:
+            self._expected_running_state_hash = \
+                caught_up_message['content']['running_state_hash']
+        elif caught_up_message['content']['running_state_hash'] != self._expected_running_state_hash:
+            output('Invalid running state detected in caught up message from: ', replica_id,
+                   ' ....Selecting another wedge quorum')
+            self._send_wedge_requests_and_wait()
+            return
+
+        self._num_caught_up_messages += 1
+
+    def _send_wedge_requests_and_wait():
+        # housekeeping
+        self._wedged_responses = []
+        self._num_caught_up_messages = 0
+        self._reconfig_in_progress = True
+        self._reconfig_id = uuid.uuid4().hex
+
+        for replica in self._config['replicas'].items():
+            wedge_request_message = {
+                'content': {
+                    'reconfig_id': self._reconfig_id
+                }
+            }
+            wedge_request_message['signed_content'] = Commons.sign(wedge_request_message['content'],
+                                                                   self._config['keys']['private_keys'][self._id])
+
+            send(('wedge', wedge_request_message), to=replica[1])
+            output("Sent wedge request to: ", replica[0])
+
+        if await(len(self._wedged_responses) >= (self._config['t'] + 1)):
+            pass
+            # todo : handle wedged_quorum_unsatisified (timeout)
+        self._handle_wedged_quorum_satisfied()
+
+    def _is_replica_in_quorum(replica_id):
+        for wedged_message in self._wedged_responses:
+            if replica_id == wedged_message['content']['replica_id']:
+                output('The following replica is inside the wedged quorum: ', replica_id)
+                return True
+
+        output('The following replica is NOT inside the wedged quorum: ', replica_id)
+        return False
 
     def initialize():
         self.parse_config()
         self.generate_keys()
         self.create_clients()
-        self.init_replicas()
+        self.init_hist()
         self.init_clients()
 
-    def reconfigure_cluster():
+    def _reconfigure_cluster(running_state):
+        output('Reconfiguration started')
         self._terminate_replicas()
         self.generate_keys_for_replicas()
-        self.init_replicas()
+        self.init_hist(running_state)
 
     def _terminate_replicas():
-        for replica in self._config['replicas'].values():
+        for replica in self._config['replicas'].items():
             message = {
                 'content': {
                     'terminate': True
@@ -305,6 +388,24 @@ class Olympus(process):
 
         output(log_messages.CONFIG_SENT, client_id)
 
+    def receive(msg=('running_state', running_state_message),
+                from_=self._config['replicas'][self._running_state_requested_replica_id]):
+        output('Running state received from: ', self._running_state_requested_replica_id)
+        if not Commons.is_valid_signature(running_state_message['content'], running_state_message['signed_content'],
+                                          self._config['keys']['public_keys'][
+                                              self._running_state_requested_replica_id]):
+            output(log_messages.INVALID_SIGNATURE, self._running_state_requested_replica_id, level=logging.ERROR)
+            return
+
+        running_state_hash = Commons.hash(running_state_message['content']['running_state'])
+        if running_state_hash != self._expected_running_state_hash:
+            self._valid_running_state_received = False
+            output('Received inconsistent running state from: ', self._running_state_requested_replica_id)
+            return
+
+        self._valid_running_state_received = True
+        self._reconfigure_cluster(running_state_message['content']['running_state'])
+
     def create_clients():
         for id_num in range(self._config['num_client']):
             self._config['clients']['c' + str(id_num)] = new(o_client.Client)
@@ -322,7 +423,87 @@ class Olympus(process):
             return not Commons.is_valid_result_proof(misbehavior_proof['result_proof'], self._config['replicas'],
                                                      self._config['keys']['public_keys'], self._id)[0]
 
+        elif 'invalid_client_request_shuttle' in misbehavior_proof:
+            return not Commons.is_valid_shuttle_header(misbehavior_proof['invalid_client_request_shuttle'],
+                                                       self._config['keys']['public_keys'],
+                                                       self._config['clients'], self._id)[0]
+
         return False
+
+    def _handle_wedged_quorum_satisfied():
+        output("\n")
+        output("Wedged quorum is satisfied, initiating catch-up process in Olympus.")
+
+        longest_history = self._get_longest_history()
+
+        for wedged_message in self._wedged_responses:
+            max_operation_slot = self._get_max_operation_slot(wedged_message['content']['history'])
+            delta_history = []
+
+            for order_proof in longest_history:
+                if order_proof['slot'] > max_operation_slot:
+                    delta_history.append(order_proof)
+            catch_up_message = {
+                'content': {
+                    'delta_history': delta_history,
+                    'reconfig_id': self._reconfig_id
+                }
+            }
+
+            wedged_message_source_replica_id = wedged_message['content']['replica_id']
+            catch_up_message['signed_content'] = Commons.sign(catch_up_message['content'],
+                                                              self._config['keys']['private_keys'][self._id])
+
+            output('Sending catch up message to replica: ', wedged_message_source_replica_id)
+            send(('catch_up', catch_up_message), to=self._config['replicas'][wedged_message_source_replica_id])
+
+        if await(self._num_caught_up_messages == self._config['t'] + 1):
+            self._handle_caught_up_quorum_satisfied()
+        elif timeout(self._timeout):
+            self._send_wedge_requests_and_wait()
+
+    def _get_longest_history():
+        max_operation_slot = -1
+        longest_history = None
+        for wedged_message in self._wedged_responses:
+            max_operation_slot_for_replica = self._get_max_operation_slot(
+                wedged_message['content']['history'])
+            if max_operation_slot_for_replica > max_operation_slot:
+                longest_history = wedged_message['content']['history']
+
+        return longest_history
+
+    def _get_max_operation_slot(history):
+        max_operation_slot = -1
+        for order_proof in history:
+            if order_proof['slot'] >= max_operation_slot:
+                max_operation_slot = order_proof['slot']
+
+        return max_operation_slot
+
+    def _handle_caught_up_quorum_satisfied():
+        output('Caught up quorum is satisfied.')
+        for wedged_message in self._wedged_responses:
+            get_running_state_messsage = {
+                'content': {
+                    'get_running_state': True  # dummy entry used
+                }
+            }
+            get_running_state_messsage['signed_content'] = Commons.sign(get_running_state_messsage['content'],
+                                                                        self._config['keys']['private_keys'][self._id])
+
+            self._running_state_requested_replica_id = wedged_message['content']['replica_id']
+
+            output('Sending get_running_state message to: ', self._running_state_requested_replica_id)
+            send(('get_running_state', get_running_state_messsage),
+                 to=self._config['replicas'][self._running_state_requested_replica_id])
+
+            self._valid_running_state_received = False
+            if await(self._valid_running_state_received):
+                self._valid_running_state_received = False
+                break
+            elif timeout(self._timeout):
+                continue
 
 
 def main():
