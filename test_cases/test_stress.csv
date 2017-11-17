@@ -25,7 +25,13 @@ client_hosts = 0; 0; 0; 0; 0; 0; 0; 0; 0; 0;
 replica_hosts = 0; 0; 0
 
 # CLIENT WORKLOAD
-workload[0] = pseudorandom(1000,100)
+workload[0] = pseudorandom(1000,1000)
+workload[1] = pseudorandom(1000,1000)
+workload[2] = pseudorandom(1000,1000)
+workload[3] = pseudorandom(1000,1000)
+workload[4] = pseudorandom(1000,1000)
+workload[5] = pseudorandom(1000,1000)
+
 
 # ----------------EXPECTED RESULT----------------------
 # The system doesn't fail
