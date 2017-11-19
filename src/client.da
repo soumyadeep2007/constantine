@@ -2,10 +2,10 @@ import logging
 
 import log_messages
 from commons import Commons
-import traceback
-
-
 # noinspection PyUnresolvedReferences,PyMethodParameters
+
+# todo : sign all client requests
+
 class Client(process):
     def setup(client_config):
         self._id = client_config['id']
@@ -39,7 +39,17 @@ class Client(process):
 
         output("~~~~~~~~~~Final state:", self._object)
         self._request_shared_object()
-        await(False)
+
+        output('Workload finished for client: ', self._id)
+
+        done_message = {
+            'content': {
+                'client_id': self._id  # dummy field
+            }
+        }
+        output('Sending done message to Olympus and terminating')
+        done_message['signed_content'] = Commons.sign(done_message['content'], self._private_key)
+        send(('done', done_message, self._id), to=self._olympus['process_id'])
 
     def _request_config():
         output(log_messages.REQUESTING_CONFIG, self._id)

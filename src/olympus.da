@@ -1,5 +1,6 @@
 import logging
 import sys
+import time
 from nacl.encoding import HexEncoder
 from nacl.signing import SigningKey
 import log_messages
@@ -13,10 +14,12 @@ import random
 o_client = import_da('client')
 o_replica = import_da('replica')
 
+start_time = time.time()
 
 # todo: add client validation
 # todo: add failures
 # todo: sent last result shuttle to client from olympus
+
 
 # noinspection PyMethodParameters
 class Olympus(process):
@@ -41,6 +44,8 @@ class Olympus(process):
         self._valid_running_state_received = False
 
         self._current_config = -1
+
+        self._done_messages = []
 
         self.initialize()
 
@@ -382,6 +387,7 @@ class Olympus(process):
         self.init_hist(running_state)
 
     def _terminate_replicas():
+        output('Terminating replicas..')
         for replica in self._config['replicas'].items():
             message = {
                 'content': {
@@ -394,7 +400,13 @@ class Olympus(process):
             output('Sent abort command to replica :', replica[0])
 
     def run():
-        await(False)
+        await(len(self._done_messages) == len(self._config['clients']))
+
+        self._terminate_replicas()
+
+        output('Olympus terminating')
+        end_time = time.time()
+        output("elapsed time (seconds): ", end_time - start_time)
 
     # On receipt of a config_request from a client
     def receive(msg=('config_request', message, client_id), from_=self._config['clients'].values()):
@@ -430,6 +442,15 @@ class Olympus(process):
 
         self._valid_running_state_received = True
         self._reconfigure_cluster(running_state_message['content']['running_state'])
+
+    def receive(msg=('done', message, client_id), from_=self._config['clients'].values()):
+        output('Done message received from client: ', client_id)
+        if not Commons.is_valid_signature(message['content'], message['signed_content'],
+                                          self._config['keys']['public_keys'][client_id]):
+            output(log_messages.INVALID_SIGNATURE, client_id, level=logging.ERROR)
+            return
+
+        self._done_messages.append(message)
 
     def create_clients():
         for id_num in range(self._config['num_client']):
