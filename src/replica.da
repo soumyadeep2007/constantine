@@ -10,7 +10,6 @@ import traceback
 # TODO : add client request in shuttle and validate
 class Replica(process):
     def setup(replica_config, running_state=None, event_counts=None):
-        output("event_counts::", event_counts)
         self._terminate = False
         # ======================REPLICA SECTION===============================================
         self._id = replica_config['id']
