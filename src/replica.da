@@ -206,10 +206,24 @@ class Replica(process):
                 self._latest_cp_slot = shuttle['content']['order_proof']['slot']
                 self._init_checkpointing()
 
-    def receive(msg=('shared_object_request', client_id), from_=(self._config['clients'].values())):
+    def receive(msg=('shared_object_request', message, client_id), from_=(self._config['clients'].values())):
+        output("Received wedge request from Olympus in Replica: ", self._id)
+        if not Commons.is_valid_signature(message['content'], message['signed_content'],
+                                          self._config['public_keys'][client_id]):
+            output(log_messages.INVALID_SIGNATURE, client_id)
+            return
+
         output("Received shared_object_request from client=", client_id)
 
-        send(('shared_object', self._object), to=self._config['clients'][client_id])
+        shared_object_message = {
+            'content': {
+                'shared_object': self._object
+            }
+        }
+        shared_object_message['signed_content'] = Commons.sign(shared_object_message['content'],
+                                                               self._config['private_key'])
+
+        send(('shared_object', shared_object_message, self._id), to=self._config['clients'][client_id])
 
     def receive(msg=('wedge', wedge_request_message), from_=(self._olympus['process_id'])):
         output("Received wedge request from Olympus in Replica: ", self._id)
