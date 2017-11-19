@@ -9,6 +9,7 @@ from nacl.signing import VerifyKey
 from nacl.signing import SigningKey
 import pickle
 
+
 class ReplicaState(Enum):
     IMMUTABLE = 0
     ACTIVE = 1
@@ -22,7 +23,6 @@ class OrderProofValidationState(Enum):
 
 
 class Commons:
-
     @staticmethod
     def is_valid_signature(expected_value, signed_value, public_key):
         public_key_deserialized = VerifyKey(public_key, encoder=HexEncoder)
@@ -144,11 +144,11 @@ class Commons:
             return 'fail'
 
     @staticmethod
-    def is_valid_order_proof(order_proof, replicas, public_keys, validator_id):
+    def is_valid_order_proof(order_proof, replica_ids, public_keys, validator_id):
         slot = order_proof['slot']
         operation = order_proof['operation']
         order_stmts = order_proof['order_statements']
-        for replica_id in replicas:
+        for replica_id in replica_ids:
             replica_missing = replica_id not in order_stmts
             if replica_missing:
                 return False, log_messages.INVALID_ORDER_PROOF_REPLICA_MISSING + " " + replica_id + " " + validator_id
@@ -156,30 +156,28 @@ class Commons:
             if not Commons.is_valid_signature(order_stmt['order_statement'], order_stmt['signed_order_statement'],
                                               public_keys[replica_id]):
                 return False, log_messages.INVALID_ORDER_PROOF_REPLICA_SIGNATURE_MISMATCH + " " + replica_id + " " \
-                    + validator_id
+                       + validator_id
 
             order_conflict = slot != order_stmt['order_statement']['slot'] \
                              or operation != order_stmt['order_statement']['operation']
             if order_conflict:
                 return False, log_messages.INVALID_ORDER_PROOF_REPLICA_SLOT_MISMATCH + " " + replica_id + " " \
-                    + validator_id
+                       + validator_id
 
         return True, None
 
     @staticmethod
-    def is_valid_result_proof(result_proof, replicas, public_keys, validator_id):
+    def is_valid_result_proof(result_proof, replica_ids, public_keys, validator_id):
         expected_hash = Commons.hash(result_proof["result"])
-        for replica_id in replicas:
+        for replica_id in replica_ids:
             replica_missing = replica_id not in result_proof['result_statements']
             if replica_missing:
-
                 return False, log_messages.INVALID_RESULT_PROOF_REPLICA_MISSING + replica_id + validator_id
 
             result_stmt_pair = result_proof['result_statements'][replica_id]
             if not Commons.is_valid_signature(result_stmt_pair['result_statement'],
                                               result_stmt_pair['signed_result_statement'],
                                               public_keys[replica_id]):
-
                 return False, log_messages.INVALID_RESULT_PROOF_REPLICA_SIGNATURE_MISMATCH + replica_id + validator_id
 
             if expected_hash != result_stmt_pair['result_statement']['result_hash']:
@@ -188,10 +186,10 @@ class Commons:
         return True, None
 
     @staticmethod
-    def is_valid_checkpoint_proof(checkpoint_proof, replicas, public_keys, validator_id):
+    def is_valid_checkpoint_proof(checkpoint_proof, replica_ids, public_keys, validator_id):
         expected_hash = None
         expected_slot = None
-        for replica_id in replicas:
+        for replica_id in replica_ids:
             replica_missing = replica_id not in checkpoint_proof['checkpoint_statements']
             if replica_missing:
                 return False, log_messages.INVALID_CHECKPOINT_PROOF_REPLICA_MISSING + replica_id + validator_id
@@ -219,14 +217,16 @@ class Commons:
 
     @staticmethod
     def is_valid_shuttle_header(shuttle, public_keys, clients, validator_id):
-        client_id = shuttle['content']['client_request_message']['content']['operation']['client_id']
+        client_id = shuttle['content']['order_proof']['client_request_message']['content']['operation']['client_id']
         if client_id in clients and \
-                not Commons.is_valid_signature(shuttle['content']['client_request_message']['content'],
-                                               shuttle['content']['client_request_message']['signed_content'],
+                not Commons.is_valid_signature(shuttle['content']['order_proof']['client_request_message']['content'],
+                                               shuttle['content']['order_proof']['client_request_message'][
+                                                   'signed_content'],
                                                public_keys[client_id]):
             return False, "Invalid client request message(signature mismatch) received in: " + validator_id
 
-        if shuttle['content']['operation'] != shuttle['content']['client_request_message']['content']['operation']:
+        if shuttle['content']['operation'] != shuttle['content']['order_proof']['client_request_message']['content'][
+                'operation']:
             return False, "Invalid client request message(operation mismatch) received in: " + validator_id
 
         return True, None
