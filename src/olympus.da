@@ -1,5 +1,6 @@
 import logging
 import sys
+import time
 from nacl.encoding import HexEncoder
 from nacl.signing import SigningKey
 import log_messages
@@ -8,11 +9,12 @@ import random
 from random_tasks import random_tasks
 import traceback
 import uuid
-import os
+import random
 
 o_client = import_da('client')
 o_replica = import_da('replica')
 
+start_time = time.time()
 
 # todo: add client validation
 # todo: add failures
@@ -32,7 +34,11 @@ class Olympus(process):
         self._timeout = 5000
         self._reconfig_id = None
 
-        self._wedged_responses = []
+        self._wedged_responses = {}
+        self._wedged_quorum = {}
+        self._wedged_slot_operation_pairs = {}
+
+        self._latest_result_stmt_result_pairs = {}
         self._num_caught_up_messages = 0
         self._reconfig_in_progress = False
         self._running_state_requested_replica_id = None
@@ -40,14 +46,9 @@ class Olympus(process):
         self._valid_running_state_received = False
 
         self._current_config = -1
+        self._done_messages = []
 
-        try:
-            self.initialize()
-
-            output(self._config)
-            os._exit(1)
-        except:
-            traceback.print_exc()
+        self.initialize()
 
     def parse_config():
         with open(self.file_path, 'r') as f:
@@ -297,16 +298,31 @@ class Olympus(process):
                 replica_ids.append(self._replicas[index])
             validation_output = Commons.is_valid_order_proof(order_proof, replica_ids,
                                                              self._config['keys']['public_keys'], self._id)
+
+            if order_proof['slot'] not in self._wedged_slot_operation_pairs:
+                self._wedged_slot_operation_pairs[order_proof['slot']] = order_proof['operation']
+            elif not order_proof['operation'] ==\
+                    self._wedged_slot_operation_pairs[order_proof['slot']]:
+                output('Order proof slot and operation mismatch across wedged statements: (slot, operation) = ',
+                       order_proof['slot'], order_proof['operation'])
+                output('Restarting quorum selection..')
+                self._send_wedge_requests_and_wait()
+                return
+
             if not validation_output[0]:
                 output(validation_output[1])
                 output('Received invalid order proof: ', order_proof, " from=", replica_id)
                 return
 
-        self._wedged_responses.append(message)
+        if len(self._wedged_quorum) <= self._config['t'] + 1:
+            output('Adding the following replica to the quorum:', replica_id)
+            self._wedged_quorum[replica_id] = message
+        else:
+            self._wedged_responses[replica_id] = message
+
         output('Validated history successfully for wedged message from: ', replica_id)
 
     def receive(msg=('caught_up', caught_up_message, replica_id), from_=self._config['replicas'].values()):
-        # todo handle result statements and send to client
         output('Received caught up message from replica:', replica_id)
         if not Commons.is_valid_signature(caught_up_message['content'], caught_up_message['signed_content'],
                                           self._config['keys']['public_keys'][replica_id]):
@@ -317,7 +333,7 @@ class Olympus(process):
             output("Caught up message received for stale reconfiguration attempt: ",
                    caught_up_message['content']['reconfig_id'], " from: ", replica_id, ". Ignoring....")
 
-        if not self._is_replica_in_quorum(replica_id):
+        if not replica_id in self._wedged_quorum:
             return
 
         if self._expected_running_state_hash is None:
@@ -326,14 +342,29 @@ class Olympus(process):
         elif caught_up_message['content']['running_state_hash'] != self._expected_running_state_hash:
             output('Invalid running state detected in caught up message from: ', replica_id,
                    ' ....Selecting another wedge quorum')
-            self._send_wedge_requests_and_wait()
+            self._handle_caught_up_quorum_unsatisfied()
             return
+
+        for client_id, latest_result_stmt_result_pair in caught_up_message['content'][
+            'latest_result_stmt_result_pairs'].items():
+            if client_id in self._latest_result_stmt_result_pairs:
+                if latest_result_stmt_result_pair != self._latest_result_stmt_result_pairs[client_id]:
+                    output('Invalid result statement and result pair found in potentially'
+                           ' unserved client requests for replica: ', client_id)
+                    self._handle_caught_up_quorum_unsatisfied()
+                    return
+
+            else:
+                self._latest_result_stmt_result_pairs[client_id] = latest_result_stmt_result_pair
 
         self._num_caught_up_messages += 1
 
     def _send_wedge_requests_and_wait():
         # housekeeping
-        self._wedged_responses = []
+        self._wedged_responses = {}
+        self._wedged_quorum = {}
+        self._wedged_slot_operation_pairs = {}
+
         self._num_caught_up_messages = 0
         self._reconfig_in_progress = True
         self._reconfig_id = uuid.uuid4().hex
@@ -350,19 +381,12 @@ class Olympus(process):
             send(('wedge', wedge_request_message), to=replica[1])
             output("Sent wedge request to: ", replica[0])
 
-        if await(len(self._wedged_responses) >= (self._config['t'] + 1)):
+        if await(len(self._wedged_quorum) >= (self._config['t'] + 1)):
             pass
-            # todo : handle wedged_quorum_unsatisified (timeout)
+        elif timeout(self._timeout):
+            output('Wait for a wedged quorum timed out...Restarting quorum selection..')
+            self._send_wedge_requests_and_wait()
         self._handle_wedged_quorum_satisfied()
-
-    def _is_replica_in_quorum(replica_id):
-        for wedged_message in self._wedged_responses:
-            if replica_id == wedged_message['content']['replica_id']:
-                output('The following replica is inside the wedged quorum: ', replica_id)
-                return True
-
-        output('The following replica is NOT inside the wedged quorum: ', replica_id)
-        return False
 
     def initialize():
         self.parse_config()
@@ -378,6 +402,7 @@ class Olympus(process):
         self.init_hist(running_state)
 
     def _terminate_replicas():
+        output('Terminating replicas..')
         for replica in self._config['replicas'].items():
             message = {
                 'content': {
@@ -390,7 +415,13 @@ class Olympus(process):
             output('Sent abort command to replica :', replica[0])
 
     def run():
-        await(False)
+        await(len(self._done_messages) == len(self._config['clients']))
+
+        self._terminate_replicas()
+
+        output('Olympus terminating')
+        end_time = time.time()
+        output("elapsed time (seconds): ", end_time - start_time)
 
     # On receipt of a config_request from a client
     def receive(msg=('config_request', message, client_id), from_=self._config['clients'].values()):
@@ -427,6 +458,15 @@ class Olympus(process):
         self._valid_running_state_received = True
         self._reconfigure_cluster(running_state_message['content']['running_state'])
 
+    def receive(msg=('done', message, client_id), from_=self._config['clients'].values()):
+        output('Done message received from client: ', client_id)
+        if not Commons.is_valid_signature(message['content'], message['signed_content'],
+                                          self._config['keys']['public_keys'][client_id]):
+            output(log_messages.INVALID_SIGNATURE, client_id, level=logging.ERROR)
+            return
+
+        self._done_messages.append(message)
+
     def create_clients():
         for id_num in range(self._config['num_client']):
             self._config['clients']['c' + str(id_num)] = new(o_client.Client)
@@ -452,12 +492,11 @@ class Olympus(process):
         return False
 
     def _handle_wedged_quorum_satisfied():
-        output("\n")
         output("Wedged quorum is satisfied, initiating catch-up process in Olympus.")
 
         longest_history = self._get_longest_history()
 
-        for wedged_message in self._wedged_responses:
+        for replica_id, wedged_message in self._wedged_quorum.items():
             max_operation_slot = self._get_max_operation_slot(wedged_message['content']['history'])
             delta_history = []
 
@@ -471,22 +510,22 @@ class Olympus(process):
                 }
             }
 
-            wedged_message_source_replica_id = wedged_message['content']['replica_id']
             catch_up_message['signed_content'] = Commons.sign(catch_up_message['content'],
                                                               self._config['keys']['private_keys'][self._id])
 
-            output('Sending catch up message to replica: ', wedged_message_source_replica_id)
-            send(('catch_up', catch_up_message), to=self._config['replicas'][wedged_message_source_replica_id])
+            output('Sending catch up message to replica: ', replica_id)
+            send(('catch_up', catch_up_message), to=self._config['replicas'][replica_id])
 
-        if await(self._num_caught_up_messages == self._config['t'] + 1):
+        if await(self._num_caught_up_messages >= self._config['t'] + 1):
             self._handle_caught_up_quorum_satisfied()
         elif timeout(self._timeout):
+            output('Wait for a caught up quorum timed out...Restarting quorum selection..')
             self._send_wedge_requests_and_wait()
 
     def _get_longest_history():
         max_operation_slot = -1
         longest_history = None
-        for wedged_message in self._wedged_responses:
+        for replica_id, wedged_message in self._wedged_quorum.items():
             max_operation_slot_for_replica = self._get_max_operation_slot(
                 wedged_message['content']['history'])
             if max_operation_slot_for_replica > max_operation_slot:
@@ -504,7 +543,7 @@ class Olympus(process):
 
     def _handle_caught_up_quorum_satisfied():
         output('Caught up quorum is satisfied.')
-        for wedged_message in self._wedged_responses:
+        for replica_id, wedged_message in self._wedged_quorum.items():
             get_running_state_messsage = {
                 'content': {
                     'get_running_state': True  # dummy entry used
@@ -513,7 +552,7 @@ class Olympus(process):
             get_running_state_messsage['signed_content'] = Commons.sign(get_running_state_messsage['content'],
                                                                         self._config['keys']['private_keys'][self._id])
 
-            self._running_state_requested_replica_id = wedged_message['content']['replica_id']
+            self._running_state_requested_replica_id = replica_id
 
             output('Sending get_running_state message to: ', self._running_state_requested_replica_id)
             send(('get_running_state', get_running_state_messsage),
@@ -525,6 +564,32 @@ class Olympus(process):
                 break
             elif timeout(self._timeout):
                 continue
+
+        self._send_verified_results()
+
+    def _send_verified_results():
+        for client_id, result_stmt_pair in self._latest_result_stmt_result_pairs.items():
+            output('Olympus sent verified, potentially undelivered result to client:', client_id)
+            verified_result_message = {
+                'content': {
+                    'operation': result_stmt_pair['result_statement']['operation'],
+                    'result': result_stmt_pair['result']
+                }
+            }
+
+            verified_result_message['signed_content'] = Commons.sign(verified_result_message['content'],
+                                                                     self._config['keys']['private_keys'][self._id])
+            send(('verified_result', verified_result_message), to=self._config['clients'][client_id])
+
+    def _handle_caught_up_quorum_unsatisfied():
+        random_quorum_replica_id = random.choice(self._wedged_responses.keys())
+        del self._wedged_quorum[random_quorum_replica_id]
+
+        random_replica_id = random.choice(self._wedged_responses.keys())
+        self._wedged_quorum[random_replica_id] = self._wedged_responses[random_replica_id]
+        del self._wedged_responses[random_replica_id]
+        output('Chosen the following replica as a replacement in the quorum:', random_replica_id)
+        self._handle_wedged_quorum_satisfied()
 
 
 def main():

@@ -37,7 +37,7 @@ class Replica(process):
         self._cp_running_state = None
         self._latest_cp_slot = 0
         self._latest_valid_cp = None
-        self._latest_result_stmt_cache = {}
+        self._latest_result_stmt_result_cache = {}
         self._clone_object = None
         self._immediate_failure_triggers = []
         # todo add client request to shuttle and verify
@@ -221,10 +221,24 @@ class Replica(process):
                 self._latest_cp_slot = shuttle['content']['order_proof']['slot']
                 self._init_checkpointing()
 
-    def receive(msg=('shared_object_request', client_id), from_=(self._config['clients'].values())):
+    def receive(msg=('shared_object_request', message, client_id), from_=(self._config['clients'].values())):
+        output("Received wedge request from Olympus in Replica: ", self._id)
+        if not Commons.is_valid_signature(message['content'], message['signed_content'],
+                                          self._config['public_keys'][client_id]):
+            output(log_messages.INVALID_SIGNATURE, client_id)
+            return
+
         output("Received shared_object_request from client=", client_id)
 
-        send(('shared_object', self._object), to=self._config['clients'][client_id])
+        shared_object_message = {
+            'content': {
+                'shared_object': self._object
+            }
+        }
+        shared_object_message['signed_content'] = Commons.sign(shared_object_message['content'],
+                                                               self._config['private_key'])
+
+        send(('shared_object', shared_object_message, self._id), to=self._config['clients'][client_id])
 
     def receive(msg=('wedge', wedge_request_message), from_=(self._olympus['process_id'])):
         output("Received wedge request from Olympus in Replica: ", self._id)
@@ -237,7 +251,6 @@ class Replica(process):
         wedged_message = {
             'content': {
                 'reconfig_id': wedge_request_message['content']['reconfig_id'],
-                'replica_id': self._id,
                 'history': self._history,
                 'checkpoint_proof': self._latest_valid_cp
             }
@@ -334,7 +347,8 @@ class Replica(process):
             output(log_messages.INVALID_SIGNATURE, 'Olympus')
             return
 
-        self._clone_object = copy.copy(self._object)
+        self._clone_object = copy.deepcopy(self._object)
+        latest_result_stmt_result_cache_clone = copy.deepcopy(self._latest_result_stmt_result_cache)
         for order_proof in catch_up_message['content']['delta_history']:
             result = Commons.perform_operation(order_proof['operation']['command_string'], self._clone_object)
             result_statement = {
@@ -342,12 +356,15 @@ class Replica(process):
                 'result_hash': Commons.hash(result)
             }
 
-            self._latest_result_stmt_cache[order_proof['operation']['client_id']] = result_statement
+            latest_result_stmt_result_cache_clone[order_proof['operation']['client_id']] = {
+                'result_statement': result_statement,
+                'result': result
+            }
 
         caught_up_message = {
             'content': {
                 'running_state_hash': Commons.hash(self._clone_object),
-                'latest_result_stmts': self._latest_result_stmt_cache,
+                'latest_result_stmt_result_pairs': latest_result_stmt_result_cache_clone,
                 'reconfig_id': catch_up_message['content']['reconfig_id']
             }
         }
@@ -421,7 +438,10 @@ class Replica(process):
             'signed_result_statement': signed_result_statement
         }
 
-        self._latest_result_stmt_cache[shuttle['content']['operation']['client_id']] = result_statement
+        self._latest_result_stmt_result_cache[shuttle['content']['operation']['client_id']] = {
+            'result_statement': result_statement,
+            'result': result
+        }
 
     def _send_result(shuttle):
         result_message = {
@@ -626,14 +646,14 @@ class Replica(process):
     def _create_shuttle(message, slot):
         return {
             'content': {
-                'client_request_message': message,
                 'slot': slot,
                 'is_retry': message['content']['is_retry'],
                 'operation': message['content']['operation'],
                 'order_proof': {
                     'slot': slot,
                     'operation': message['content']['operation'],
-                    'order_statements': {}
+                    'order_statements': {},
+                    'client_request_message': message
                 },
                 'result_proof': {
                     'result_statements': {}

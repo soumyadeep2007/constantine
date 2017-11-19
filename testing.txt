@@ -13,3 +13,6 @@ Additionally, there is one test case labelled test_stress.csv which is a stress 
 100 operations selected at random from our repository of random operations.
 
 The name of the log file for each test case has the same name as the test case with a .log suffix.
+
+Performance evaluation:
+raft2.da reported time: 12.243465900421143s

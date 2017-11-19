@@ -2,10 +2,11 @@ import logging
 
 import log_messages
 from commons import Commons
-import traceback
-
-
 # noinspection PyUnresolvedReferences,PyMethodParameters
+
+# todo : sign all client requests
+
+
 class Client(process):
     def setup(client_config):
         self._id = client_config['id']
@@ -39,12 +40,24 @@ class Client(process):
 
         output("~~~~~~~~~~Final state:", self._object)
         self._request_shared_object()
-        await(False)
+
+        output('Workload finished for client: ', self._id)
+
+        done_message = {
+            'content': {
+                'client_id': self._id  # dummy field
+            }
+        }
+        output('Sending done message to Olympus and terminating')
+        done_message['signed_content'] = Commons.sign(done_message['content'], self._private_key)
+        send(('done', done_message, self._id), to=self._olympus['process_id'])
 
     def _request_config():
         output(log_messages.REQUESTING_CONFIG, self._id)
-        config_request_message = _create_config_request_message()
+        config_request_message = self._create_config_request_message()
         self._config_received = False
+
+        output('Sending config request from client: ', self._id)
         send(('config_request', config_request_message, self._id), to=self._olympus['process_id'])
 
         if await(self._config_received):
@@ -54,19 +67,19 @@ class Client(process):
             self._request_config()
 
     def _request_shared_object():
-        output("Requesting shared object from head:")
         self._shared_object_received = False
-        send(('shared_object_request', self._id), to=self._replicas[self._head_id])
+        shared_object_request_message = {
+            'content': {
+                'client_id': self._id  # dummy field
+            }
+        }
+
+        output("Requesting shared object from head from client:", self._id)
+        shared_object_request_message['signed_content'] = \
+            Commons.sign(shared_object_request_message['content'], self._private_key)
+        send(('shared_object_request', shared_object_request_message, self._id), to=self._replicas[self._head_id])
         if await(self._shared_object_received):
             pass
-
-    def receive(msg=('shared_object', shared_object), from_=self._olympus['process_id']):
-        output("Received shared object from head = ", shared_object)
-        self._shared_object_received = True
-        if self._is_final_result_consistent(self._object, shared_object):
-            output('Final results are consistent')
-        else:
-            output('Final results are NOT consistent')
 
     def _is_final_result_consistent(client_object, shared_object):
         for client_object_key in client_object.keys():
@@ -141,6 +154,11 @@ class Client(process):
     def receive(msg=('result', message, replica_id), from_=self._replicas.values()):
         output(log_messages.RESULT_RECEIVED, replica_id)
 
+        if not Commons.is_valid_signature(message['content'], message['signed_content'],
+                                          self._public_keys[replica_id]):
+            output(log_messages.INVALID_SIGNATURE, replica_id, level=logging.ERROR)
+            return
+
         pending_requests_key = (message['content']['operation']['id'], message['content']['operation']['client_id'])
         if pending_requests_key not in self._pending_requests:
             output('Not a pending request', pending_requests_key)
@@ -157,10 +175,48 @@ class Client(process):
                    message['content']['operation'])
             self._retry_request(message)
 
-    # On receipt of an error message from a replica
+    def receive(msg=('verified_result', message), from_=self._olympus['process_id']):
+        output('Verified result message received from Olympus')
+
+        if not Commons.is_valid_signature(message['content'], message['signed_content'],
+                                          self._public_keys[self._olympus['id']]):
+            output(log_messages.INVALID_SIGNATURE, self._olympus['id'], level=logging.ERROR)
+            return
+
+        pending_requests_key = (message['content']['operation']['id'], message['content']['operation']['client_id'])
+        if pending_requests_key not in self._pending_requests:
+            output('Not a pending request', pending_requests_key)
+            return
+        self._pending_requests.pop(pending_requests_key)
+
+        self._process_result(message['content']['operation'], message['content']['result'])
+        self._valid_result_received = True
+        output(log_messages.VALID_RESULT_RECEIVED, message['content']['result'],
+               message['content']['operation'])
+
+    #  On receipt of an error message from a replica
     def receive(msg=('error', message, replica_id), from_=self._replicas.values()):
         output(log_messages.ERROR_MESSAGE_RECEIVED, replica_id)
+        if not Commons.is_valid_signature(message['content'], message['signed_content'],
+                                          self._public_keys[replica_id]):
+            output(log_messages.INVALID_SIGNATURE, replica_id, level=logging.ERROR)
+            return
+
         self._retry_request(message)
+
+    def receive(msg=('shared_object', shared_object_message, head_id), from_=self._replicas[self._head_id]):
+        output("Received shared object from head = ", shared_object_message['content']['shared_object'])
+
+        if not Commons.is_valid_signature(shared_object_message['content'], shared_object_message['signed_content'],
+                                          self._public_keys[self._head_id]):
+            output(log_messages.INVALID_SIGNATURE, self._olympus['id'], level=logging.ERROR)
+            return
+
+        self._shared_object_received = True
+        if self._is_final_result_consistent(self._object, shared_object_message['content']['shared_object']):
+            output('Final results are consistent')
+        else:
+            output('Final results are NOT consistent')
 
     def _process_result(operation, result):
         output(log_messages.OPERATION_RESULT_PAIR, operation, result)
