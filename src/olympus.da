@@ -31,6 +31,7 @@ class Olympus(process):
 
         self._wedged_responses = {}
         self._wedged_quorum = {}
+        self._wedged_slot_operation_pairs = {}
 
         self._latest_result_stmt_result_pairs = {}
         self._num_caught_up_messages = 0
@@ -277,6 +278,17 @@ class Olympus(process):
                 replica_ids.append(self._replicas[index])
             validation_output = Commons.is_valid_order_proof(order_proof, replica_ids,
                                                              self._config['keys']['public_keys'], self._id)
+
+            if order_proof['slot'] not in self._wedged_slot_operation_pairs:
+                self._wedged_slot_operation_pairs[order_proof['slot']] = order_proof['operation']
+            elif not order_proof['operation'] ==\
+                    self._wedged_slot_operation_pairs[order_proof['slot']]:
+                output('Order proof slot and operation mismatch across wedged statements: (slot, operation) = ',
+                       order_proof['slot'], order_proof['operation'])
+                output('Restarting quorum selection..')
+                self._send_wedge_requests_and_wait()
+                return
+
             if not validation_output[0]:
                 output(validation_output[1])
                 output('Received invalid order proof: ', order_proof, " from=", replica_id)
@@ -291,7 +303,6 @@ class Olympus(process):
         output('Validated history successfully for wedged message from: ', replica_id)
 
     def receive(msg=('caught_up', caught_up_message, replica_id), from_=self._config['replicas'].values()):
-        # todo handle result statements and send to client
         output('Received caught up message from replica:', replica_id)
         if not Commons.is_valid_signature(caught_up_message['content'], caught_up_message['signed_content'],
                                           self._config['keys']['public_keys'][replica_id]):
@@ -315,7 +326,7 @@ class Olympus(process):
             return
 
         for client_id, latest_result_stmt_result_pair in caught_up_message['content'][
-                'latest_result_stmt_result_pairs'].items():
+            'latest_result_stmt_result_pairs'].items():
             if client_id in self._latest_result_stmt_result_pairs:
                 if latest_result_stmt_result_pair != self._latest_result_stmt_result_pairs[client_id]:
                     output('Invalid result statement and result pair found in potentially'
@@ -332,6 +343,7 @@ class Olympus(process):
         # housekeeping
         self._wedged_responses = {}
         self._wedged_quorum = {}
+        self._wedged_slot_operation_pairs = {}
 
         self._num_caught_up_messages = 0
         self._reconfig_in_progress = True
