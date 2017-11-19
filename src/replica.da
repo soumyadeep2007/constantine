@@ -11,7 +11,7 @@ import traceback
 
 # TODO : add client request in shuttle and validate
 class Replica(process):
-    def setup(replica_config, object=None, event_counts=None):
+    def setup(replica_config, running_state=None, event_counts=None):
         self._terminate = False
         # ======================REPLICA SECTION===============================================
         self._id = replica_config['id']
@@ -19,22 +19,11 @@ class Replica(process):
         self._olympus = replica_config['olympus']
         self._state = ReplicaState.ACTIVE
         self._result_cache = {}
-        self._object = object if object is not None else {}
+        self._object = running_state if running_state is not None else {}
         self._last_signed_slot = 0
 
-        # init event counts
-        if event_counts is None:
-            self._event_counts = {event_type: -1 for event_type in ['wedge_request', 'new_configuration', 'checkpoint',
-                                                                    'completed_checkpoint', 'get_running_state', 'catch_up',
-                                                                    'client_events']}
-            self._event_counts['client_events'] = {event_type: {} for event_type in ['forwarded_request', 'client_request',
-                                                                                     'shuttle', 'result_shuttle']}
-            for event_type in self._event_counts['client_events']:
-                for client_id in self._config['clients']:
-                    self._event_counts['client_events'][event_type][client_id] = -1
-        else:
-            self._event_counts = event_counts
-        self._event_counts['new_configuration'] = self._config['current_config'] - 1
+        self._event_counts = {}
+        self._init_event_counts(event_counts)
 
         self._failure_trigger = None
         self._send_error = False
@@ -58,7 +47,27 @@ class Replica(process):
         # ========================TAIL SECTION=============================================
         # =================================================================================
 
-    # ========================RECEIVERS=============================================
+    def _init_event_counts(event_counts):
+        if event_counts is not None:
+            self._event_counts = event_counts
+            return
+
+        # init event counts
+        self._event_counts = {event_type: -1 for event_type in ['wedge_request', 'new_configuration', 'checkpoint',
+                                                                'completed_checkpoint', 'get_running_state',
+                                                                'catch_up',
+                                                                'client_events']}
+        self._event_counts['client_events'] = {event_type: {} for event_type in
+                                               ['forwarded_request', 'client_request',
+                                                'shuttle', 'result_shuttle']}
+        for event_type in self._event_counts['client_events']:
+            for client_id in self._config['clients']:
+                self._event_counts['client_events'][event_type][client_id] = -1
+
+        self._event_counts['new_configuration'] = self._config['current_config'] - 1
+
+
+        # ========================RECEIVERS=============================================
     def receive(msg=('request', message, sender_id),
                 from_=(self._config['clients'].values() + self._config['next_replica'])):  # todo: resolve
         output("Received request message (source, client_id, operation_id, self_id) ",
@@ -273,6 +282,16 @@ class Replica(process):
                                           self._config['public_keys'][self._olympus['id']]):
             output(log_messages.INVALID_SIGNATURE, self._olympus['id'])
             return
+
+        aborted_message = {
+            'content': {
+                'event_counts': self._event_counts
+            }
+        }
+
+        output('Sending aborted message to Olympus from: ', self._id)
+        aborted_message['signed_content'] = Commons.sign(aborted_message['content'], self._config['private_key'])
+        send(('aborted', aborted_message, self._id), to=self._olympus['process_id'])
 
         self._terminate = True
 

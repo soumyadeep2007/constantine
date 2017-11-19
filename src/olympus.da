@@ -47,6 +47,7 @@ class Olympus(process):
 
         self._current_config = -1
         self._done_messages = []
+        self._aborted_messages = {}
 
         self.initialize()
 
@@ -239,7 +240,15 @@ class Olympus(process):
 
             prev_replica = replica
             id_num += 1
-            setup(replica, args=(replica_config, running_state,))
+
+            aborted_message = self._aborted_messages.get(replica_id)
+            event_counts = None
+            if aborted_message is None:
+                event_counts = None
+            else:
+                event_counts = aborted_message['content']['event_counts']
+
+            setup(replica, args=(replica_config, running_state, event_counts))
             start(replica)
             self._replicas.append(replica_id)
             preceding_replica_ids.append(replica_id)
@@ -397,7 +406,13 @@ class Olympus(process):
 
     def _reconfigure_cluster(running_state):
         output('Reconfiguration started')
+
         self._terminate_replicas()
+        if await(len(self._aborted_messages) == len(self._replicas)):
+            pass
+        elif timeout(self._timeout):
+            pass
+
         self.generate_keys_for_replicas()
         self.init_hist(running_state)
 
@@ -466,6 +481,15 @@ class Olympus(process):
             return
 
         self._done_messages.append(message)
+
+    def receive(msg=('aborted', aborted_message, replica_id), from_=self._config['replicas'].values()):
+        output('Aborted message received from replica: ', replica_id)
+        if not Commons.is_valid_signature(aborted_message['content'], aborted_message['signed_content'],
+                                          self._config['keys']['public_keys'][replica_id]):
+            output(log_messages.INVALID_SIGNATURE, replica_id, level=logging.ERROR)
+            return
+
+        self._aborted_messages[replica_id] = aborted_message
 
     def create_clients():
         for id_num in range(self._config['num_client']):
