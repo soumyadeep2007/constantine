@@ -4,12 +4,14 @@ from commons import Commons
 from commons import ReplicaState
 import log_messages
 import copy
+import os
+import time
 import traceback
 
 
 # TODO : add client request in shuttle and validate
 class Replica(process):
-    def setup(replica_config, object=None):
+    def setup(replica_config, object=None, event_counts=None):
         self._terminate = False
         # ======================REPLICA SECTION===============================================
         self._id = replica_config['id']
@@ -21,14 +23,18 @@ class Replica(process):
         self._last_signed_slot = 0
 
         # init event counts
-        self._event_counts = {event_type: -1 for event_type in ['wedge_request', 'new_configuration', 'checkpoint',
-                                                                'completed_checkpoint', 'get_running_state', 'catch_up',
-                                                                'client_events']}
-        self._event_counts['client_events'] = {event_type: {} for event_type in ['forwarded_request', 'client_request',
-                                                                                 'shuttle', 'result_shuttle']}
-        for event_type in self._event_counts['client_events']:
-            for client_id in self._config['clients']:
-                self._event_counts['client_events'][event_type][client_id] = -1
+        if event_counts is None:
+            self._event_counts = {event_type: -1 for event_type in ['wedge_request', 'new_configuration', 'checkpoint',
+                                                                    'completed_checkpoint', 'get_running_state', 'catch_up',
+                                                                    'client_events']}
+            self._event_counts['client_events'] = {event_type: {} for event_type in ['forwarded_request', 'client_request',
+                                                                                     'shuttle', 'result_shuttle']}
+            for event_type in self._event_counts['client_events']:
+                for client_id in self._config['clients']:
+                    self._event_counts['client_events'][event_type][client_id] = -1
+        else:
+            self._event_counts = event_counts
+        self._event_counts['new_configuration'] = self._config['current_config'] - 1
 
         self._failure_trigger = None
         self._send_error = False
@@ -242,6 +248,7 @@ class Replica(process):
 
     def receive(msg=('wedge', wedge_request_message), from_=(self._olympus['process_id'])):
         output("Received wedge request from Olympus in Replica: ", self._id)
+        self._update_event_counts('wedge_request')
         if not Commons.is_valid_signature(wedge_request_message['content'], wedge_request_message['signed_content'],
                                           self._config['public_keys'][self._olympus['id']]):
             output(log_messages.INVALID_SIGNATURE, self._olympus['id'])
@@ -273,6 +280,7 @@ class Replica(process):
         if self._config['type'] == 'head':
             return
 
+        self._update_event_counts('checkpoint')
         output('Received checkpoint shuttle from, in =', sender_id, self._id)
 
         if self._state == ReplicaState.IMMUTABLE:
@@ -292,17 +300,20 @@ class Replica(process):
             output(validation_result[1])
             return
 
+        self._apply_failure('checkpoint', None, None, 'pre')
         self._update_checkpoint_proof(checkpoint_shuttle)
 
         checkpoint_shuttle['signed_content'] = Commons.sign(checkpoint_shuttle['content'], self._config['private_key'])
 
         if self._config['type'] == 'tail':
             self._apply_checkpoint(checkpoint_shuttle['content']['checkpoint_proof'])
+            self._apply_failure('checkpoint', checkpoint_shuttle, 'checkpoint_shuttle', 'post')
             send(('complete_checkpoint', checkpoint_shuttle, self._id), to=self._config['prev_replica'])
             output("Tail sent complete checkpoint shuttle for slot :",
                    checkpoint_shuttle['content']['checkpoint_proof']['slot'], " from: ", self._id)
             return
 
+        self._apply_failure('checkpoint', checkpoint_shuttle, 'checkpoint_shuttle', 'post')
         send(('checkpoint', checkpoint_shuttle, self._id), to=self._config['next_replica'])
         output("Replica sent checkpoint shuttle for slot :",
                checkpoint_shuttle['content']['checkpoint_proof']['slot'], " from: ", self._id)
@@ -311,7 +322,12 @@ class Replica(process):
         if self._config['type'] == 'tail':
             return
 
+        if self._id == 'r1':
+            output("r1 event counts: ", self._event_counts)
+        self._update_event_counts('completed_checkpoint')
         output('Received complete checkpoint shuttle from, in =', sender_id, self._id)
+        if self._id == 'r1':
+            output("r1 event counts: ", self._event_counts)
 
         if self._state == ReplicaState.IMMUTABLE:
             output("Discarded complete checkpoint shuttle from ", sender_id, " in Replica: ", self._id,
@@ -329,19 +345,24 @@ class Replica(process):
             output(validation_result[1])
             return
 
+        self._apply_failure('completed_checkpoint', None, None, 'pre')
+
         self._update_checkpoint_proof(checkpoint_shuttle)
         if self._config['type'] == 'head':
             output("Checkpointing process completed successfully until slot: ",
                    checkpoint_shuttle['content']['checkpoint_proof']['slot'])
+            self._apply_failure('completed_checkpoint', checkpoint_shuttle, 'completed_checkpoint_shuttle', 'post')
             return
 
         checkpoint_shuttle['signed_content'] = Commons.sign(checkpoint_shuttle['content'], self._config['private_key'])
+        self._apply_failure('completed_checkpoint', checkpoint_shuttle, 'completed_checkpoint_shuttle', 'post')
         send(('complete_checkpoint', checkpoint_shuttle, self._id), to=self._config['prev_replica'])
         output("Replica sent complete checkpoint shuttle for slot :",
                checkpoint_shuttle['content']['checkpoint_proof']['slot'], " from: ", self._id)
 
     def receive(msg=('catch_up', catch_up_message), from_=(self._olympus['process_id'])):
         output('Received catch up message from Olympus in =', self._id)
+        self._update_event_counts('catch_up')
         if not Commons.is_valid_signature(catch_up_message['content'], catch_up_message['signed_content'],
                                           self._config['public_keys'][self._olympus['id']]):
             output(log_messages.INVALID_SIGNATURE, 'Olympus')
@@ -375,6 +396,7 @@ class Replica(process):
 
     def receive(msg=('get_running_state', get_running_state_message), from_=(self._olympus['process_id'])):
         output('Received get running state message from Olympus, in =', self._id)
+        self._update_event_counts('get_running_state')
         if not Commons.is_valid_signature(get_running_state_message['content'],
                                           get_running_state_message['signed_content'],
                                           self._config['public_keys'][self._olympus['id']]):
@@ -463,8 +485,10 @@ class Replica(process):
                 client_maps[client_id] += 1
 
     def _apply_failure(trigger_type, shuttle, shuttle_type, failure_application='post'):
-        cloned_shuttle = dict(shuttle)
+        cloned_shuttle = dict(shuttle) if shuttle is not None else None
         selected_failures = self._get_failures(trigger_type, failure_application)
+        if len(selected_failures) == 0:
+            output("No failure associated with trigger: ", trigger_type, " found in replica: ", self._id)
         for selected_failure in selected_failures:
             if selected_failure[0] == 'change_operation' and shuttle_type == 'shuttle':
                 cloned_shuttle['content']['operation']['command_string'] = "get('x')"
@@ -483,20 +507,29 @@ class Replica(process):
                 cloned_shuttle['content']['result_proof']['result_statements'].pop(self._id)
                 output("Failure 'drop_result_stmt' applied for (operation, replica_id) ",
                        cloned_shuttle['content']['operation'], self._id)
-            cloned_shuttle['signed_content'] = Commons.sign(cloned_shuttle['content'], self._config['private_key'])
+            elif selected_failure[0] == 'crash':
+                output("Applying failure 'crash' to Replica: ", self._id, ". Node going down.......")
+                logging.shutdown()
+                os._exit(-1)
+            elif selected_failure[0] == 'sleep':
+                output("Apply failure 'sleep'  for replica_id) ",  self._id)
+                time.sleep(int(int(selected_failure[1]) / 1000))
+                output("Failure 'sleep' applied for replica_id) ",  self._id)
+            if cloned_shuttle is not None:
+                cloned_shuttle['signed_content'] = Commons.sign(cloned_shuttle['content'], self._config['private_key'])
 
         return cloned_shuttle
 
     def _get_failures(trigger_type, failure_application):
         output("Checking for failure associated with trigger: ", trigger_type, " in replica: ", self._id)
         selected_failures = []
-        failures = self._config['failures']
+        failures = self._config.get('failures', {})
         if trigger_type not in failures:
             # if self._id == 'r1':
             #     output("trigger not found failure")
             return selected_failures
 
-        failures = failures[trigger_type]
+        failures = failures.get(trigger_type, [])
         event_count = self._event_counts.get(trigger_type, -1)
         for failure in failures:
             if failure['trigger_point']['client_id'] is not None:
