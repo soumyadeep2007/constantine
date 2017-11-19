@@ -8,6 +8,7 @@ import random
 from random_tasks import random_tasks
 import traceback
 import uuid
+import os
 
 o_client = import_da('client')
 o_replica = import_da('replica')
@@ -17,6 +18,9 @@ o_replica = import_da('replica')
 # todo: add failures
 # todo: sent last result shuttle to client from olympus
 
+PRE_PROCESS_APPLICATION_FAILURES = ['crash', 'sleep', 'drop', 'increment_slot', 'extra_op']
+DELAYED_FAILURES = ['change_operation', 'change_result', 'drop_result_stmt', 'truncate_history',
+                          'invalid_order_sig', 'invalid_result_sig', 'drop_checkpt_stmts']
 # noinspection PyMethodParameters
 class Olympus(process):
     def setup(process_id, file_path):
@@ -39,6 +43,9 @@ class Olympus(process):
 
         try:
             self.initialize()
+
+            output(self._config)
+            os._exit(1)
         except:
             traceback.print_exc()
 
@@ -104,7 +111,7 @@ class Olympus(process):
             config_failure = failures[config_num] if config_num in failures else {}
             config_failure[replica_id] = {}
             if len(val.split("; ")) > 0:
-                config_failure[replica_id] = _parse_failure_triggers(val.split("; "))
+                config_failure[replica_id] = self._parse_failure_triggers(val.split("; "))
             failures[config_num] = config_failure
             self._config['failures'] = failures
         else:
@@ -113,19 +120,33 @@ class Olympus(process):
     def _parse_failure_triggers(failure_triggers):
         parsed_failure_triggers = {}
         for failure_trigger in failure_triggers:
-            trigger = failure_trigger.split(",")[0].strip()
+            trigger = failure_trigger.split("),")[0].strip()
             trigger_type = trigger.split("(")[0].strip()
-            client_id = 'c' + trigger.split("(")[1].split(",")[0].strip()
-            trigger_num = failure_trigger.split(",")[1].strip()[:-1]
+            client_id = None
+            trigger_str_split = trigger.split("(")[1].split(",")
+            trigger_num = -1
+            if len(trigger_str_split) == 1:
+                trigger_num = int(trigger_str_split[0].strip())
+            elif len(trigger_str_split) == 2:
+                client_id = 'c' + trigger_str_split[0].strip()
+                trigger_num = int(trigger_str_split[1].strip())
             failure = failure_trigger.split("),")[1].strip()
             failure_type = failure.split("(")[0].strip()
             failure_arg = failure.split("(")[1].strip()[:-1]
-            parsed_failure = parsed_failure_triggers[client_id] if client_id in parsed_failure_triggers else {}
-            parsed_failure_trigger_type = parsed_failure[
-                trigger_type] if trigger_type in parsed_failure_triggers else {}
-            parsed_failure_trigger_type[trigger_num] = [failure_type, failure_arg]
-            parsed_failure[trigger_type] = parsed_failure_trigger_type
-            parsed_failure_triggers[client_id] = parsed_failure
+            if failure_type in DELAYED_FAILURES:
+                trigger_num += 1
+
+            parsed_failures_for_trigger = parsed_failure_triggers[trigger_type] if trigger_type in parsed_failure_triggers else []
+            parsed_failure_trigger = {
+                'failure': (failure_type, failure_arg), 'trigger_point': {
+                    'event_num': trigger_num,
+                    'application': 'pre' if failure_type in PRE_PROCESS_APPLICATION_FAILURES else 'post',
+                    'client_id': client_id
+                }
+            }
+            parsed_failures_for_trigger.append(parsed_failure_trigger)
+            parsed_failure_triggers[trigger_type] = parsed_failures_for_trigger
+
         return parsed_failure_triggers
 
     def generate_keys():
