@@ -549,10 +549,23 @@ class Replica(process):
                 else:
                     self._truncate_length = n
                 output('Failure truncate_history activated for replica_id', self._id)
-            if cloned_payload is not None:
+            elif selected_failure[0] == 'extra_op':
+                Commons.perform_operation("put('a','a')", self._object)
+                output('Failure "extra_op" applied for Replica: ', self._id)
+            elif selected_failure[0] == 'increment_slot':
+                if self._config['type'] == 'head':
+                    self._current_slot += 1
+                    output('Failure "increment_slot" applied in Head: ', self._id)
+
+            if selected_failure[0] =='invalid_order_sig' and payload_type == 'shuttle':
+                cloned_payload['signed_content'] = self._get_invalid_signature()
+            elif cloned_payload is not None:
                 cloned_payload['signed_content'] = Commons.sign(cloned_payload['content'], self._config['private_key'])
 
         return cloned_payload
+
+    def _get_invalid_signature():
+        return Commons.sign("ajhsjhdbahsbsuqbkdkjbuhbajlbkkabdslbakjscbajkhbdkl", self._config['private_key'])
 
     def _get_failures(trigger_type, failure_application):
         output("Checking for failure associated with trigger, application: ", (trigger_type, failure_application),
