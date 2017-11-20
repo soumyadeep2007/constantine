@@ -192,7 +192,9 @@ class Replica(process):
             output("Discarded result shuttle from ", replica_id, " in Replica: ", self._id,
                    " as Replica is in immutable state")
             return
+
         self._update_event_counts('result_shuttle', shuttle['content']['operation']['client_id'])
+        self._apply_failure('result_shuttle', None, None, 'pre')
 
         if not Commons.is_valid_signature(shuttle['content'], shuttle['signed_content'],
                                           self._config['public_keys'][replica_id]):
@@ -212,10 +214,10 @@ class Replica(process):
                 self._pending_requests.discard(result_cache_key)
             if self._config['type'] != 'head':
                 mod_shuttle = self._apply_failure('result_shuttle', shuttle, 'result_shuttle')
+
                 send(('result_shuttle', mod_shuttle, self._id), to=self._config['prev_replica'])
         else:
             output(valid_result_proof[1])
-            # self._update_failure_trigger(shuttle['content']['operation']['client_id'], 'shuttle')
             self._send_error = True
             self._state = ReplicaState.IMMUTABLE
             reason = {
@@ -228,7 +230,6 @@ class Replica(process):
 
             return
 
-        # self._update_failure_trigger(shuttle['content']['operation']['client_id'], 'result_shuttle')
         if self._config['type'] == 'head':
             if 0 == shuttle['content']['order_proof']['slot'] % self._config['checkpt_interval']:
                 self._cp_running_state = copy.copy(self._object)
@@ -256,7 +257,10 @@ class Replica(process):
 
     def receive(msg=('wedge', wedge_request_message), from_=(self._olympus['process_id'])):
         output("Received wedge request from Olympus in Replica: ", self._id)
+
         self._update_event_counts('wedge_request')
+        self._apply_failure('wedge_request', None, None, 'pre')
+
         if not Commons.is_valid_signature(wedge_request_message['content'], wedge_request_message['signed_content'],
                                           self._config['public_keys'][self._olympus['id']]):
             output(log_messages.INVALID_SIGNATURE, self._olympus['id'])
@@ -272,11 +276,13 @@ class Replica(process):
         }
 
         if self._truncate_length > 0:
-            wedged_message['content']['hsitory'] = self._history[:len(self._history) - self._truncate_length]
+            wedged_message['content']['history'] = self._history[:len(self._history) - self._truncate_length]
             output('Failure truncate_history applied for replica_id', self._id)
             self._truncate_length = 0
 
         wedged_message['signed_content'] = Commons.sign(wedged_message['content'], self._config['private_key'])
+
+        self._apply_failure('wedge_request', wedged_message, 'wedged_message')
 
         send(('wedged', wedged_message, self._id), to=self._olympus['process_id'])
         output('Sent Wedged message to Olympus from replica: ', self._id)
@@ -305,6 +311,8 @@ class Replica(process):
             return
 
         self._update_event_counts('checkpoint')
+        self._apply_failure('checkpoint', None, None, 'pre')
+
         output('Received checkpoint shuttle from, in =', sender_id, self._id)
 
         if self._state == ReplicaState.IMMUTABLE:
@@ -324,20 +332,22 @@ class Replica(process):
             output(validation_result[1])
             return
 
-        self._apply_failure('checkpoint', None, None, 'pre')
         self._update_checkpoint_proof(checkpoint_shuttle)
 
         checkpoint_shuttle['signed_content'] = Commons.sign(checkpoint_shuttle['content'], self._config['private_key'])
 
         if self._config['type'] == 'tail':
             self._apply_checkpoint(checkpoint_shuttle['content']['checkpoint_proof'])
-            self._apply_failure('checkpoint', checkpoint_shuttle, 'checkpoint_shuttle', 'post')
+
+            self._apply_failure('completed_checkpoint', checkpoint_shuttle, 'completed_checkpoint_shuttle')
+
             send(('complete_checkpoint', checkpoint_shuttle, self._id), to=self._config['prev_replica'])
             output("Tail sent complete checkpoint shuttle for slot :",
                    checkpoint_shuttle['content']['checkpoint_proof']['slot'], " from: ", self._id)
             return
 
-        self._apply_failure('checkpoint', checkpoint_shuttle, 'checkpoint_shuttle', 'post')
+        self._apply_failure('checkpoint', checkpoint_shuttle, 'checkpoint_shuttle')
+
         send(('checkpoint', checkpoint_shuttle, self._id), to=self._config['next_replica'])
         output("Replica sent checkpoint shuttle for slot :",
                checkpoint_shuttle['content']['checkpoint_proof']['slot'], " from: ", self._id)
@@ -348,7 +358,7 @@ class Replica(process):
 
         if self._id == 'r1':
             output("r1 event counts: ", self._event_counts)
-        self._update_event_counts('completed_checkpoint')
+
         output('Received complete checkpoint shuttle from, in =', sender_id, self._id)
         if self._id == 'r1':
             output("r1 event counts: ", self._event_counts)
@@ -357,6 +367,10 @@ class Replica(process):
             output("Discarded complete checkpoint shuttle from ", sender_id, " in Replica: ", self._id,
                    " as Replica is in immutable state")
             return
+
+        self._update_event_counts('completed_checkpoint')
+        self._apply_failure('completed_checkpoint', None, None, 'pre')
+
         if not Commons.is_valid_signature(checkpoint_shuttle['content'], checkpoint_shuttle['signed_content'],
                                           self._config['public_keys'][sender_id]):
             output(log_messages.INVALID_SIGNATURE, sender_id)
@@ -369,24 +383,26 @@ class Replica(process):
             output(validation_result[1])
             return
 
-        self._apply_failure('completed_checkpoint', None, None, 'pre')
-
         self._apply_checkpoint(checkpoint_shuttle['content']['checkpoint_proof'])
         if self._config['type'] == 'head':
             output("Checkpointing process completed successfully until slot: ",
                    checkpoint_shuttle['content']['checkpoint_proof']['slot'])
-            self._apply_failure('completed_checkpoint', checkpoint_shuttle, 'completed_checkpoint_shuttle', 'post')
             return
 
         checkpoint_shuttle['signed_content'] = Commons.sign(checkpoint_shuttle['content'], self._config['private_key'])
-        self._apply_failure('completed_checkpoint', checkpoint_shuttle, 'completed_checkpoint_shuttle', 'post')
+
+        self._apply_failure('completed_checkpoint', checkpoint_shuttle, 'completed_checkpoint_shuttle')
+
         send(('complete_checkpoint', checkpoint_shuttle, self._id), to=self._config['prev_replica'])
         output("Replica sent complete checkpoint shuttle for slot :",
                checkpoint_shuttle['content']['checkpoint_proof']['slot'], " from: ", self._id)
 
     def receive(msg=('catch_up', catch_up_message), from_=(self._olympus['process_id'])):
         output('Received catch up message from Olympus in =', self._id)
+
         self._update_event_counts('catch_up')
+        self._apply_failure('catch_up', None, None, 'pre')
+
         if not Commons.is_valid_signature(catch_up_message['content'], catch_up_message['signed_content'],
                                           self._config['public_keys'][self._olympus['id']]):
             output(log_messages.INVALID_SIGNATURE, 'Olympus')
@@ -416,11 +432,16 @@ class Replica(process):
         output('Sending caught up message to Olympus from replica: ', self._id)
         caught_up_message['signed_content'] = Commons.sign(caught_up_message['content'], self._config['private_key'])
 
+        self._apply_failure('catch_up', caught_up_message, 'caught_up_message')
+
         send(('caught_up', caught_up_message, self._id), to=self._olympus['process_id'])
 
     def receive(msg=('get_running_state', get_running_state_message), from_=(self._olympus['process_id'])):
         output('Received get running state message from Olympus, in =', self._id)
+
         self._update_event_counts('get_running_state')
+        self._apply_failure('get_running_state', None, None, 'pre')
+
         if not Commons.is_valid_signature(get_running_state_message['content'],
                                           get_running_state_message['signed_content'],
                                           self._config['public_keys'][self._olympus['id']]):
@@ -434,6 +455,8 @@ class Replica(process):
         }
         running_state_message['signed_content'] = Commons.sign(running_state_message['content'],
                                                                self._config['private_key'])
+
+        self._apply_failure('get_running_state', running_state_message, 'running_state_message')
 
         output('Sending running state message to Olympus from: ', self._id)
         send(('running_state', running_state_message), to=self._olympus['process_id'])
@@ -619,8 +642,9 @@ class Replica(process):
 
     def _handle_shuttle_at_replica(shuttle):
         shuttle['signed_content'] = Commons.sign(shuttle['content'], self._config['private_key'])
+
         mod_shuttle = self._apply_failure('shuttle', shuttle, 'shuttle')
-        self._update_event_counts('shuttle', shuttle['content']['operation']['client_id'])
+
         send(('shuttle', mod_shuttle, self._id), to=self._config['next_replica'])
 
     def _send_reconfig_request(reason):
@@ -756,7 +780,6 @@ class Replica(process):
     def _handle_shuttle_at_tail(shuttle):
         valid_result_proof = Commons.is_valid_result_proof(shuttle['content']['result_proof'], self._config['replicas'],
                                                            self._config['public_keys'], self._id)
-        self._update_event_counts('shuttle', shuttle['content']['operation']['client_id'])
 
         if not valid_result_proof:
             self._send_error = True
