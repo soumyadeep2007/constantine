@@ -31,7 +31,7 @@ class Olympus(process):
         self._config = {'clients': {}, 'replicas': {}, 'failures': {}}
         self._replicas = []
         self.file_path = file_path
-        self._timeout = 5000
+        self._timeout = 3
         self._reconfig_id = None
 
         self._wedged_responses = {}
@@ -299,7 +299,7 @@ class Olympus(process):
         prev_slot = -1
         for order_proof in message["content"]["history"]:
             if prev_slot != -1 and prev_slot + 1 != order_proof['slot']:
-                output('Received history with holes: ', order_proof, " from=", replica_id)
+                output('Received history with holes: ', message["content"]["history"], " from=", replica_id)
                 return
             prev_slot = order_proof['slot']
             replica_ids = []
@@ -373,6 +373,7 @@ class Olympus(process):
         self._wedged_responses = {}
         self._wedged_quorum = {}
         self._wedged_slot_operation_pairs = {}
+        self._latest_result_stmt_result_pairs = {}
 
         self._num_caught_up_messages = 0
         self._reconfig_in_progress = True
@@ -408,9 +409,12 @@ class Olympus(process):
         output('Reconfiguration started')
 
         self._terminate_replicas()
+
         if await(len(self._aborted_messages) == len(self._replicas)):
+            output('Received all aborted messages')
             pass
         elif timeout(self._timeout):
+            output('Wait for aborted messages from all replicas timed out.')
             pass
 
         self.generate_keys_for_replicas()
@@ -470,6 +474,7 @@ class Olympus(process):
             output('Received inconsistent running state from: ', self._running_state_requested_replica_id)
             return
 
+        output('Valid running state received in: ', self._running_state_requested_replica_id)
         self._valid_running_state_received = True
         self._reconfigure_cluster(running_state_message['content']['running_state'])
 
@@ -549,12 +554,17 @@ class Olympus(process):
     def _get_longest_history():
         max_operation_slot = -1
         longest_history = None
+        updated_replica_id = None
+        output("Finding Longest History from Wedged Messages.")
         for replica_id, wedged_message in self._wedged_quorum.items():
             max_operation_slot_for_replica = self._get_max_operation_slot(
                 wedged_message['content']['history'])
             if max_operation_slot_for_replica > max_operation_slot:
                 longest_history = wedged_message['content']['history']
+                updated_replica_id = replica_id
+                max_operation_slot = max_operation_slot_for_replica
 
+        output("Longest History found in Replica: ", updated_replica_id)
         return longest_history
 
     def _get_max_operation_slot(history):
@@ -562,7 +572,6 @@ class Olympus(process):
         for order_proof in history:
             if order_proof['slot'] >= max_operation_slot:
                 max_operation_slot = order_proof['slot']
-
         return max_operation_slot
 
     def _handle_caught_up_quorum_satisfied():

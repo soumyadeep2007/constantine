@@ -9,7 +9,6 @@ import time
 import traceback
 
 
-# TODO : add client request in shuttle and validate
 class Replica(process):
     def setup(replica_config, running_state=None, event_counts=None):
         self._terminate = False
@@ -35,7 +34,6 @@ class Replica(process):
         self._latest_result_stmt_result_cache = {}
         self._clone_object = None
         self._immediate_failure_triggers = []
-        # todo add client request to shuttle and verify
         # =================================================================================
 
         # ======================HEAD SECTION===============================================
@@ -46,6 +44,7 @@ class Replica(process):
 
         # ========================TAIL SECTION=============================================
         # =================================================================================
+        output("Spawned and initialized replica: ", self._id)
 
     def _init_event_counts(event_counts):
         if event_counts is not None:
@@ -366,7 +365,7 @@ class Replica(process):
 
         self._apply_failure('completed_checkpoint', None, None, 'pre')
 
-        self._update_checkpoint_proof(checkpoint_shuttle)
+        self._apply_checkpoint(checkpoint_shuttle['content']['checkpoint_proof'])
         if self._config['type'] == 'head':
             output("Checkpointing process completed successfully until slot: ",
                    checkpoint_shuttle['content']['checkpoint_proof']['slot'])
