@@ -44,6 +44,9 @@ class Replica(process):
 
         # ========================TAIL SECTION=============================================
         # =================================================================================
+
+        self._truncate_length = 0
+
         output("Spawned and initialized replica: ", self._id)
 
     def _init_event_counts(event_counts):
@@ -65,26 +68,25 @@ class Replica(process):
 
         self._event_counts['new_configuration'] = self._config['current_config'] - 1
 
+        #  ========================RECEIVERS=============================================
 
-        # ========================RECEIVERS=============================================
     def receive(msg=('request', message, sender_id),
                 from_=(self._config['clients'].values() + self._config['next_replica'])):  # todo: resolve
         output("Received request message (source, client_id, operation_id, self_id) ",
                sender_id, message['content']['operation']['client_id'], message['content']['operation']['id'], self._id)
 
         client_id = message['content']['operation']['client_id']
+
+        trigger_type = 'forwarded_request'
         if sender_id.startswith('c'):
-            self._update_event_counts('client_request', client_id)
-        else:
-            self._update_event_counts('forwarded_request', client_id)
+            trigger_type = 'client_request'
+
+        self._update_event_counts(trigger_type, client_id)
+        self._apply_failure(trigger_type, None, None, 'pre')
 
         if not Commons.is_valid_signature(message['content'], message['signed_content'],
                                           self._config['public_keys'][sender_id]):
             output(log_messages.INVALID_SIGNATURE, sender_id)
-            # if sender_id.startswith('c'):
-            #     self._update_failure_trigger(client_id, 'client_request')
-            # else:
-            #     self._update_failure_trigger(client_id, 'forwarded_request')
             return
 
         if self._state == ReplicaState.IMMUTABLE:
@@ -114,12 +116,13 @@ class Replica(process):
             output("Discarded shuttle from ", replica_id, " in Replica: ", self._id,
                    " as Replica is in immutable state")
             return
+
         self._update_event_counts('shuttle', shuttle['content']['operation']['client_id'])
+        self._apply_failure('shuttle', None, None, 'pre')
+
         if not Commons.is_valid_signature(shuttle['content'], shuttle['signed_content'],
                                           self._config['public_keys'][replica_id]):
             output(log_messages.INVALID_SIGNATURE, replica_id)
-
-            # self._update_failure_trigger(shuttle['content']['operation']['client_id'], 'shuttle')
             return
 
         validation_output = Commons.is_valid_shuttle_header(shuttle, self._config['public_keys'],
@@ -137,7 +140,6 @@ class Replica(process):
         slot_skipped = shuttle['content']['slot'] != self._last_signed_slot + 1
         if slot_skipped and not shuttle['content']['is_retry']:
             output(log_messages.INVALID_SLOT, level=logging.ERROR)  # todo check if reconfig required
-            # self._update_failure_trigger(shuttle['content']['operation']['client_id'], 'shuttle')
             return
 
         valid_order_proof = Commons.is_valid_order_proof(shuttle['content']['order_proof'],
@@ -146,8 +148,6 @@ class Replica(process):
 
         if not valid_order_proof[0]:
             output(valid_order_proof[1])
-            self._update_event_counts('shuttle', shuttle['content']['operation']['client_id'])
-            # self._update_failure_trigger(shuttle['content']['operation']['client_id'], 'shuttle')
             self._send_error = True
             reason = {
                 'misbehavior_proof': {
@@ -270,6 +270,12 @@ class Replica(process):
                 'checkpoint_proof': self._latest_valid_cp
             }
         }
+
+        if self._truncate_length > 0:
+            wedged_message['content']['hsitory'] = self._history[:len(self._history) - self._truncate_length]
+            output('Failure truncate_history applied for replica_id', self._id)
+            self._truncate_length = 0
+
         wedged_message['signed_content'] = Commons.sign(wedged_message['content'], self._config['private_key'])
 
         send(('wedged', wedged_message, self._id), to=self._olympus['process_id'])
@@ -483,7 +489,7 @@ class Replica(process):
             'result': result
         }
 
-    def _send_result(shuttle):
+    def _send_result(shuttle, trigger_type):
         result_message = {
             'content': {
                 'result_proof': shuttle['content']['result_proof'],
@@ -492,7 +498,10 @@ class Replica(process):
         }
         result_message['signed_content'] = Commons.sign(result_message['content'], self._config['private_key'])
         client_id = shuttle['content']['operation']['client_id']
-        send(('result', result_message, self._id), to=self._config['clients'][client_id])
+
+        mod_result_message = self._apply_failure(trigger_type, result_message, 'result_shuttle')
+
+        send(('result', mod_result_message, self._id), to=self._config['clients'][client_id])
 
     def _update_event_counts(message_type, client_id=None):
         if message_type in self._event_counts:
@@ -502,29 +511,29 @@ class Replica(process):
             if client_id in client_maps:
                 client_maps[client_id] += 1
 
-    def _apply_failure(trigger_type, shuttle, shuttle_type, failure_application='post'):
-        cloned_shuttle = dict(shuttle) if shuttle is not None else None
+    def _apply_failure(trigger_type, payload, payload_type, failure_application='post'):
+        cloned_payload = dict(payload) if payload is not None else None
         selected_failures = self._get_failures(trigger_type, failure_application)
         if len(selected_failures) == 0:
             output("No failure associated with trigger: ", trigger_type, " found in replica: ", self._id)
         for selected_failure in selected_failures:
-            if selected_failure[0] == 'change_operation' and shuttle_type == 'shuttle':
-                cloned_shuttle['content']['operation']['command_string'] = "get('x')"
+            if selected_failure[0] == 'change_operation' and payload_type == 'payload':
+                cloned_payload['content']['operation']['command_string'] = "get('x')"
                 output("Failure 'change_operation' applied for (operation, replica_id) ",
-                       cloned_shuttle['content']['operation'], self._id)
-            elif selected_failure[0] == 'change_result' and shuttle_type == 'result_shuttle':
-                cloned_shuttle['content']['result_proof']['result_statements'][self._id]['result_statement'][
+                       cloned_payload['content']['operation'], self._id)
+            elif selected_failure[0] == 'change_result' and payload_type == 'result_shuttle':
+                cloned_payload['content']['result_proof']['result_statements'][self._id]['result_statement'][
                     'result_hash'] = Commons.hash('OK')
-                cloned_shuttle['content']['result_proof']['result_statements'][self._id]['signed_result_statement'] = \
+                cloned_payload['content']['result_proof']['result_statements'][self._id]['signed_result_statement'] = \
                     Commons.sign(
-                        cloned_shuttle['content']['result_proof']['result_statements'][self._id]['result_statement'],
+                        cloned_payload['content']['result_proof']['result_statements'][self._id]['result_statement'],
                         self._config['private_key'])
                 output("Failure 'change_result' applied for (operation, replica_id) ",
-                       cloned_shuttle['content']['operation'], self._id)
-            elif selected_failure[0] == 'drop_result_stmt' and shuttle_type == 'result_shuttle':
-                cloned_shuttle['content']['result_proof']['result_statements'].pop(self._id)
+                       cloned_payload['content']['operation'], self._id)
+            elif selected_failure[0] == 'drop_result_stmt' and payload_type == 'result_shuttle':
+                cloned_payload['content']['result_proof']['result_statements'].pop(self._id)
                 output("Failure 'drop_result_stmt' applied for (operation, replica_id) ",
-                       cloned_shuttle['content']['operation'], self._id)
+                       cloned_payload['content']['operation'], self._id)
             elif selected_failure[0] == 'crash':
                 output("Applying failure 'crash' to Replica: ", self._id, ". Node going down.......")
                 logging.shutdown()
@@ -533,13 +542,21 @@ class Replica(process):
                 output("Apply failure 'sleep'  for replica_id) ",  self._id)
                 time.sleep(int(int(selected_failure[1]) / 1000))
                 output("Failure 'sleep' applied for replica_id) ",  self._id)
-            if cloned_shuttle is not None:
-                cloned_shuttle['signed_content'] = Commons.sign(cloned_shuttle['content'], self._config['private_key'])
+            elif selected_failure[0] == 'truncate_history':
+                n = int(selected_failure[1])
+                if len(self._history) <= n:
+                    self._truncate_length = 0
+                else:
+                    self._truncate_length = n
+                output('Failure truncate_history activated for replica_id', self._id)
+            if cloned_payload is not None:
+                cloned_payload['signed_content'] = Commons.sign(cloned_payload['content'], self._config['private_key'])
 
-        return cloned_shuttle
+        return cloned_payload
 
     def _get_failures(trigger_type, failure_application):
-        output("Checking for failure associated with trigger: ", trigger_type, " in replica: ", self._id)
+        output("Checking for failure associated with trigger, application: ", (trigger_type, failure_application),
+               " in replica: ", self._id)
         selected_failures = []
         failures = self._config.get('failures', {})
         if trigger_type not in failures:
@@ -574,13 +591,10 @@ class Replica(process):
         if sender_id.startswith('c'):
             trigger_type = 'client_request'
 
-        self._update_event_counts(trigger_type, client_id)
-
         result_cache_key = (message['content']['operation']['id'], client_id)
         if result_cache_key in self._result_cache:
             result_shuttle = self._result_cache[result_cache_key]
-            mod_result_shuttle = self._apply_failure(trigger_type, result_shuttle, 'result_shuttle')
-            self._send_result(mod_result_shuttle)
+            self._send_result(result_shuttle, trigger_type)
         else:
             message['signed_content'] = Commons.sign(message['content'], self._config['private_key'])
             send(('request', message, self._id), to=self._config['prev_replica'])
@@ -589,19 +603,11 @@ class Replica(process):
             elif timeout(self._config['timeout']):
                 output('Result Shuttle Timeout in Replica: ', self._id)
                 self._send_reconfig_request({'timeout': True})
-        #
-        # if sender_id.startswith('c'):
-        #     _update_event_counts('client_request', client_id)
-        #     self._update_failure_trigger(client_id, 'client_request')
-        # else:
-        #     _update_event_counts('forwarded_request', client_id)
-        #     self._update_failure_trigger(client_id, 'forwarded_request')
 
     def _handle_shuttle_at_replica(shuttle):
         shuttle['signed_content'] = Commons.sign(shuttle['content'], self._config['private_key'])
         mod_shuttle = self._apply_failure('shuttle', shuttle, 'shuttle')
         self._update_event_counts('shuttle', shuttle['content']['operation']['client_id'])
-        # self._update_failure_trigger(shuttle['content']['operation']['client_id'], 'shuttle')
         send(('shuttle', mod_shuttle, self._id), to=self._config['next_replica'])
 
     def _send_reconfig_request(reason):
@@ -626,18 +632,17 @@ class Replica(process):
     def _handle_request_at_head(message, sender_id):
         client_id = message['content']['operation']['client_id']
         request_key = (message['content']['operation']['id'], client_id)
+
         trigger_type = 'forwarded_request'
         if sender_id.startswith('c'):
             trigger_type = 'client_request'
-        self._update_event_counts(trigger_type, client_id)
 
         reply_cached_for_request = request_key in self._result_cache
         reply_pending_for_request = request_key in self._pending_requests
         if reply_cached_for_request:
             output(log_messages.RESULT_CACHED, client_id)
             result_shuttle = self._result_cache[request_key]
-            mod_result_shuttle = self._apply_failure(trigger_type, result_shuttle, 'result_shuttle')
-            self._send_result(mod_result_shuttle)
+            self._send_result(result_shuttle, trigger_type)
         elif reply_pending_for_request:
             output(log_messages.RESULT_PENDING)
             self._handle_retransmission_in_head(request_key, client_id, trigger_type)
@@ -645,15 +650,11 @@ class Replica(process):
             shuttle = self._process_request(message)
 
             mod_shuttle = self._apply_failure(trigger_type, shuttle, 'shuttle')
+
             send(('shuttle', mod_shuttle, self._id), to=self._config['next_replica'])
 
             if message['content']['is_retry']:
                 self._handle_retransmission_in_head(request_key, client_id, trigger_type)
-
-        # if sender_id.startswith('c'):
-        #     self._update_failure_trigger(client_id, 'client_request')
-        # else:
-        #     self._update_failure_trigger(client_id, 'forwarded_request')
 
     def _handle_retransmission_in_head(request_key, client_id, trigger_type):
         if request_key in self._active_timers:
@@ -663,8 +664,7 @@ class Replica(process):
         if await(request_key not in self._pending_requests):
             output(log_messages.RESULT_SENT_AFTER_WAIT, client_id)
             result_shuttle = self._result_cache[request_key]
-            mod_result_shuttle = self._apply_failure(trigger_type, result_shuttle, 'result_shuttle')
-            self._send_result(mod_result_shuttle)
+            self._send_result(result_shuttle, trigger_type)
             self._active_timers.add(request_key)
         elif timeout(self._config['timeout']):
             output('Result Shuttle Timeout in head: ', self._id)
@@ -765,7 +765,7 @@ class Replica(process):
         # self._update_failure_trigger(shuttle['content']['operation']['client_id'], 'shuttle')
 
         send(('result_shuttle', mod_shuttle, self._id), to=self._config['prev_replica'])
-        self._send_result(mod_shuttle)
+        self._send_result(shuttle, 'shuttle')
 
     # =================================================================================
 

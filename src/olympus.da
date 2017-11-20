@@ -22,7 +22,9 @@ start_time = time.time()
 
 PRE_PROCESS_APPLICATION_FAILURES = ['crash', 'sleep', 'drop', 'increment_slot', 'extra_op']
 DELAYED_FAILURES = ['change_operation', 'change_result', 'drop_result_stmt', 'truncate_history',
-                          'invalid_order_sig', 'invalid_result_sig', 'drop_checkpt_stmts']
+                    'invalid_order_sig', 'invalid_result_sig', 'drop_checkpt_stmts']
+
+
 # noinspection PyMethodParameters
 class Olympus(process):
     def setup(process_id, file_path):
@@ -355,7 +357,7 @@ class Olympus(process):
             return
 
         for client_id, latest_result_stmt_result_pair in caught_up_message['content'][
-            'latest_result_stmt_result_pairs'].items():
+                'latest_result_stmt_result_pairs'].items():
             if client_id in self._latest_result_stmt_result_pairs:
                 if latest_result_stmt_result_pair != self._latest_result_stmt_result_pairs[client_id]:
                     output('Invalid result statement and result pair found in potentially'
