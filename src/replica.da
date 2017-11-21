@@ -44,6 +44,7 @@ class Replica(process):
 
         self._truncate_length = 0
         self._drop_message = False
+        self._drop_checkpt_stmts = False
 
         output("Spawned and initialized replica: ", self._id)
 
@@ -345,6 +346,13 @@ class Replica(process):
                                                               self._config['public_keys'], self._id)
         if not validation_result[0]:
             output(validation_result[1])
+            output("Send reconfiguration request because invalid checkpoint proof detected at ", self._id)
+            reason = {
+                'misbehavior_proof': {
+                    'checkpoint_proof': checkpoint_shuttle['content']['checkpoint_proof']
+                }
+            }
+            self._send_reconfig_request(reason)
             return
 
         self._update_checkpoint_proof(checkpoint_shuttle)
@@ -355,6 +363,13 @@ class Replica(process):
             self._apply_checkpoint(checkpoint_shuttle['content']['checkpoint_proof'])
 
             self._apply_failure('completed_checkpoint', checkpoint_shuttle, 'completed_checkpoint_shuttle')
+
+            if self._drop_checkpt_stmts:
+                self._drop_checkpt_stmts = False
+                for i in range(0, self._config['t'] + 1):
+                    replica_id = 'r' + str(i)
+                    del checkpoint_shuttle['content']['checkpoint_proof']['checkpoint_statements'][replica_id]
+                output('Applied failure drop_checkpt_stmts at tail: ', self._id)
 
             send(('complete_checkpoint', checkpoint_shuttle, self._id), to=self._config['prev_replica'])
             output("Tail sent complete checkpoint shuttle for slot :",
@@ -371,12 +386,7 @@ class Replica(process):
         if self._config['type'] == 'tail':
             return
 
-        if self._id == 'r1':
-            output("r1 event counts: ", self._event_counts)
-
         output('Received complete checkpoint shuttle from, in =', sender_id, self._id)
-        if self._id == 'r1':
-            output("r1 event counts: ", self._event_counts)
 
         if self._state == ReplicaState.IMMUTABLE:
             output("Discarded complete checkpoint shuttle from ", sender_id, " in Replica: ", self._id,
@@ -387,7 +397,7 @@ class Replica(process):
         self._apply_failure('completed_checkpoint', None, None, 'pre')
         if self._drop_message:
             self._drop_message = False
-            output("Applying failure 'drop' at Replica: ", self._id)
+            output("Applied failure 'drop' at Replica: ", self._id)
             return
 
         if not Commons.is_valid_signature(checkpoint_shuttle['content'], checkpoint_shuttle['signed_content'],
@@ -400,6 +410,13 @@ class Replica(process):
                                                               self._config['public_keys'], self._id)
         if not validation_result[0]:
             output(validation_result[1])
+            output("Send reconfiguration request because invalid checkpoint proof detected at ", self._id)
+            reason = {
+                'misbehavior_proof': {
+                    'checkpoint_proof': checkpoint_shuttle['content']['checkpoint_proof']
+                }
+            }
+            self._send_reconfig_request(reason)
             return
 
         self._apply_checkpoint(checkpoint_shuttle['content']['checkpoint_proof'])
@@ -407,6 +424,13 @@ class Replica(process):
             output("Checkpointing process completed successfully until slot: ",
                    checkpoint_shuttle['content']['checkpoint_proof']['slot'])
             return
+
+        if self._drop_checkpt_stmts:
+            self._drop_checkpt_stmts = False
+            for i in range(0, self._config['t'] + 1):
+                replica_id = 'r' + str(i)
+                del checkpoint_shuttle['content']['checkpoint_proof']['checkpoint_statements'][replica_id]
+            output('Applied failure drop_checkpt_stmts at replica: ', self._id)
 
         checkpoint_shuttle['signed_content'] = Commons.sign(checkpoint_shuttle['content'], self._config['private_key'])
 
@@ -607,10 +631,8 @@ class Replica(process):
                     self._current_slot += 1
                     output('Failure "increment_slot" applied in Head: ', self._id)
             elif selected_failure[0] == 'drop_checkpt_stmts':
-                for i in range(0, self._config['t'] + 1):
-                    replica_id = 'r' + str(i)
-                    del cloned_payload['content']['checkpoint_proof']['checkpoint_stmts'][replica_id]
-                output('Failure drop_checkpt_stmts applied for replica id: ', self._id)
+                self._drop_checkpt_stmts = True
+                output('Failure drop_checkpt_stmts activated for replica id: ', self._id)
             elif selected_failure[0] == 'drop':
                 self._drop_message = True
                 output('Failure drop activated in replica id: ', self._id)

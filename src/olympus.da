@@ -16,10 +16,6 @@ o_replica = import_da('replica')
 
 start_time = time.time()
 
-# todo: add client validation
-# todo: add failures
-# todo: sent last result shuttle to client from olympus
-
 PRE_PROCESS_APPLICATION_FAILURES = ['crash', 'sleep', 'drop', 'increment_slot', 'extra_op']
 DELAYED_FAILURES = ['change_operation', 'change_result', 'drop_result_stmt', 'truncate_history',
                     'invalid_order_sig', 'invalid_result_sig', 'drop_checkpt_stmts']
@@ -522,6 +518,10 @@ class Olympus(process):
             return not Commons.is_valid_shuttle_header(misbehavior_proof['invalid_client_request_shuttle'],
                                                        self._config['keys']['public_keys'],
                                                        self._config['clients'], self._id)[0]
+        elif 'checkpoint_proof' in misbehavior_proof:
+            return not Commons.is_valid_checkpoint_proof(misbehavior_proof['checkpoint_proof'],
+                                                         self._config['replicas'], self._config['keys']['public_keys'],
+                                                         self._id)[0]
 
         return False
 
@@ -620,10 +620,12 @@ class Olympus(process):
             send(('verified_result', verified_result_message), to=self._config['clients'][client_id])
 
     def _handle_caught_up_quorum_unsatisfied():
-        random_quorum_replica_id = random.choice(self._wedged_responses.keys())
+        quorum_replica_ids = list(self._wedged_responses.keys())
+        random_quorum_replica_id = random.choice(quorum_replica_ids)
         del self._wedged_quorum[random_quorum_replica_id]
 
-        random_replica_id = random.choice(self._wedged_responses.keys())
+        wedged_responses_replica_ids = list(self._wedged_responses.keys())
+        random_replica_id = random.choice(wedged_responses_replica_ids)
         self._wedged_quorum[random_replica_id] = self._wedged_responses[random_replica_id]
         del self._wedged_responses[random_replica_id]
         output('Chosen the following replica as a replacement in the quorum:', random_replica_id)
