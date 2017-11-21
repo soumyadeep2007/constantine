@@ -12,6 +12,7 @@ client_timeout = 3000
 # in section 3.3.
 head_timeout = 3000
 nonhead_timeout = 3000
+
 checkpt_interval = 100
 
 # MAPPING OF PROCESSES TO HOSTS
