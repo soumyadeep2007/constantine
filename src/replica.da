@@ -42,10 +42,8 @@ class Replica(process):
         self._active_timers = set()
         # =================================================================================
 
-        # ========================TAIL SECTION=============================================
-        # =================================================================================
-
         self._truncate_length = 0
+        self._drop_message = False
 
         output("Spawned and initialized replica: ", self._id)
 
@@ -83,6 +81,10 @@ class Replica(process):
 
         self._update_event_counts(trigger_type, client_id)
         self._apply_failure(trigger_type, None, None, 'pre')
+        if self._drop_message:
+            self._drop_message = False
+            output("Applying failure 'drop' at Replica: ", self._id)
+            return
 
         if not Commons.is_valid_signature(message['content'], message['signed_content'],
                                           self._config['public_keys'][sender_id]):
@@ -119,6 +121,10 @@ class Replica(process):
 
         self._update_event_counts('shuttle', shuttle['content']['operation']['client_id'])
         self._apply_failure('shuttle', None, None, 'pre')
+        if self._drop_message:
+            self._drop_message = False
+            output("Applying failure 'drop' at Replica: ", self._id)
+            return
 
         if not Commons.is_valid_signature(shuttle['content'], shuttle['signed_content'],
                                           self._config['public_keys'][replica_id]):
@@ -195,6 +201,10 @@ class Replica(process):
 
         self._update_event_counts('result_shuttle', shuttle['content']['operation']['client_id'])
         self._apply_failure('result_shuttle', None, None, 'pre')
+        if self._drop_message:
+            self._drop_message = False
+            output("Applying failure 'drop' at Replica: ", self._id)
+            return
 
         if not Commons.is_valid_signature(shuttle['content'], shuttle['signed_content'],
                                           self._config['public_keys'][replica_id]):
@@ -260,6 +270,10 @@ class Replica(process):
 
         self._update_event_counts('wedge_request')
         self._apply_failure('wedge_request', None, None, 'pre')
+        if self._drop_message:
+            self._drop_message = False
+            output("Applying failure 'drop' at Replica: ", self._id)
+            return
 
         if not Commons.is_valid_signature(wedge_request_message['content'], wedge_request_message['signed_content'],
                                           self._config['public_keys'][self._olympus['id']]):
@@ -312,6 +326,10 @@ class Replica(process):
 
         self._update_event_counts('checkpoint')
         self._apply_failure('checkpoint', None, None, 'pre')
+        if self._drop_message:
+            self._drop_message = False
+            output("Applying failure 'drop' at Replica: ", self._id)
+            return
 
         output('Received checkpoint shuttle from, in =', sender_id, self._id)
 
@@ -370,6 +388,10 @@ class Replica(process):
 
         self._update_event_counts('completed_checkpoint')
         self._apply_failure('completed_checkpoint', None, None, 'pre')
+        if self._drop_message:
+            self._drop_message = False
+            output("Applying failure 'drop' at Replica: ", self._id)
+            return
 
         if not Commons.is_valid_signature(checkpoint_shuttle['content'], checkpoint_shuttle['signed_content'],
                                           self._config['public_keys'][sender_id]):
@@ -402,6 +424,10 @@ class Replica(process):
 
         self._update_event_counts('catch_up')
         self._apply_failure('catch_up', None, None, 'pre')
+        if self._drop_message:
+            self._drop_message = False
+            output("Applying failure 'drop' at Replica: ", self._id)
+            return
 
         if not Commons.is_valid_signature(catch_up_message['content'], catch_up_message['signed_content'],
                                           self._config['public_keys'][self._olympus['id']]):
@@ -441,6 +467,10 @@ class Replica(process):
 
         self._update_event_counts('get_running_state')
         self._apply_failure('get_running_state', None, None, 'pre')
+        if self._drop_message:
+            self._drop_message = False
+            output("Applying failure 'drop' at Replica: ", self._id)
+            return
 
         if not Commons.is_valid_signature(get_running_state_message['content'],
                                           get_running_state_message['signed_content'],
@@ -579,9 +609,22 @@ class Replica(process):
                 if self._config['type'] == 'head':
                     self._current_slot += 1
                     output('Failure "increment_slot" applied in Head: ', self._id)
+            elif selected_failure[0] == 'drop_checkpt_stmts':
+                for i in range(0, self._config['t'] + 1):
+                    replica_id = 'r' + str(i)
+                    del cloned_payload['content']['checkpoint_proof']['checkpoint_stmts'][replica_id]
+                output('Failure drop_checkpt_stmts applied for replica id: ', self._id)
+            elif selected_failure[0] == 'drop':
+                self._drop_message = True
+                output('Failure drop activated in replica id: ', self._id)
 
-            if selected_failure[0] =='invalid_order_sig' and payload_type == 'shuttle':
+            if selected_failure[0] == 'invalid_order_sig' and payload_type == 'shuttle':
                 cloned_payload['signed_content'] = self._get_invalid_signature()
+                output('Failure invalid_order_sig applied at replica: ', self._id)
+            elif selected_failure[0] == 'invalid_result_sig' and payload_type == 'result_shuttle':
+                cloned_payload['content']['result_proof']['result_statements'][self._id]['signed_content'] = \
+                    self._get_invalid_signature()
+                output('Failure invalid_result_sig applied at replica: ', self._id)
             elif cloned_payload is not None:
                 cloned_payload['signed_content'] = Commons.sign(cloned_payload['content'], self._config['private_key'])
 
@@ -798,7 +841,6 @@ class Replica(process):
 
         shuttle['signed_content'] = Commons.sign(shuttle['content'], self._config['private_key'])
         mod_shuttle = self._apply_failure('shuttle', shuttle, 'result_shuttle')
-        # self._update_failure_trigger(shuttle['content']['operation']['client_id'], 'shuttle')
 
         send(('result_shuttle', mod_shuttle, self._id), to=self._config['prev_replica'])
         self._send_result(shuttle, 'shuttle')

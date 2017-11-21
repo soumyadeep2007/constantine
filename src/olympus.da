@@ -222,7 +222,8 @@ class Olympus(process):
                 'prev_replica': prev_replica,
                 'checkpt_interval': self._config['checkpt_interval'],
                 'replicas': self._config['replicas'],
-                'olympus': {'id': self._id, 'process_id': self._process_id}
+                'olympus': {'id': self._id, 'process_id': self._process_id},
+                't': self._config['t']
             }
             next_replica_id = 'r' + str(id_num + 1)
             replica_config['next_replica'] = self._config['replicas'][next_replica_id] \
