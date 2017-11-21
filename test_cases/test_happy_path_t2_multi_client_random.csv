@@ -13,6 +13,8 @@ client_timeout = 3000
 head_timeout = 3000
 nonhead_timeout = 3000
 
+checkpt_interval = 100
+
 # MAPPING OF PROCESSES TO HOSTS
 # to simplify changing the hosts, we first specify a semicolon-separated
 # list of hosts, and then use 0-based indices into that list to specify the
