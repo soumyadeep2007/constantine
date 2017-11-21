@@ -136,7 +136,7 @@ class Olympus(process):
                 trigger_num = int(trigger_str_split[1].strip())
             failure = failure_trigger.split("),")[1].strip()
             failure_type = failure.split("(")[0].strip()
-            failure_arg = failure.split("(")[1].strip()[:-1]
+            failure_arg = failure.split("(")[1].strip()[:-2]
             if failure_type in DELAYED_FAILURES:
                 trigger_num += 1
 
@@ -288,6 +288,7 @@ class Olympus(process):
         if message['content']['reconfig_id'] != self._reconfig_id:
             output("Wedged message received for stale reconfiguration attempt: ",
                    message['content']['reconfig_id'], " from: ", replica_id, ". Ignoring....")
+            return
 
         if 'checkpoint_proof' in message['content'] and message['content']['checkpoint_proof'] is not None:
             validation_output = Commons.is_valid_checkpoint_proof(message["content"]["checkpoint_proof"],
@@ -326,10 +327,11 @@ class Olympus(process):
                 output('Received invalid order proof: ', order_proof, " from=", replica_id)
                 return
 
-        if len(self._wedged_quorum) <= self._config['t'] + 1:
+        if len(self._wedged_quorum) < self._config['t'] + 1:
             output('Adding the following replica to the quorum:', replica_id)
             self._wedged_quorum[replica_id] = message
         else:
+            output('Adding wedged response to wedged_responses:', replica_id)
             self._wedged_responses[replica_id] = message
 
         output('Validated history successfully for wedged message from: ', replica_id)

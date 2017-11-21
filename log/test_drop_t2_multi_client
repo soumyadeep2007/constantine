@@ -1,0 +1,1150 @@
+[2017-11-20 23:23:32,648] olympus.Olympus<Olympus:1c002>:OUTPUT: Parsed config: {'clients': {}, 'replicas': {}, 'failures': {0: {'r1': {'shuttle': [{'failure': ('drop', ''), 'trigger_point': {'event_num': 2, 'application': 'pre', 'client_id': 'c0'}}]}}}, 'test_case_name': 'test_drop_t2_multi_client', 't': 2, 'num_client': 2, 'client_timeout': 3000, 'head_timeout': 3000, 'nonhead_timeout': 3000, 'checkpt_interval': 100, 'hosts': {0: 'localhost;'}, 'client_hosts': {'c0': 'localhost;', 'c1': 'localhost;'}, 'replica_hosts': {'r0': '0', 'r1': '0', 'r2': '0', 'r3': '0', 'r4': '0'}, 'workloads': {'c0': ["put('movie','star')", "get('movie')", "append('movie', '123')", "get('movie')", "get('movie');"], 'c1': ["put('movie1','star1')", "get('movie1')", "append('movie1', '123')", "get('movie1')", "get('movie1');"]}}
+[2017-11-20 23:23:32,654] olympus.Olympus<Olympus:1c002>:OUTPUT: Generated keys: {'private_keys': {'o1': b'7480d861e8f45040c756248a41340c579db08c6ca19cd76cfa13e36d6e6946b0', 'c0': b'2ea561e375e400c6a32211853cd40c9a6f34a4db9a9a0c81710bc966a21b03a8', 'c1': b'893eb1761c6af43f7d0fbb32f8c1fcae45f35692e2c1448e0e99b3d4bcdd53f5', 'r0': b'acbc8bbbf4fc03d7f6128ab9693033a4d0433843c875b10e93dec580ae6d1361', 'r1': b'2980bfb5001780016d05b19d4b36f45b185e4e6791dfe41c36efb3835e3080c7', 'r2': b'de4bb4f00c43affa331f6fb9fa0af932f84d316e980961b55e82d0f1c75e28dc', 'r3': b'3ebd0f24f7be38de5bee3aab082871d422d1aef279f1df4b2d3314041f5484f0', 'r4': b'19b898c01a3a1373cc3f0d8be83177b97fd9389c1b230f9359e0a3ad11403de1'}, 'public_keys': {'o1': b'f7d40da3c32b33c4e1f48fb102ab8d33437e791b1c0e1e57968541e1a90a800a', 'c0': b'0dba56e57256795be46a3e7f73940b9adaf76e38202a837e9640eb7352d1f7fb', 'c1': b'7da0417b4dc60175b6ef50753981301b710fe60571f422ad7eb8269a2f8ef4f4', 'r0': b'33f42f346b3542959c52638f143b9c7fe8a17d0b75caea0dca82aff945699d16', 'r1': b'405231778d29cf164eaef483ea636a49cfe239a213ac3c95447ebbb6c98bd6f7', 'r2': b'16d139f0501f75439dac7ebaa0b99f6de8717aad20c1fa4130c1b523cf52f35d', 'r3': b'194eeb6fde58be3265f6666898c62196eb7c56a3e9f77486551911cdb12853ff', 'r4': b'264e8990d8f678d6864f5bce0dbf5327eca1c8b5ae9f8e7e7bd20b49fa5e090d'}}
+[2017-11-20 23:23:33,138] olympus.Olympus<Olympus:1c002>:OUTPUT: Initializing cluster with configuration version:  0
+[2017-11-20 23:23:34,307] replica.Replica<Replica:a0003>:OUTPUT: Spawned and initialized replica:  r0
+[2017-11-20 23:23:34,312] replica.Replica<Replica:a0004>:OUTPUT: Spawned and initialized replica:  r1
+[2017-11-20 23:23:34,318] replica.Replica<Replica:a0005>:OUTPUT: Spawned and initialized replica:  r2
+[2017-11-20 23:23:34,322] replica.Replica<Replica:a0006>:OUTPUT: Spawned and initialized replica:  r3
+[2017-11-20 23:23:34,328] replica.Replica<Replica:a0007>:OUTPUT: Spawned and initialized replica:  r4
+[2017-11-20 23:23:34,333] client.Client<Client:a0001>:OUTPUT: c0  initialized with config= {'id': 'c0', 'workload': ["put('movie','star')", "get('movie')", "append('movie', '123')", "get('movie')", "get('movie');"], 'private_key': b'2ea561e375e400c6a32211853cd40c9a6f34a4db9a9a0c81710bc966a21b03a8', 'public_keys': {'o1': b'f7d40da3c32b33c4e1f48fb102ab8d33437e791b1c0e1e57968541e1a90a800a', 'c0': b'0dba56e57256795be46a3e7f73940b9adaf76e38202a837e9640eb7352d1f7fb', 'c1': b'7da0417b4dc60175b6ef50753981301b710fe60571f422ad7eb8269a2f8ef4f4', 'r0': b'33f42f346b3542959c52638f143b9c7fe8a17d0b75caea0dca82aff945699d16', 'r1': b'405231778d29cf164eaef483ea636a49cfe239a213ac3c95447ebbb6c98bd6f7', 'r2': b'16d139f0501f75439dac7ebaa0b99f6de8717aad20c1fa4130c1b523cf52f35d', 'r3': b'194eeb6fde58be3265f6666898c62196eb7c56a3e9f77486551911cdb12853ff', 'r4': b'264e8990d8f678d6864f5bce0dbf5327eca1c8b5ae9f8e7e7bd20b49fa5e090d'}, 'client_timeout': 3.0, 'olympus': {'id': 'o1', 'process_id': <Olympus:1c002>}, 'replicas': {'r0': <Replica:a0003>, 'r1': <Replica:a0004>, 'r2': <Replica:a0005>, 'r3': <Replica:a0006>, 'r4': <Replica:a0007>}, 'head_id': 'r0', 't': 2}
+[2017-11-20 23:23:34,335] client.Client<Client:a0001>:OUTPUT: The following operation was created: {'id': 0, 'client_id': 'c0', 'command_string': "put('movie','star')"}
+[2017-11-20 23:23:34,336] client.Client<Client:a0001>:OUTPUT: return_value= OK
+[2017-11-20 23:23:34,340] client.Client<Client:a0002>:OUTPUT: c1  initialized with config= {'id': 'c1', 'workload': ["put('movie1','star1')", "get('movie1')", "append('movie1', '123')", "get('movie1')", "get('movie1');"], 'private_key': b'893eb1761c6af43f7d0fbb32f8c1fcae45f35692e2c1448e0e99b3d4bcdd53f5', 'public_keys': {'o1': b'f7d40da3c32b33c4e1f48fb102ab8d33437e791b1c0e1e57968541e1a90a800a', 'c0': b'0dba56e57256795be46a3e7f73940b9adaf76e38202a837e9640eb7352d1f7fb', 'c1': b'7da0417b4dc60175b6ef50753981301b710fe60571f422ad7eb8269a2f8ef4f4', 'r0': b'33f42f346b3542959c52638f143b9c7fe8a17d0b75caea0dca82aff945699d16', 'r1': b'405231778d29cf164eaef483ea636a49cfe239a213ac3c95447ebbb6c98bd6f7', 'r2': b'16d139f0501f75439dac7ebaa0b99f6de8717aad20c1fa4130c1b523cf52f35d', 'r3': b'194eeb6fde58be3265f6666898c62196eb7c56a3e9f77486551911cdb12853ff', 'r4': b'264e8990d8f678d6864f5bce0dbf5327eca1c8b5ae9f8e7e7bd20b49fa5e090d'}, 'client_timeout': 3.0, 'olympus': {'id': 'o1', 'process_id': <Olympus:1c002>}, 'replicas': {'r0': <Replica:a0003>, 'r1': <Replica:a0004>, 'r2': <Replica:a0005>, 'r3': <Replica:a0006>, 'r4': <Replica:a0007>}, 'head_id': 'r0', 't': 2}
+[2017-11-20 23:23:34,341] client.Client<Client:a0001>:OUTPUT: A request for an operation was made {'content': {'is_retry': False, 'operation': {'id': 0, 'client_id': 'c0', 'command_string': "put('movie','star')"}}, 'signed_content': b"\x0e\x05Up\xca\xacw\xe7\x1d\xbc\xef\xbd\xd6\xe4\xd0\xbb\xb1\xef\xb2\xb8n\x85\xe3\x8e1\x03kl\x92\xa8\xb6T{\x00\x1e^\xde\x0e\xb9\x88b\x88\x17\xcd\x16OB\xd8\xb0\xa4S\xbc\xd3\xe8\x90\x85<.\xf2Y\xcb\x88\xba\x03\x80\x03}q\x00(X\x08\x00\x00\x00is_retryq\x01\x89X\t\x00\x00\x00operationq\x02}q\x03(X\x02\x00\x00\x00idq\x04K\x00X\t\x00\x00\x00client_idq\x05X\x02\x00\x00\x00c0q\x06X\x0e\x00\x00\x00command_stringq\x07X\x13\x00\x00\x00put('movie','star')q\x08uu."}
+[2017-11-20 23:23:34,342] replica.Replica<Replica:a0003>:OUTPUT: Received request message (source, client_id, operation_id, self_id)  c0 c0 0 r0
+[2017-11-20 23:23:34,343] replica.Replica<Replica:a0003>:OUTPUT: Checking for failure associated with trigger, application:  ('client_request', 'pre')  in replica:  r0
+[2017-11-20 23:23:34,343] replica.Replica<Replica:a0003>:OUTPUT: No failure associated with trigger:  client_request  found in replica:  r0
+[2017-11-20 23:23:34,344] client.Client<Client:a0002>:OUTPUT: The following operation was created: {'id': 0, 'client_id': 'c1', 'command_string': "put('movie1','star1')"}
+[2017-11-20 23:23:34,345] client.Client<Client:a0002>:OUTPUT: return_value= OK
+[2017-11-20 23:23:34,347] replica.Replica<Replica:a0003>:OUTPUT: Head is processing request (operation_id, client_id) (0, 'c0')
+[2017-11-20 23:23:34,351] client.Client<Client:a0002>:OUTPUT: A request for an operation was made {'content': {'is_retry': False, 'operation': {'id': 0, 'client_id': 'c1', 'command_string': "put('movie1','star1')"}}, 'signed_content': b'\xb4\xa4\x8a\xe4N\x9b\xb07 |\x9d\x95\xc6<5\x96\x9c\xad\xcb\xbaL>\xaaB\x81\xb7Zg\x85\xa1\xa3!\x1fHs\xc2w\x19xO\xb0-\xc7%g6j\x1b<9\xb8S<\xe7-\x18"\xf3\r{}\xf9\xa3\x0f\x80\x03}q\x00(X\x08\x00\x00\x00is_retryq\x01\x89X\t\x00\x00\x00operationq\x02}q\x03(X\x02\x00\x00\x00idq\x04K\x00X\t\x00\x00\x00client_idq\x05X\x02\x00\x00\x00c1q\x06X\x0e\x00\x00\x00command_stringq\x07X\x15\x00\x00\x00put(\'movie1\',\'star1\')q\x08uu.'}
+[2017-11-20 23:23:34,355] replica.Replica<Replica:a0003>:OUTPUT: Checking for failure associated with trigger, application:  ('client_request', 'post')  in replica:  r0
+[2017-11-20 23:23:34,355] replica.Replica<Replica:a0003>:OUTPUT: No failure associated with trigger:  client_request  found in replica:  r0
+[2017-11-20 23:23:34,360] replica.Replica<Replica:a0003>:OUTPUT: Received request message (source, client_id, operation_id, self_id)  c1 c1 0 r0
+[2017-11-20 23:23:34,360] replica.Replica<Replica:a0003>:OUTPUT: Checking for failure associated with trigger, application:  ('client_request', 'pre')  in replica:  r0
+[2017-11-20 23:23:34,360] replica.Replica<Replica:a0004>:OUTPUT: Received shuttle (source, client_id, operation_id, self_id)  r0 c0 0 r1
+[2017-11-20 23:23:34,360] replica.Replica<Replica:a0003>:OUTPUT: No failure associated with trigger:  client_request  found in replica:  r0
+[2017-11-20 23:23:34,361] replica.Replica<Replica:a0004>:OUTPUT: Checking for failure associated with trigger, application:  ('shuttle', 'pre')  in replica:  r1
+[2017-11-20 23:23:34,361] replica.Replica<Replica:a0004>:OUTPUT: No failure associated with trigger:  shuttle  found in replica:  r1
+[2017-11-20 23:23:34,364] replica.Replica<Replica:a0003>:OUTPUT: Head is processing request (operation_id, client_id) (0, 'c1')
+[2017-11-20 23:23:34,371] replica.Replica<Replica:a0003>:OUTPUT: Checking for failure associated with trigger, application:  ('client_request', 'post')  in replica:  r0
+[2017-11-20 23:23:34,372] replica.Replica<Replica:a0003>:OUTPUT: No failure associated with trigger:  client_request  found in replica:  r0
+[2017-11-20 23:23:34,378] replica.Replica<Replica:a0004>:OUTPUT: Checking for failure associated with trigger, application:  ('shuttle', 'post')  in replica:  r1
+[2017-11-20 23:23:34,379] replica.Replica<Replica:a0004>:OUTPUT: No failure associated with trigger:  shuttle  found in replica:  r1
+[2017-11-20 23:23:34,386] replica.Replica<Replica:a0004>:OUTPUT: Received shuttle (source, client_id, operation_id, self_id)  r0 c1 0 r1
+[2017-11-20 23:23:34,387] replica.Replica<Replica:a0004>:OUTPUT: Checking for failure associated with trigger, application:  ('shuttle', 'pre')  in replica:  r1
+[2017-11-20 23:23:34,387] replica.Replica<Replica:a0004>:OUTPUT: No failure associated with trigger:  shuttle  found in replica:  r1
+[2017-11-20 23:23:34,387] replica.Replica<Replica:a0005>:OUTPUT: Received shuttle (source, client_id, operation_id, self_id)  r1 c0 0 r2
+[2017-11-20 23:23:34,388] replica.Replica<Replica:a0005>:OUTPUT: Checking for failure associated with trigger, application:  ('shuttle', 'pre')  in replica:  r2
+[2017-11-20 23:23:34,388] replica.Replica<Replica:a0005>:OUTPUT: No failure associated with trigger:  shuttle  found in replica:  r2
+[2017-11-20 23:23:34,404] replica.Replica<Replica:a0004>:OUTPUT: Checking for failure associated with trigger, application:  ('shuttle', 'post')  in replica:  r1
+[2017-11-20 23:23:34,405] replica.Replica<Replica:a0004>:OUTPUT: No failure associated with trigger:  shuttle  found in replica:  r1
+[2017-11-20 23:23:34,407] replica.Replica<Replica:a0005>:OUTPUT: Checking for failure associated with trigger, application:  ('shuttle', 'post')  in replica:  r2
+[2017-11-20 23:23:34,408] replica.Replica<Replica:a0005>:OUTPUT: No failure associated with trigger:  shuttle  found in replica:  r2
+[2017-11-20 23:23:34,413] replica.Replica<Replica:a0005>:OUTPUT: Received shuttle (source, client_id, operation_id, self_id)  r1 c1 0 r2
+[2017-11-20 23:23:34,413] replica.Replica<Replica:a0005>:OUTPUT: Checking for failure associated with trigger, application:  ('shuttle', 'pre')  in replica:  r2
+[2017-11-20 23:23:34,414] replica.Replica<Replica:a0006>:OUTPUT: Received shuttle (source, client_id, operation_id, self_id)  r2 c0 0 r3
+[2017-11-20 23:23:34,414] replica.Replica<Replica:a0005>:OUTPUT: No failure associated with trigger:  shuttle  found in replica:  r2
+[2017-11-20 23:23:34,414] replica.Replica<Replica:a0006>:OUTPUT: Checking for failure associated with trigger, application:  ('shuttle', 'pre')  in replica:  r3
+[2017-11-20 23:23:34,415] replica.Replica<Replica:a0006>:OUTPUT: No failure associated with trigger:  shuttle  found in replica:  r3
+[2017-11-20 23:23:34,436] replica.Replica<Replica:a0005>:OUTPUT: Checking for failure associated with trigger, application:  ('shuttle', 'post')  in replica:  r2
+[2017-11-20 23:23:34,437] replica.Replica<Replica:a0005>:OUTPUT: No failure associated with trigger:  shuttle  found in replica:  r2
+[2017-11-20 23:23:34,440] replica.Replica<Replica:a0006>:OUTPUT: Checking for failure associated with trigger, application:  ('shuttle', 'post')  in replica:  r3
+[2017-11-20 23:23:34,441] replica.Replica<Replica:a0006>:OUTPUT: No failure associated with trigger:  shuttle  found in replica:  r3
+[2017-11-20 23:23:34,446] replica.Replica<Replica:a0006>:OUTPUT: Received shuttle (source, client_id, operation_id, self_id)  r2 c1 0 r3
+[2017-11-20 23:23:34,447] replica.Replica<Replica:a0006>:OUTPUT: Checking for failure associated with trigger, application:  ('shuttle', 'pre')  in replica:  r3
+[2017-11-20 23:23:34,447] replica.Replica<Replica:a0007>:OUTPUT: Received shuttle (source, client_id, operation_id, self_id)  r3 c0 0 r4
+[2017-11-20 23:23:34,447] replica.Replica<Replica:a0006>:OUTPUT: No failure associated with trigger:  shuttle  found in replica:  r3
+[2017-11-20 23:23:34,447] replica.Replica<Replica:a0007>:OUTPUT: Checking for failure associated with trigger, application:  ('shuttle', 'pre')  in replica:  r4
+[2017-11-20 23:23:34,447] replica.Replica<Replica:a0007>:OUTPUT: No failure associated with trigger:  shuttle  found in replica:  r4
+[2017-11-20 23:23:34,470] replica.Replica<Replica:a0006>:OUTPUT: Checking for failure associated with trigger, application:  ('shuttle', 'post')  in replica:  r3
+[2017-11-20 23:23:34,470] replica.Replica<Replica:a0006>:OUTPUT: No failure associated with trigger:  shuttle  found in replica:  r3
+[2017-11-20 23:23:34,489] replica.Replica<Replica:a0007>:OUTPUT: Checking for failure associated with trigger, application:  ('shuttle', 'post')  in replica:  r4
+[2017-11-20 23:23:34,490] replica.Replica<Replica:a0007>:OUTPUT: No failure associated with trigger:  shuttle  found in replica:  r4
+[2017-11-20 23:23:34,495] replica.Replica<Replica:a0006>:OUTPUT: Received result shuttle (source, client_id, operation_id, self_id)  r4 c0 0 r3
+[2017-11-20 23:23:34,496] replica.Replica<Replica:a0007>:OUTPUT: Checking for failure associated with trigger, application:  ('shuttle', 'post')  in replica:  r4
+[2017-11-20 23:23:34,496] replica.Replica<Replica:a0006>:OUTPUT: Checking for failure associated with trigger, application:  ('result_shuttle', 'pre')  in replica:  r3
+[2017-11-20 23:23:34,496] replica.Replica<Replica:a0007>:OUTPUT: No failure associated with trigger:  shuttle  found in replica:  r4
+[2017-11-20 23:23:34,496] replica.Replica<Replica:a0006>:OUTPUT: No failure associated with trigger:  result_shuttle  found in replica:  r3
+[2017-11-20 23:23:34,501] client.Client<Client:a0001>:OUTPUT: A result was received from replica= r4
+[2017-11-20 23:23:34,501] replica.Replica<Replica:a0007>:OUTPUT: Received shuttle (source, client_id, operation_id, self_id)  r3 c1 0 r4
+[2017-11-20 23:23:34,502] replica.Replica<Replica:a0007>:OUTPUT: Checking for failure associated with trigger, application:  ('shuttle', 'pre')  in replica:  r4
+[2017-11-20 23:23:34,502] replica.Replica<Replica:a0007>:OUTPUT: No failure associated with trigger:  shuttle  found in replica:  r4
+[2017-11-20 23:23:34,520] replica.Replica<Replica:a0006>:OUTPUT: Checking for failure associated with trigger, application:  ('result_shuttle', 'post')  in replica:  r3
+[2017-11-20 23:23:34,521] replica.Replica<Replica:a0006>:OUTPUT: No failure associated with trigger:  result_shuttle  found in replica:  r3
+[2017-11-20 23:23:34,524] client.Client<Client:a0001>:OUTPUT: The operation result pair is= {'id': 0, 'client_id': 'c0', 'command_string': "put('movie','star')"} OK
+[2017-11-20 23:23:34,524] client.Client<Client:a0001>:OUTPUT: The result received is valid:(result, operation)= OK {'id': 0, 'client_id': 'c0', 'command_string': "put('movie','star')"}
+[2017-11-20 23:23:34,525] client.Client<Client:a0001>:OUTPUT: The following operation was created: {'id': 1, 'client_id': 'c0', 'command_string': "get('movie')"}
+[2017-11-20 23:23:34,527] client.Client<Client:a0001>:OUTPUT: return_value= star
+[2017-11-20 23:23:34,528] replica.Replica<Replica:a0005>:OUTPUT: Received result shuttle (source, client_id, operation_id, self_id)  r3 c0 0 r2
+[2017-11-20 23:23:34,528] replica.Replica<Replica:a0005>:OUTPUT: Checking for failure associated with trigger, application:  ('result_shuttle', 'pre')  in replica:  r2
+[2017-11-20 23:23:34,529] replica.Replica<Replica:a0005>:OUTPUT: No failure associated with trigger:  result_shuttle  found in replica:  r2
+[2017-11-20 23:23:34,531] replica.Replica<Replica:a0003>:OUTPUT: Received request message (source, client_id, operation_id, self_id)  c0 c0 1 r0
+[2017-11-20 23:23:34,532] replica.Replica<Replica:a0003>:OUTPUT: Checking for failure associated with trigger, application:  ('client_request', 'pre')  in replica:  r0
+[2017-11-20 23:23:34,533] replica.Replica<Replica:a0003>:OUTPUT: No failure associated with trigger:  client_request  found in replica:  r0
+[2017-11-20 23:23:34,538] replica.Replica<Replica:a0003>:OUTPUT: Head is processing request (operation_id, client_id) (1, 'c0')
+[2017-11-20 23:23:34,540] client.Client<Client:a0001>:OUTPUT: A request for an operation was made {'content': {'is_retry': False, 'operation': {'id': 1, 'client_id': 'c0', 'command_string': "get('movie')"}}, 'signed_content': b"\xb8\xfb\xa0C\x00q{\r\xd8\x8dV\x11\xca\xc2\xfe\xc6;\x9fRNd\x93\xa6\xd6h7\x92|$T\xc4\x96~Q\x18\xceUbc\x82QF\xca\x95\xce\xbeq\x1a\x90\x1e\xaa\xf8fFZ\xd8\xb0\xdd\xbc\xe8\t\xdd%\x04\x80\x03}q\x00(X\x08\x00\x00\x00is_retryq\x01\x89X\t\x00\x00\x00operationq\x02}q\x03(X\x02\x00\x00\x00idq\x04K\x01X\t\x00\x00\x00client_idq\x05X\x02\x00\x00\x00c0q\x06X\x0e\x00\x00\x00command_stringq\x07X\x0c\x00\x00\x00get('movie')q\x08uu."}
+[2017-11-20 23:23:34,545] replica.Replica<Replica:a0003>:OUTPUT: Checking for failure associated with trigger, application:  ('client_request', 'post')  in replica:  r0
+[2017-11-20 23:23:34,545] replica.Replica<Replica:a0003>:OUTPUT: No failure associated with trigger:  client_request  found in replica:  r0
+[2017-11-20 23:23:34,548] replica.Replica<Replica:a0007>:OUTPUT: Checking for failure associated with trigger, application:  ('shuttle', 'post')  in replica:  r4
+[2017-11-20 23:23:34,548] replica.Replica<Replica:a0004>:OUTPUT: Received shuttle (source, client_id, operation_id, self_id)  r0 c0 1 r1
+[2017-11-20 23:23:34,548] replica.Replica<Replica:a0007>:OUTPUT: No failure associated with trigger:  shuttle  found in replica:  r4
+[2017-11-20 23:23:34,549] replica.Replica<Replica:a0004>:OUTPUT: Checking for failure associated with trigger, application:  ('shuttle', 'pre')  in replica:  r1
+[2017-11-20 23:23:34,550] replica.Replica<Replica:a0004>:OUTPUT: No failure associated with trigger:  shuttle  found in replica:  r1
+[2017-11-20 23:23:34,554] replica.Replica<Replica:a0005>:OUTPUT: Checking for failure associated with trigger, application:  ('result_shuttle', 'post')  in replica:  r2
+[2017-11-20 23:23:34,555] replica.Replica<Replica:a0005>:OUTPUT: No failure associated with trigger:  result_shuttle  found in replica:  r2
+[2017-11-20 23:23:34,556] replica.Replica<Replica:a0006>:OUTPUT: Received result shuttle (source, client_id, operation_id, self_id)  r4 c1 0 r3
+[2017-11-20 23:23:34,556] replica.Replica<Replica:a0006>:OUTPUT: Checking for failure associated with trigger, application:  ('result_shuttle', 'pre')  in replica:  r3
+[2017-11-20 23:23:34,557] replica.Replica<Replica:a0006>:OUTPUT: No failure associated with trigger:  result_shuttle  found in replica:  r3
+[2017-11-20 23:23:34,564] replica.Replica<Replica:a0007>:OUTPUT: Checking for failure associated with trigger, application:  ('shuttle', 'post')  in replica:  r4
+[2017-11-20 23:23:34,564] replica.Replica<Replica:a0007>:OUTPUT: No failure associated with trigger:  shuttle  found in replica:  r4
+[2017-11-20 23:23:34,568] replica.Replica<Replica:a0004>:OUTPUT: Checking for failure associated with trigger, application:  ('shuttle', 'post')  in replica:  r1
+[2017-11-20 23:23:34,569] replica.Replica<Replica:a0004>:OUTPUT: No failure associated with trigger:  shuttle  found in replica:  r1
+[2017-11-20 23:23:34,570] client.Client<Client:a0002>:OUTPUT: A result was received from replica= r4
+[2017-11-20 23:23:34,574] replica.Replica<Replica:a0004>:OUTPUT: Received result shuttle (source, client_id, operation_id, self_id)  r2 c0 0 r1
+[2017-11-20 23:23:34,576] replica.Replica<Replica:a0005>:OUTPUT: Received shuttle (source, client_id, operation_id, self_id)  r1 c0 1 r2
+[2017-11-20 23:23:34,577] replica.Replica<Replica:a0004>:OUTPUT: Checking for failure associated with trigger, application:  ('result_shuttle', 'pre')  in replica:  r1
+[2017-11-20 23:23:34,578] replica.Replica<Replica:a0005>:OUTPUT: Checking for failure associated with trigger, application:  ('shuttle', 'pre')  in replica:  r2
+[2017-11-20 23:23:34,578] replica.Replica<Replica:a0004>:OUTPUT: No failure associated with trigger:  result_shuttle  found in replica:  r1
+[2017-11-20 23:23:34,579] replica.Replica<Replica:a0005>:OUTPUT: No failure associated with trigger:  shuttle  found in replica:  r2
+[2017-11-20 23:23:34,583] replica.Replica<Replica:a0006>:OUTPUT: Checking for failure associated with trigger, application:  ('result_shuttle', 'post')  in replica:  r3
+[2017-11-20 23:23:34,583] replica.Replica<Replica:a0006>:OUTPUT: No failure associated with trigger:  result_shuttle  found in replica:  r3
+[2017-11-20 23:23:34,593] client.Client<Client:a0002>:OUTPUT: The operation result pair is= {'id': 0, 'client_id': 'c1', 'command_string': "put('movie1','star1')"} OK
+[2017-11-20 23:23:34,594] client.Client<Client:a0002>:OUTPUT: The result received is valid:(result, operation)= OK {'id': 0, 'client_id': 'c1', 'command_string': "put('movie1','star1')"}
+[2017-11-20 23:23:34,594] client.Client<Client:a0002>:OUTPUT: The following operation was created: {'id': 1, 'client_id': 'c1', 'command_string': "get('movie1')"}
+[2017-11-20 23:23:34,595] client.Client<Client:a0002>:OUTPUT: return_value= star1
+[2017-11-20 23:23:34,598] client.Client<Client:a0002>:OUTPUT: A request for an operation was made {'content': {'is_retry': False, 'operation': {'id': 1, 'client_id': 'c1', 'command_string': "get('movie1')"}}, 'signed_content': b"jXS6\xc3\xdf\x88;o\xdb5\xe2{\xa3\xce\xd8}\x88\xd6\xf3\x8dd7\xcb\xf3\x85\xda\xb6X\x1dc\xd9}7\xb4\xcb\xbb\xad\x83\xec'\xdd\x84\xf3\xee2\x0cy\xc0{\xaf\x90eH+5\x00#\xbe~\xdf\x07 \x0c\x80\x03}q\x00(X\x08\x00\x00\x00is_retryq\x01\x89X\t\x00\x00\x00operationq\x02}q\x03(X\x02\x00\x00\x00idq\x04K\x01X\t\x00\x00\x00client_idq\x05X\x02\x00\x00\x00c1q\x06X\x0e\x00\x00\x00command_stringq\x07X\r\x00\x00\x00get('movie1')q\x08uu."}
+[2017-11-20 23:23:34,599] replica.Replica<Replica:a0003>:OUTPUT: Received request message (source, client_id, operation_id, self_id)  c1 c1 1 r0
+[2017-11-20 23:23:34,599] replica.Replica<Replica:a0003>:OUTPUT: Checking for failure associated with trigger, application:  ('client_request', 'pre')  in replica:  r0
+[2017-11-20 23:23:34,600] replica.Replica<Replica:a0003>:OUTPUT: No failure associated with trigger:  client_request  found in replica:  r0
+[2017-11-20 23:23:34,602] replica.Replica<Replica:a0005>:OUTPUT: Checking for failure associated with trigger, application:  ('shuttle', 'post')  in replica:  r2
+[2017-11-20 23:23:34,602] replica.Replica<Replica:a0005>:OUTPUT: No failure associated with trigger:  shuttle  found in replica:  r2
+[2017-11-20 23:23:34,604] replica.Replica<Replica:a0003>:OUTPUT: Head is processing request (operation_id, client_id) (1, 'c1')
+[2017-11-20 23:23:34,607] replica.Replica<Replica:a0005>:OUTPUT: Received result shuttle (source, client_id, operation_id, self_id)  r3 c1 0 r2
+[2017-11-20 23:23:34,608] replica.Replica<Replica:a0005>:OUTPUT: Checking for failure associated with trigger, application:  ('result_shuttle', 'pre')  in replica:  r2
+[2017-11-20 23:23:34,608] replica.Replica<Replica:a0005>:OUTPUT: No failure associated with trigger:  result_shuttle  found in replica:  r2
+[2017-11-20 23:23:34,608] replica.Replica<Replica:a0006>:OUTPUT: Received shuttle (source, client_id, operation_id, self_id)  r2 c0 1 r3
+[2017-11-20 23:23:34,610] replica.Replica<Replica:a0006>:OUTPUT: Checking for failure associated with trigger, application:  ('shuttle', 'pre')  in replica:  r3
+[2017-11-20 23:23:34,611] replica.Replica<Replica:a0006>:OUTPUT: No failure associated with trigger:  shuttle  found in replica:  r3
+[2017-11-20 23:23:34,612] replica.Replica<Replica:a0003>:OUTPUT: Checking for failure associated with trigger, application:  ('client_request', 'post')  in replica:  r0
+[2017-11-20 23:23:34,613] replica.Replica<Replica:a0003>:OUTPUT: No failure associated with trigger:  client_request  found in replica:  r0
+[2017-11-20 23:23:34,612] replica.Replica<Replica:a0004>:OUTPUT: Checking for failure associated with trigger, application:  ('result_shuttle', 'post')  in replica:  r1
+[2017-11-20 23:23:34,613] replica.Replica<Replica:a0004>:OUTPUT: No failure associated with trigger:  result_shuttle  found in replica:  r1
+[2017-11-20 23:23:34,619] replica.Replica<Replica:a0004>:OUTPUT: Received shuttle (source, client_id, operation_id, self_id)  r0 c1 1 r1
+[2017-11-20 23:23:34,619] replica.Replica<Replica:a0004>:OUTPUT: Checking for failure associated with trigger, application:  ('shuttle', 'pre')  in replica:  r1
+[2017-11-20 23:23:34,620] replica.Replica<Replica:a0003>:OUTPUT: Received result shuttle (source, client_id, operation_id, self_id)  r1 c0 0 r0
+[2017-11-20 23:23:34,621] replica.Replica<Replica:a0004>:OUTPUT: No failure associated with trigger:  shuttle  found in replica:  r1
+[2017-11-20 23:23:34,621] replica.Replica<Replica:a0003>:OUTPUT: Checking for failure associated with trigger, application:  ('result_shuttle', 'pre')  in replica:  r0
+[2017-11-20 23:23:34,622] replica.Replica<Replica:a0003>:OUTPUT: No failure associated with trigger:  result_shuttle  found in replica:  r0
+[2017-11-20 23:23:34,635] replica.Replica<Replica:a0005>:OUTPUT: Checking for failure associated with trigger, application:  ('result_shuttle', 'post')  in replica:  r2
+[2017-11-20 23:23:34,636] replica.Replica<Replica:a0005>:OUTPUT: No failure associated with trigger:  result_shuttle  found in replica:  r2
+[2017-11-20 23:23:34,639] replica.Replica<Replica:a0006>:OUTPUT: Checking for failure associated with trigger, application:  ('shuttle', 'post')  in replica:  r3
+[2017-11-20 23:23:34,640] replica.Replica<Replica:a0004>:OUTPUT: No failure associated with trigger:  shuttle  found in replica:  r1
+[2017-11-20 23:23:34,640] replica.Replica<Replica:a0006>:OUTPUT: No failure associated with trigger:  shuttle  found in replica:  r3
+[2017-11-20 23:23:34,644] replica.Replica<Replica:a0005>:OUTPUT: Received shuttle (source, client_id, operation_id, self_id)  r1 c1 1 r2
+[2017-11-20 23:23:34,644] replica.Replica<Replica:a0005>:OUTPUT: Checking for failure associated with trigger, application:  ('shuttle', 'pre')  in replica:  r2
+[2017-11-20 23:23:34,645] replica.Replica<Replica:a0005>:OUTPUT: No failure associated with trigger:  shuttle  found in replica:  r2
+[2017-11-20 23:23:34,645] replica.Replica<Replica:a0007>:OUTPUT: Received shuttle (source, client_id, operation_id, self_id)  r3 c0 1 r4
+[2017-11-20 23:23:34,646] replica.Replica<Replica:a0007>:OUTPUT: Checking for failure associated with trigger, application:  ('shuttle', 'pre')  in replica:  r4
+[2017-11-20 23:23:34,646] replica.Replica<Replica:a0007>:OUTPUT: No failure associated with trigger:  shuttle  found in replica:  r4
+[2017-11-20 23:23:34,647] replica.Replica<Replica:a0004>:OUTPUT: Received result shuttle (source, client_id, operation_id, self_id)  r2 c1 0 r1
+[2017-11-20 23:23:34,656] replica.Replica<Replica:a0004>:OUTPUT: Checking for failure associated with trigger, application:  ('result_shuttle', 'pre')  in replica:  r1
+[2017-11-20 23:23:34,657] replica.Replica<Replica:a0004>:OUTPUT: No failure associated with trigger:  result_shuttle  found in replica:  r1
+[2017-11-20 23:23:34,669] replica.Replica<Replica:a0005>:OUTPUT: Checking for failure associated with trigger, application:  ('shuttle', 'post')  in replica:  r2
+[2017-11-20 23:23:34,669] replica.Replica<Replica:a0005>:OUTPUT: No failure associated with trigger:  shuttle  found in replica:  r2
+[2017-11-20 23:23:34,674] replica.Replica<Replica:a0006>:OUTPUT: Received shuttle (source, client_id, operation_id, self_id)  r2 c1 1 r3
+[2017-11-20 23:23:34,674] replica.Replica<Replica:a0006>:OUTPUT: Checking for failure associated with trigger, application:  ('shuttle', 'pre')  in replica:  r3
+[2017-11-20 23:23:34,675] replica.Replica<Replica:a0006>:OUTPUT: No failure associated with trigger:  shuttle  found in replica:  r3
+[2017-11-20 23:23:34,684] replica.Replica<Replica:a0004>:OUTPUT: Checking for failure associated with trigger, application:  ('result_shuttle', 'post')  in replica:  r1
+[2017-11-20 23:23:34,684] replica.Replica<Replica:a0004>:OUTPUT: No failure associated with trigger:  result_shuttle  found in replica:  r1
+[2017-11-20 23:23:34,688] replica.Replica<Replica:a0003>:OUTPUT: Received result shuttle (source, client_id, operation_id, self_id)  r1 c1 0 r0
+[2017-11-20 23:23:34,689] replica.Replica<Replica:a0003>:OUTPUT: Checking for failure associated with trigger, application:  ('result_shuttle', 'pre')  in replica:  r0
+[2017-11-20 23:23:34,690] replica.Replica<Replica:a0003>:OUTPUT: No failure associated with trigger:  result_shuttle  found in replica:  r0
+[2017-11-20 23:23:34,695] replica.Replica<Replica:a0007>:OUTPUT: Checking for failure associated with trigger, application:  ('shuttle', 'post')  in replica:  r4
+[2017-11-20 23:23:34,696] replica.Replica<Replica:a0007>:OUTPUT: No failure associated with trigger:  shuttle  found in replica:  r4
+[2017-11-20 23:23:34,701] replica.Replica<Replica:a0006>:OUTPUT: Checking for failure associated with trigger, application:  ('shuttle', 'post')  in replica:  r3
+[2017-11-20 23:23:34,701] replica.Replica<Replica:a0006>:OUTPUT: No failure associated with trigger:  shuttle  found in replica:  r3
+[2017-11-20 23:23:34,703] replica.Replica<Replica:a0007>:OUTPUT: Checking for failure associated with trigger, application:  ('shuttle', 'post')  in replica:  r4
+[2017-11-20 23:23:34,704] replica.Replica<Replica:a0007>:OUTPUT: No failure associated with trigger:  shuttle  found in replica:  r4
+[2017-11-20 23:23:34,705] replica.Replica<Replica:a0006>:OUTPUT: Received result shuttle (source, client_id, operation_id, self_id)  r4 c0 1 r3
+[2017-11-20 23:23:34,706] replica.Replica<Replica:a0006>:OUTPUT: Checking for failure associated with trigger, application:  ('result_shuttle', 'pre')  in replica:  r3
+[2017-11-20 23:23:34,706] replica.Replica<Replica:a0006>:OUTPUT: No failure associated with trigger:  result_shuttle  found in replica:  r3
+[2017-11-20 23:23:34,708] client.Client<Client:a0001>:OUTPUT: A result was received from replica= r4
+[2017-11-20 23:23:34,708] replica.Replica<Replica:a0007>:OUTPUT: Received shuttle (source, client_id, operation_id, self_id)  r3 c1 1 r4
+[2017-11-20 23:23:34,709] replica.Replica<Replica:a0007>:OUTPUT: Checking for failure associated with trigger, application:  ('shuttle', 'pre')  in replica:  r4
+[2017-11-20 23:23:34,709] replica.Replica<Replica:a0007>:OUTPUT: No failure associated with trigger:  shuttle  found in replica:  r4
+[2017-11-20 23:23:34,730] client.Client<Client:a0001>:OUTPUT: The operation result pair is= {'id': 1, 'client_id': 'c0', 'command_string': "get('movie')"} star
+[2017-11-20 23:23:34,730] client.Client<Client:a0001>:OUTPUT: The result received is valid:(result, operation)= star {'id': 1, 'client_id': 'c0', 'command_string': "get('movie')"}
+[2017-11-20 23:23:34,731] client.Client<Client:a0001>:OUTPUT: The following operation was created: {'id': 2, 'client_id': 'c0', 'command_string': "append('movie', '123')"}
+[2017-11-20 23:23:34,731] client.Client<Client:a0001>:OUTPUT: return_value= OK
+[2017-11-20 23:23:34,736] replica.Replica<Replica:a0003>:OUTPUT: Received request message (source, client_id, operation_id, self_id)  c0 c0 2 r0
+[2017-11-20 23:23:34,734] client.Client<Client:a0001>:OUTPUT: A request for an operation was made {'content': {'is_retry': False, 'operation': {'id': 2, 'client_id': 'c0', 'command_string': "append('movie', '123')"}}, 'signed_content': b"\x9c\xf6\xb7\x06Pb\t\xf4\x9d\xf4\xfc\x02\x9f\xe5\xf1\xba\xe0\xfb\xc04\x1d\tZU\x89\xf6\xd5\x99\xaf\xa1\x99\xe8\x15\x8d`\xdcB\x089Ba`\x87\na{\x05$\x95\xc1\xa3U)H\xffb\xfa\xf0\xf4\xe8\x8e'\xc1\x07\x80\x03}q\x00(X\x08\x00\x00\x00is_retryq\x01\x89X\t\x00\x00\x00operationq\x02}q\x03(X\x02\x00\x00\x00idq\x04K\x02X\t\x00\x00\x00client_idq\x05X\x02\x00\x00\x00c0q\x06X\x0e\x00\x00\x00command_stringq\x07X\x16\x00\x00\x00append('movie', '123')q\x08uu."}
+[2017-11-20 23:23:34,736] replica.Replica<Replica:a0003>:OUTPUT: Checking for failure associated with trigger, application:  ('client_request', 'pre')  in replica:  r0
+[2017-11-20 23:23:34,737] replica.Replica<Replica:a0003>:OUTPUT: No failure associated with trigger:  client_request  found in replica:  r0
+[2017-11-20 23:23:34,738] replica.Replica<Replica:a0006>:OUTPUT: Checking for failure associated with trigger, application:  ('result_shuttle', 'post')  in replica:  r3
+[2017-11-20 23:23:34,740] replica.Replica<Replica:a0006>:OUTPUT: No failure associated with trigger:  result_shuttle  found in replica:  r3
+[2017-11-20 23:23:34,742] replica.Replica<Replica:a0003>:OUTPUT: Head is processing request (operation_id, client_id) (2, 'c0')
+[2017-11-20 23:23:34,745] replica.Replica<Replica:a0005>:OUTPUT: Received result shuttle (source, client_id, operation_id, self_id)  r3 c0 1 r2
+[2017-11-20 23:23:34,745] replica.Replica<Replica:a0005>:OUTPUT: Checking for failure associated with trigger, application:  ('result_shuttle', 'pre')  in replica:  r2
+[2017-11-20 23:23:34,746] replica.Replica<Replica:a0005>:OUTPUT: No failure associated with trigger:  result_shuttle  found in replica:  r2
+[2017-11-20 23:23:34,748] replica.Replica<Replica:a0003>:OUTPUT: Checking for failure associated with trigger, application:  ('client_request', 'post')  in replica:  r0
+[2017-11-20 23:23:34,748] replica.Replica<Replica:a0003>:OUTPUT: No failure associated with trigger:  client_request  found in replica:  r0
+[2017-11-20 23:23:34,751] replica.Replica<Replica:a0004>:OUTPUT: Received shuttle (source, client_id, operation_id, self_id)  r0 c0 2 r1
+[2017-11-20 23:23:34,752] replica.Replica<Replica:a0004>:OUTPUT: Checking for failure associated with trigger, application:  ('shuttle', 'pre')  in replica:  r1
+[2017-11-20 23:23:34,752] replica.Replica<Replica:a0004>:OUTPUT: Failure drop activated in replica id:  r1
+[2017-11-20 23:23:34,753] replica.Replica<Replica:a0004>:OUTPUT: Applying failure 'drop' at Replica:  r1
+[2017-11-20 23:23:34,758] replica.Replica<Replica:a0007>:OUTPUT: Checking for failure associated with trigger, application:  ('shuttle', 'post')  in replica:  r4
+[2017-11-20 23:23:34,759] replica.Replica<Replica:a0007>:OUTPUT: No failure associated with trigger:  shuttle  found in replica:  r4
+[2017-11-20 23:23:34,764] replica.Replica<Replica:a0006>:OUTPUT: Received result shuttle (source, client_id, operation_id, self_id)  r4 c1 1 r3
+[2017-11-20 23:23:34,764] replica.Replica<Replica:a0007>:OUTPUT: Checking for failure associated with trigger, application:  ('shuttle', 'post')  in replica:  r4
+[2017-11-20 23:23:34,765] replica.Replica<Replica:a0006>:OUTPUT: Checking for failure associated with trigger, application:  ('result_shuttle', 'pre')  in replica:  r3
+[2017-11-20 23:23:34,765] replica.Replica<Replica:a0007>:OUTPUT: No failure associated with trigger:  shuttle  found in replica:  r4
+[2017-11-20 23:23:34,766] replica.Replica<Replica:a0006>:OUTPUT: No failure associated with trigger:  result_shuttle  found in replica:  r3
+[2017-11-20 23:23:34,769] client.Client<Client:a0002>:OUTPUT: A result was received from replica= r4
+[2017-11-20 23:23:34,771] replica.Replica<Replica:a0005>:OUTPUT: Checking for failure associated with trigger, application:  ('result_shuttle', 'post')  in replica:  r2
+[2017-11-20 23:23:34,772] replica.Replica<Replica:a0005>:OUTPUT: No failure associated with trigger:  result_shuttle  found in replica:  r2
+[2017-11-20 23:23:34,777] replica.Replica<Replica:a0004>:OUTPUT: Received result shuttle (source, client_id, operation_id, self_id)  r2 c0 1 r1
+[2017-11-20 23:23:34,777] replica.Replica<Replica:a0004>:OUTPUT: Checking for failure associated with trigger, application:  ('result_shuttle', 'pre')  in replica:  r1
+[2017-11-20 23:23:34,778] replica.Replica<Replica:a0004>:OUTPUT: No failure associated with trigger:  result_shuttle  found in replica:  r1
+[2017-11-20 23:23:34,791] client.Client<Client:a0002>:OUTPUT: The operation result pair is= {'id': 1, 'client_id': 'c1', 'command_string': "get('movie1')"} star1
+[2017-11-20 23:23:34,791] client.Client<Client:a0002>:OUTPUT: The result received is valid:(result, operation)= star1 {'id': 1, 'client_id': 'c1', 'command_string': "get('movie1')"}
+[2017-11-20 23:23:34,792] client.Client<Client:a0002>:OUTPUT: The following operation was created: {'id': 2, 'client_id': 'c1', 'command_string': "append('movie1', '123')"}
+[2017-11-20 23:23:34,792] client.Client<Client:a0002>:OUTPUT: return_value= OK
+[2017-11-20 23:23:34,793] replica.Replica<Replica:a0006>:OUTPUT: Checking for failure associated with trigger, application:  ('result_shuttle', 'post')  in replica:  r3
+[2017-11-20 23:23:34,793] replica.Replica<Replica:a0006>:OUTPUT: No failure associated with trigger:  result_shuttle  found in replica:  r3
+[2017-11-20 23:23:34,796] client.Client<Client:a0002>:OUTPUT: A request for an operation was made {'content': {'is_retry': False, 'operation': {'id': 2, 'client_id': 'c1', 'command_string': "append('movie1', '123')"}}, 'signed_content': b"\xe45\xa1\xaf!\xd6\xff#\x92ux\x1a\xcaX\xb1av\x95U\xcf\xf8\xd5\x13\xbb_\\\x9a`58\xf9\x97\x17\xc1\xdf\xca\x16\xc8\xf0\x8e\x14mM\x9d\xeb+\x9d\x9a,\xc9]X\x1f\x88\xf45\x9cZT%\xda\xe4\xf4\x00\x80\x03}q\x00(X\x08\x00\x00\x00is_retryq\x01\x89X\t\x00\x00\x00operationq\x02}q\x03(X\x02\x00\x00\x00idq\x04K\x02X\t\x00\x00\x00client_idq\x05X\x02\x00\x00\x00c1q\x06X\x0e\x00\x00\x00command_stringq\x07X\x17\x00\x00\x00append('movie1', '123')q\x08uu."}
+[2017-11-20 23:23:34,797] replica.Replica<Replica:a0003>:OUTPUT: Received request message (source, client_id, operation_id, self_id)  c1 c1 2 r0
+[2017-11-20 23:23:34,798] replica.Replica<Replica:a0003>:OUTPUT: Checking for failure associated with trigger, application:  ('client_request', 'pre')  in replica:  r0
+[2017-11-20 23:23:34,798] replica.Replica<Replica:a0005>:OUTPUT: Received result shuttle (source, client_id, operation_id, self_id)  r3 c1 1 r2
+[2017-11-20 23:23:34,798] replica.Replica<Replica:a0003>:OUTPUT: No failure associated with trigger:  client_request  found in replica:  r0
+[2017-11-20 23:23:34,798] replica.Replica<Replica:a0005>:OUTPUT: Checking for failure associated with trigger, application:  ('result_shuttle', 'pre')  in replica:  r2
+[2017-11-20 23:23:34,799] replica.Replica<Replica:a0005>:OUTPUT: No failure associated with trigger:  result_shuttle  found in replica:  r2
+[2017-11-20 23:23:34,802] replica.Replica<Replica:a0003>:OUTPUT: Head is processing request (operation_id, client_id) (2, 'c1')
+[2017-11-20 23:23:34,802] replica.Replica<Replica:a0004>:OUTPUT: Checking for failure associated with trigger, application:  ('result_shuttle', 'post')  in replica:  r1
+[2017-11-20 23:23:34,803] replica.Replica<Replica:a0004>:OUTPUT: No failure associated with trigger:  result_shuttle  found in replica:  r1
+[2017-11-20 23:23:34,810] replica.Replica<Replica:a0003>:OUTPUT: Checking for failure associated with trigger, application:  ('client_request', 'post')  in replica:  r0
+[2017-11-20 23:23:34,812] replica.Replica<Replica:a0003>:OUTPUT: No failure associated with trigger:  client_request  found in replica:  r0
+[2017-11-20 23:23:34,814] replica.Replica<Replica:a0004>:OUTPUT: Received shuttle (source, client_id, operation_id, self_id)  r0 c1 2 r1
+[2017-11-20 23:23:34,815] replica.Replica<Replica:a0003>:OUTPUT: Received result shuttle (source, client_id, operation_id, self_id)  r1 c0 1 r0
+[2017-11-20 23:23:34,815] replica.Replica<Replica:a0004>:OUTPUT: Checking for failure associated with trigger, application:  ('shuttle', 'pre')  in replica:  r1
+:  r0
+[2017-11-20 23:23:34,817] replica.Replica<Replica:a0003>:OUTPUT: No failure associated with trigger:  result_shuttle  found in replica:  r0
+[2017-11-20 23:23:34,817] replica.Replica<Replica:a0004>:OUTPUT: Failure drop activated in replica id:  r1
+[2017-11-20 23:23:34,817] replica.Replica<Replica:a0004>:OUTPUT: Applying failure 'drop' at Replica:  r1
+[2017-11-20 23:23:34,827] replica.Replica<Replica:a0005>:OUTPUT: Checking for failure associated with trigger, application:  ('result_shuttle', 'post')  in replica:  r2
+[2017-11-20 23:23:34,827] replica.Replica<Replica:a0005>:OUTPUT: No failure associated with trigger:  result_shuttle  found in replica:  r2
+[2017-11-20 23:23:34,831] replica.Replica<Replica:a0004>:OUTPUT: Received result shuttle (source, client_id, operation_id, self_id)  r2 c1 1 r1
+[2017-11-20 23:23:34,832] replica.Replica<Replica:a0004>:OUTPUT: Checking for failure associated with trigger, application:  ('result_shuttle', 'pre')  in replica:  r1
+[2017-11-20 23:23:34,832] replica.Replica<Replica:a0004>:OUTPUT: No failure associated with trigger:  result_shuttle  found in replica:  r1
+[2017-11-20 23:23:34,855] replica.Replica<Replica:a0004>:OUTPUT: Checking for failure associated with trigger, application:  ('result_shuttle', 'post')  in replica:  r1
+[2017-11-20 23:23:34,855] replica.Replica<Replica:a0004>:OUTPUT: No failure associated with trigger:  result_shuttle  found in replica:  r1
+[2017-11-20 23:23:34,859] replica.Replica<Replica:a0003>:OUTPUT: Received result shuttle (source, client_id, operation_id, self_id)  r1 c1 1 r0
+[2017-11-20 23:23:34,860] replica.Replica<Replica:a0003>:OUTPUT: Checking for failure associated with trigger, application:  ('result_shuttle', 'pre')  in replica:  r0
+[2017-11-20 23:23:34,860] replica.Replica<Replica:a0003>:OUTPUT: No failure associated with trigger:  result_shuttle  found in replica:  r0
+[2017-11-20 23:23:37,737] client.Client<Client:a0001>:OUTPUT: Wait for result timed out for operation= {'id': 2, 'client_id': 'c0', 'command_string': "append('movie', '123')"}
+[2017-11-20 23:23:37,739] client.Client<Client:a0001>:OUTPUT: Config requested from Olympus by client= c0
+[2017-11-20 23:23:37,744] client.Client<Client:a0001>:OUTPUT: Sending config request from client:  c0
+[2017-11-20 23:23:37,749] olympus.Olympus<Olympus:1c002>:OUTPUT: Config request received from client= c0
+[2017-11-20 23:23:37,765] olympus.Olympus<Olympus:1c002>:OUTPUT: Config has been sent to client= c0
+[2017-11-20 23:23:37,777] client.Client<Client:a0001>:OUTPUT: The config was fetched from Olympus: {'id': 'c0', 'workload': ["put('movie','star')", "get('movie')", "append('movie', '123')", "get('movie')", "get('movie');"], 'private_key': b'2ea561e375e400c6a32211853cd40c9a6f34a4db9a9a0c81710bc966a21b03a8', 'public_keys': {'o1': b'f7d40da3c32b33c4e1f48fb102ab8d33437e791b1c0e1e57968541e1a90a800a', 'c0': b'0dba56e57256795be46a3e7f73940b9adaf76e38202a837e9640eb7352d1f7fb', 'c1': b'7da0417b4dc60175b6ef50753981301b710fe60571f422ad7eb8269a2f8ef4f4', 'r0': b'33f42f346b3542959c52638f143b9c7fe8a17d0b75caea0dca82aff945699d16', 'r1': b'405231778d29cf164eaef483ea636a49cfe239a213ac3c95447ebbb6c98bd6f7', 'r2': b'16d139f0501f75439dac7ebaa0b99f6de8717aad20c1fa4130c1b523cf52f35d', 'r3': b'194eeb6fde58be3265f6666898c62196eb7c56a3e9f77486551911cdb12853ff', 'r4': b'264e8990d8f678d6864f5bce0dbf5327eca1c8b5ae9f8e7e7bd20b49fa5e090d'}, 'client_timeout': 3.0, 'olympus': {'id': 'o1', 'process_id': <Olympus:1c002>}, 'replicas': {'r0': <Replica:a0003>, 'r1': <Replica:a0004>, 'r2': <Replica:a0005>, 'r3': <Replica:a0006>, 'r4': <Replica:a0007>}, 'head_id': 'r0', 't': 2}
+[2017-11-20 23:23:37,782] client.Client<Client:a0001>:OUTPUT: Retransmitting request to all replicas for operation= {'id': 2, 'client_id': 'c0', 'command_string': "append('movie', '123')"}
+[2017-11-20 23:23:37,785] replica.Replica<Replica:a0003>:OUTPUT: Received request message (source, client_id, operation_id, self_id)  c0 c0 2 r0
+[2017-11-20 23:23:37,786] replica.Replica<Replica:a0003>:OUTPUT: Checking for failure associated with trigger, application:  ('client_request', 'pre')  in replica:  r0
+[2017-11-20 23:23:37,789] replica.Replica<Replica:a0003>:OUTPUT: No failure associated with trigger:  client_request  found in replica:  r0
+[2017-11-20 23:23:37,788] replica.Replica<Replica:a0004>:OUTPUT: Received request message (source, client_id, operation_id, self_id)  c0 c0 2 r1
+[2017-11-20 23:23:37,790] replica.Replica<Replica:a0005>:OUTPUT: Received request message (source, client_id, operation_id, self_id)  c0 c0 2 r2
+[2017-11-20 23:23:37,790] replica.Replica<Replica:a0004>:OUTPUT: Checking for failure associated with trigger, application:  ('client_request', 'pre')  in replica:  r1
+[2017-11-20 23:23:37,791] replica.Replica<Replica:a0005>:OUTPUT: Checking for failure associated with trigger, application:  ('client_request', 'pre')  in replica:  r2
+[2017-11-20 23:23:37,791] replica.Replica<Replica:a0004>:OUTPUT: No failure associated with trigger:  client_request  found in replica:  r1
+[2017-11-20 23:23:37,792] replica.Replica<Replica:a0005>:OUTPUT: No failure associated with trigger:  client_request  found in replica:  r2
+[2017-11-20 23:23:37,792] replica.Replica<Replica:a0006>:OUTPUT: Received request message (source, client_id, operation_id, self_id)  c0 c0 2 r3
+[2017-11-20 23:23:37,793] replica.Replica<Replica:a0003>:OUTPUT: Awaiting result shuttle from downstream _replicas
+[2017-11-20 23:23:37,794] replica.Replica<Replica:a0006>:OUTPUT: Checking for failure associated with trigger, application:  ('client_request', 'pre')  in replica:  r3
+[2017-11-20 23:23:37,794] replica.Replica<Replica:a0007>:OUTPUT: Received request message (source, client_id, operation_id, self_id)  c0 c0 2 r4
+[2017-11-20 23:23:37,796] replica.Replica<Replica:a0006>:OUTPUT: No failure associated with trigger:  client_request  found in replica:  r3
+[2017-11-20 23:23:37,796] replica.Replica<Replica:a0007>:OUTPUT: Checking for failure associated with trigger, application:  ('client_request', 'pre')  in replica:  r4
+[2017-11-20 23:23:37,797] replica.Replica<Replica:a0007>:OUTPUT: No failure associated with trigger:  client_request  found in replica:  r4
+[2017-11-20 23:23:37,801] replica.Replica<Replica:a0003>:OUTPUT: Received request message (source, client_id, operation_id, self_id)  r1 c0 2 r0
+[2017-11-20 23:23:37,801] replica.Replica<Replica:a0004>:OUTPUT: Received request message (source, client_id, operation_id, self_id)  r2 c0 2 r1
+[2017-11-20 23:23:37,801] replica.Replica<Replica:a0003>:OUTPUT: Checking for failure associated with trigger, application:  ('forwarded_request', 'pre')  in replica:  r0
+[2017-11-20 23:23:37,802] replica.Replica<Replica:a0004>:OUTPUT: Checking for failure associated with trigger, application:  ('forwarded_request', 'pre')  in replica:  r1
+[2017-11-20 23:23:37,802] replica.Replica<Replica:a0003>:OUTPUT: No failure associated with trigger:  forwarded_request  found in replica:  r0
+[2017-11-20 23:23:37,802] replica.Replica<Replica:a0004>:OUTPUT: No failure associated with trigger:  forwarded_request  found in replica:  r1
+[2017-11-20 23:23:37,805] replica.Replica<Replica:a0005>:OUTPUT: Received request message (source, client_id, operation_id, self_id)  r3 c0 2 r2
+[2017-11-20 23:23:37,806] replica.Replica<Replica:a0006>:OUTPUT: Received request message (source, client_id, operation_id, self_id)  r4 c0 2 r3
+[2017-11-20 23:23:37,806] replica.Replica<Replica:a0003>:OUTPUT: Awaiting result shuttle from downstream _replicas
+[2017-11-20 23:23:37,806] replica.Replica<Replica:a0005>:OUTPUT: Checking for failure associated with trigger, application:  ('forwarded_request', 'pre')  in replica:  r2
+[2017-11-20 23:23:37,807] replica.Replica<Replica:a0006>:OUTPUT: Checking for failure associated with trigger, application:  ('forwarded_request', 'pre')  in replica:  r3
+[2017-11-20 23:23:37,807] replica.Replica<Replica:a0005>:OUTPUT: No failure associated with trigger:  forwarded_request  found in replica:  r2
+[2017-11-20 23:23:37,807] replica.Replica<Replica:a0006>:OUTPUT: No failure associated with trigger:  forwarded_request  found in replica:  r3
+[2017-11-20 23:23:37,814] replica.Replica<Replica:a0003>:OUTPUT: Received request message (source, client_id, operation_id, self_id)  r1 c0 2 r0
+[2017-11-20 23:23:37,814] replica.Replica<Replica:a0003>:OUTPUT: Checking for failure associated with trigger, application:  ('forwarded_request', 'pre')  in replica:  r0
+[2017-11-20 23:23:37,815] replica.Replica<Replica:a0003>:OUTPUT: No failure associated with trigger:  forwarded_request  found in replica:  r0
+[2017-11-20 23:23:37,816] replica.Replica<Replica:a0004>:OUTPUT: Received request message (source, client_id, operation_id, self_id)  r2 c0 2 r1
+[2017-11-20 23:23:37,816] replica.Replica<Replica:a0005>:OUTPUT: Received request message (source, client_id, operation_id, self_id)  r3 c0 2 r2
+[2017-11-20 23:23:37,816] replica.Replica<Replica:a0005>:OUTPUT: Checking for failure associated with trigger, application:  ('forwarded_request', 'pre')  in replica:  r2
+[2017-11-20 23:23:37,816] replica.Replica<Replica:a0004>:OUTPUT: Checking for failure associated with trigger, application:  ('forwarded_request', 'pre')  in replica:  r1
+[2017-11-20 23:23:37,817] replica.Replica<Replica:a0005>:OUTPUT: No failure associated with trigger:  forwarded_request  found in replica:  r2
+[2017-11-20 23:23:37,813] client.Client<Client:a0002>:OUTPUT: Wait for result timed out for operation= {'id': 2, 'client_id': 'c1', 'command_string': "append('movie1', '123')"}
+[2017-11-20 23:23:37,817] replica.Replica<Replica:a0004>:OUTPUT: No failure associated with trigger:  forwarded_request  found in replica:  r1
+[2017-11-20 23:23:37,818] client.Client<Client:a0002>:OUTPUT: Config requested from Olympus by client= c1
+[2017-11-20 23:23:37,819] replica.Replica<Replica:a0003>:OUTPUT: Awaiting result shuttle from downstream _replicas
+[2017-11-20 23:23:37,821] client.Client<Client:a0002>:OUTPUT: Sending config request from client:  c1
+[2017-11-20 23:23:37,823] olympus.Olympus<Olympus:1c002>:OUTPUT: Config request received from client= c1
+[2017-11-20 23:23:37,827] replica.Replica<Replica:a0003>:OUTPUT: Received request message (source, client_id, operation_id, self_id)  r1 c0 2 r0
+[2017-11-20 23:23:37,826] replica.Replica<Replica:a0004>:OUTPUT: Received request message (source, client_id, operation_id, self_id)  r2 c0 2 r1
+[2017-11-20 23:23:37,827] replica.Replica<Replica:a0003>:OUTPUT: Checking for failure associated with trigger, application:  ('forwarded_request', 'pre')  in replica:  r0
+[2017-11-20 23:23:37,827] replica.Replica<Replica:a0004>:OUTPUT: Checking for failure associated with trigger, application:  ('forwarded_request', 'pre')  in replica:  r1
+[2017-11-20 23:23:37,828] replica.Replica<Replica:a0003>:OUTPUT: No failure associated with trigger:  forwarded_request  found in replica:  r0
+[2017-11-20 23:23:37,828] replica.Replica<Replica:a0004>:OUTPUT: No failure associated with trigger:  forwarded_request  found in replica:  r1
+[2017-11-20 23:23:37,830] olympus.Olympus<Olympus:1c002>:OUTPUT: Config has been sent to client= c1
+[2017-11-20 23:23:37,833] replica.Replica<Replica:a0003>:OUTPUT: Awaiting result shuttle from downstream _replicas
+[2017-11-20 23:23:37,835] client.Client<Client:a0002>:OUTPUT: The config was fetched from Olympus: {'id': 'c1', 'workload': ["put('movie1','star1')", "get('movie1')", "append('movie1', '123')", "get('movie1')", "get('movie1');"], 'private_key': b'893eb1761c6af43f7d0fbb32f8c1fcae45f35692e2c1448e0e99b3d4bcdd53f5', 'public_keys': {'o1': b'f7d40da3c32b33c4e1f48fb102ab8d33437e791b1c0e1e57968541e1a90a800a', 'c0': b'0dba56e57256795be46a3e7f73940b9adaf76e38202a837e9640eb7352d1f7fb', 'c1': b'7da0417b4dc60175b6ef50753981301b710fe60571f422ad7eb8269a2f8ef4f4', 'r0': b'33f42f346b3542959c52638f143b9c7fe8a17d0b75caea0dca82aff945699d16', 'r1': b'405231778d29cf164eaef483ea636a49cfe239a213ac3c95447ebbb6c98bd6f7', 'r2': b'16d139f0501f75439dac7ebaa0b99f6de8717aad20c1fa4130c1b523cf52f35d', 'r3': b'194eeb6fde58be3265f6666898c62196eb7c56a3e9f77486551911cdb12853ff', 'r4': b'264e8990d8f678d6864f5bce0dbf5327eca1c8b5ae9f8e7e7bd20b49fa5e090d'}, 'client_timeout': 3.0, 'olympus': {'id': 'o1', 'process_id': <Olympus:1c002>}, 'replicas': {'r0': <Replica:a0003>, 'r1': <Replica:a0004>, 'r2': <Replica:a0005>, 'r3': <Replica:a0006>, 'r4': <Replica:a0007>}, 'head_id': 'r0', 't': 2}
+[2017-11-20 23:23:37,838] replica.Replica<Replica:a0003>:OUTPUT: Received request message (source, client_id, operation_id, self_id)  r1 c0 2 r0
+[2017-11-20 23:23:37,838] replica.Replica<Replica:a0003>:OUTPUT: Checking for failure associated with trigger, application:  ('forwarded_request', 'pre')  in replica:  r0
+[2017-11-20 23:23:37,839] client.Client<Client:a0002>:OUTPUT: Retransmitting request to all replicas for operation= {'id': 2, 'client_id': 'c1', 'command_string': "append('movie1', '123')"}
+[2017-11-20 23:23:37,839] replica.Replica<Replica:a0003>:OUTPUT: No failure associated with trigger:  forwarded_request  found in replica:  r0
+[2017-11-20 23:23:37,843] replica.Replica<Replica:a0003>:OUTPUT: Awaiting result shuttle from downstream _replicas
+[2017-11-20 23:23:37,843] replica.Replica<Replica:a0004>:OUTPUT: Received request message (source, client_id, operation_id, self_id)  c1 c1 2 r1
+[2017-11-20 23:23:37,844] replica.Replica<Replica:a0004>:OUTPUT: Checking for failure associated with trigger, application:  ('client_request', 'pre')  in replica:  r1
+[2017-11-20 23:23:37,845] replica.Replica<Replica:a0004>:OUTPUT: No failure associated with trigger:  client_request  found in replica:  r1
+[2017-11-20 23:23:37,845] replica.Replica<Replica:a0005>:OUTPUT: Received request message (source, client_id, operation_id, self_id)  c1 c1 2 r2
+[2017-11-20 23:23:37,849] replica.Replica<Replica:a0006>:OUTPUT: Received request message (source, client_id, operation_id, self_id)  c1 c1 2 r3
+[2017-11-20 23:23:37,849] replica.Replica<Replica:a0005>:OUTPUT: Checking for failure associated with trigger, application:  ('client_request', 'pre')  in replica:  r2
+[2017-11-20 23:23:37,850] replica.Replica<Replica:a0006>:OUTPUT: Checking for failure associated with trigger, application:  ('client_request', 'pre')  in replica:  r3
+[2017-11-20 23:23:37,851] replica.Replica<Replica:a0007>:OUTPUT: Received request message (source, client_id, operation_id, self_id)  c1 c1 2 r4
+[2017-11-20 23:23:37,852] replica.Replica<Replica:a0005>:OUTPUT: No failure associated with trigger:  client_request  found in replica:  r2
+[2017-11-20 23:23:37,852] replica.Replica<Replica:a0006>:OUTPUT: No failure associated with trigger:  client_request  found in replica:  r3
+[2017-11-20 23:23:37,853] replica.Replica<Replica:a0007>:OUTPUT: Checking for failure associated with trigger, application:  ('client_request', 'pre')  in replica:  r4
+[2017-11-20 23:23:37,855] replica.Replica<Replica:a0007>:OUTPUT: No failure associated with trigger:  client_request  found in replica:  r4
+[2017-11-20 23:23:37,844] replica.Replica<Replica:a0003>:OUTPUT: Received request message (source, client_id, operation_id, self_id)  c1 c1 2 r0
+[2017-11-20 23:23:37,859] replica.Replica<Replica:a0003>:OUTPUT: Checking for failure associated with trigger, application:  ('client_request', 'pre')  in replica:  r0
+[2017-11-20 23:23:37,861] replica.Replica<Replica:a0003>:OUTPUT: No failure associated with trigger:  client_request  found in replica:  r0
+[2017-11-20 23:23:37,863] replica.Replica<Replica:a0004>:OUTPUT: Received request message (source, client_id, operation_id, self_id)  r2 c1 2 r1
+[2017-11-20 23:23:37,863] replica.Replica<Replica:a0005>:OUTPUT: Received request message (source, client_id, operation_id, self_id)  r3 c1 2 r2
+[2017-11-20 23:23:37,863] replica.Replica<Replica:a0006>:OUTPUT: Received request message (source, client_id, operation_id, self_id)  r4 c1 2 r3
+[2017-11-20 23:23:37,864] replica.Replica<Replica:a0004>:OUTPUT: Checking for failure associated with trigger, application:  ('forwarded_request', 'pre')  in replica:  r1
+[2017-11-20 23:23:37,864] replica.Replica<Replica:a0005>:OUTPUT: Checking for failure associated with trigger, application:  ('forwarded_request', 'pre')  in replica:  r2
+[2017-11-20 23:23:37,864] replica.Replica<Replica:a0006>:OUTPUT: Checking for failure associated with trigger, application:  ('forwarded_request', 'pre')  in replica:  r3
+[2017-11-20 23:23:37,864] replica.Replica<Replica:a0004>:OUTPUT: No failure associated with trigger:  forwarded_request  found in replica:  r1
+[2017-11-20 23:23:37,865] replica.Replica<Replica:a0006>:OUTPUT: No failure associated with trigger:  forwarded_request  found in replica:  r3
+[2017-11-20 23:23:37,865] replica.Replica<Replica:a0005>:OUTPUT: No failure associated with trigger:  forwarded_request  found in replica:  r2
+[2017-11-20 23:23:37,866] replica.Replica<Replica:a0003>:OUTPUT: Awaiting result shuttle from downstream _replicas
+[2017-11-20 23:23:37,867] replica.Replica<Replica:a0003>:OUTPUT: Received request message (source, client_id, operation_id, self_id)  r1 c1 2 r0
+[2017-11-20 23:23:37,868] replica.Replica<Replica:a0003>:OUTPUT: Checking for failure associated with trigger, application:  ('forwarded_request', 'pre')  in replica:  r0
+[2017-11-20 23:23:37,868] replica.Replica<Replica:a0003>:OUTPUT: No failure associated with trigger:  forwarded_request  found in replica:  r0
+[2017-11-20 23:23:37,874] replica.Replica<Replica:a0005>:OUTPUT: Received request message (source, client_id, operation_id, self_id)  r3 c1 2 r2
+[2017-11-20 23:23:37,874] replica.Replica<Replica:a0005>:OUTPUT: Checking for failure associated with trigger, application:  ('forwarded_request', 'pre')  in replica:  r2
+[2017-11-20 23:23:37,874] replica.Replica<Replica:a0004>:OUTPUT: Received request message (source, client_id, operation_id, self_id)  r2 c1 2 r1
+[2017-11-20 23:23:37,875] replica.Replica<Replica:a0005>:OUTPUT: No failure associated with trigger:  forwarded_request  found in replica:  r2
+[2017-11-20 23:23:37,875] replica.Replica<Replica:a0003>:OUTPUT: Awaiting result shuttle from downstream _replicas
+[2017-11-20 23:23:37,875] replica.Replica<Replica:a0004>:OUTPUT: Checking for failure associated with trigger, application:  ('forwarded_request', 'pre')  in replica:  r1
+[2017-11-20 23:23:37,875] replica.Replica<Replica:a0004>:OUTPUT: No failure associated with trigger:  forwarded_request  found in replica:  r1
+[2017-11-20 23:23:37,876] replica.Replica<Replica:a0003>:OUTPUT: Received request message (source, client_id, operation_id, self_id)  r1 c1 2 r0
+[2017-11-20 23:23:37,877] replica.Replica<Replica:a0003>:OUTPUT: Checking for failure associated with trigger, application:  ('forwarded_request', 'pre')  in replica:  r0
+[2017-11-20 23:23:37,878] replica.Replica<Replica:a0003>:OUTPUT: No failure associated with trigger:  forwarded_request  found in replica:  r0
+[2017-11-20 23:23:37,884] replica.Replica<Replica:a0003>:OUTPUT: Awaiting result shuttle from downstream _replicas
+[2017-11-20 23:23:37,884] replica.Replica<Replica:a0004>:OUTPUT: Received request message (source, client_id, operation_id, self_id)  r2 c1 2 r1
+[2017-11-20 23:23:37,884] replica.Replica<Replica:a0004>:OUTPUT: Checking for failure associated with trigger, application:  ('forwarded_request', 'pre')  in replica:  r1
+[2017-11-20 23:23:37,885] replica.Replica<Replica:a0004>:OUTPUT: No failure associated with trigger:  forwarded_request  found in replica:  r1
+[2017-11-20 23:23:37,885] replica.Replica<Replica:a0003>:OUTPUT: Received request message (source, client_id, operation_id, self_id)  r1 c1 2 r0
+[2017-11-20 23:23:37,886] replica.Replica<Replica:a0003>:OUTPUT: Checking for failure associated with trigger, application:  ('forwarded_request', 'pre')  in replica:  r0
+[2017-11-20 23:23:37,886] replica.Replica<Replica:a0003>:OUTPUT: No failure associated with trigger:  forwarded_request  found in replica:  r0
+[2017-11-20 23:23:37,891] replica.Replica<Replica:a0003>:OUTPUT: Awaiting result shuttle from downstream _replicas
+[2017-11-20 23:23:37,892] replica.Replica<Replica:a0003>:OUTPUT: Received request message (source, client_id, operation_id, self_id)  r1 c1 2 r0
+[2017-11-20 23:23:37,893] replica.Replica<Replica:a0003>:OUTPUT: Checking for failure associated with trigger, application:  ('forwarded_request', 'pre')  in replica:  r0
+[2017-11-20 23:23:37,893] replica.Replica<Replica:a0003>:OUTPUT: No failure associated with trigger:  forwarded_request  found in replica:  r0
+[2017-11-20 23:23:37,895] replica.Replica<Replica:a0003>:OUTPUT: Awaiting result shuttle from downstream _replicas
+[2017-11-20 23:23:40,794] client.Client<Client:a0001>:OUTPUT: Wait for result timed out for operation= {'id': 2, 'client_id': 'c0', 'command_string': "append('movie', '123')"}
+[2017-11-20 23:23:40,795] client.Client<Client:a0001>:OUTPUT: Config requested from Olympus by client= c0
+[2017-11-20 23:23:40,801] client.Client<Client:a0001>:OUTPUT: Sending config request from client:  c0
+[2017-11-20 23:23:40,806] olympus.Olympus<Olympus:1c002>:OUTPUT: Config request received from client= c0
+[2017-11-20 23:23:40,818] olympus.Olympus<Olympus:1c002>:OUTPUT: Config has been sent to client= c0
+[2017-11-20 23:23:40,827] client.Client<Client:a0001>:OUTPUT: The config was fetched from Olympus: {'id': 'c0', 'workload': ["put('movie','star')", "get('movie')", "append('movie', '123')", "get('movie')", "get('movie');"], 'private_key': b'2ea561e375e400c6a32211853cd40c9a6f34a4db9a9a0c81710bc966a21b03a8', 'public_keys': {'o1': b'f7d40da3c32b33c4e1f48fb102ab8d33437e791b1c0e1e57968541e1a90a800a', 'c0': b'0dba56e57256795be46a3e7f73940b9adaf76e38202a837e9640eb7352d1f7fb', 'c1': b'7da0417b4dc60175b6ef50753981301b710fe60571f422ad7eb8269a2f8ef4f4', 'r0': b'33f42f346b3542959c52638f143b9c7fe8a17d0b75caea0dca82aff945699d16', 'r1': b'405231778d29cf164eaef483ea636a49cfe239a213ac3c95447ebbb6c98bd6f7', 'r2': b'16d139f0501f75439dac7ebaa0b99f6de8717aad20c1fa4130c1b523cf52f35d', 'r3': b'194eeb6fde58be3265f6666898c62196eb7c56a3e9f77486551911cdb12853ff', 'r4': b'264e8990d8f678d6864f5bce0dbf5327eca1c8b5ae9f8e7e7bd20b49fa5e090d'}, 'client_timeout': 3.0, 'olympus': {'id': 'o1', 'process_id': <Olympus:1c002>}, 'replicas': {'r0': <Replica:a0003>, 'r1': <Replica:a0004>, 'r2': <Replica:a0005>, 'r3': <Replica:a0006>, 'r4': <Replica:a0007>}, 'head_id': 'r0', 't': 2}
+[2017-11-20 23:23:40,833] client.Client<Client:a0001>:OUTPUT: Retransmitting request to all replicas for operation= {'id': 2, 'client_id': 'c0', 'command_string': "append('movie', '123')"}
+[2017-11-20 23:23:40,837] replica.Replica<Replica:a0003>:OUTPUT: Received request message (source, client_id, operation_id, self_id)  c0 c0 2 r0
+[2017-11-20 23:23:40,840] replica.Replica<Replica:a0004>:OUTPUT: Received request message (source, client_id, operation_id, self_id)  c0 c0 2 r1
+[2017-11-20 23:23:40,842] replica.Replica<Replica:a0005>:OUTPUT: Received request message (source, client_id, operation_id, self_id)  c0 c0 2 r2
+[2017-11-20 23:23:40,842] replica.Replica<Replica:a0003>:OUTPUT: Checking for failure associated with trigger, application:  ('client_request', 'pre')  in replica:  r0
+[2017-11-20 23:23:40,843] replica.Replica<Replica:a0006>:OUTPUT: Received request message (source, client_id, operation_id, self_id)  c0 c0 2 r3
+[2017-11-20 23:23:40,843] replica.Replica<Replica:a0004>:OUTPUT: Checking for failure associated with trigger, application:  ('client_request', 'pre')  in replica:  r1
+[2017-11-20 23:23:40,843] replica.Replica<Replica:a0005>:OUTPUT: Checking for failure associated with trigger, application:  ('client_request', 'pre')  in replica:  r2
+[2017-11-20 23:23:40,843] replica.Replica<Replica:a0007>:OUTPUT: Received request message (source, client_id, operation_id, self_id)  c0 c0 2 r4
+[2017-11-20 23:23:40,844] replica.Replica<Replica:a0003>:OUTPUT: No failure associated with trigger:  client_request  found in replica:  r0
+[2017-11-20 23:23:40,844] replica.Replica<Replica:a0006>:OUTPUT: Checking for failure associated with trigger, application:  ('client_request', 'pre')  in replica:  r3
+[2017-11-20 23:23:40,844] replica.Replica<Replica:a0004>:OUTPUT: No failure associated with trigger:  client_request  found in replica:  r1
+[2017-11-20 23:23:40,845] replica.Replica<Replica:a0007>:OUTPUT: Checking for failure associated with trigger, application:  ('client_request', 'pre')  in replica:  r4
+[2017-11-20 23:23:40,844] replica.Replica<Replica:a0005>:OUTPUT: No failure associated with trigger:  client_request  found in replica:  r2
+[2017-11-20 23:23:40,846] replica.Replica<Replica:a0007>:OUTPUT: No failure associated with trigger:  client_request  found in replica:  r4
+[2017-11-20 23:23:40,845] replica.Replica<Replica:a0006>:OUTPUT: No failure associated with trigger:  client_request  found in replica:  r3
+[2017-11-20 23:23:40,848] replica.Replica<Replica:a0003>:OUTPUT: Awaiting result shuttle from downstream _replicas
+[2017-11-20 23:23:40,849] client.Client<Client:a0002>:OUTPUT: Wait for result timed out for operation= {'id': 2, 'client_id': 'c1', 'command_string': "append('movie1', '123')"}
+[2017-11-20 23:23:40,856] replica.Replica<Replica:a0003>:OUTPUT: Received request message (source, client_id, operation_id, self_id)  r1 c0 2 r0
+[2017-11-20 23:23:40,857] replica.Replica<Replica:a0004>:OUTPUT: Received request message (source, client_id, operation_id, self_id)  r2 c0 2 r1
+[2017-11-20 23:23:40,857] client.Client<Client:a0002>:OUTPUT: Config requested from Olympus by client= c1
+[2017-11-20 23:23:40,857] replica.Replica<Replica:a0003>:OUTPUT: Checking for failure associated with trigger, application:  ('forwarded_request', 'pre')  in replica:  r0
+[2017-11-20 23:23:40,857] replica.Replica<Replica:a0004>:OUTPUT: Checking for failure associated with trigger, application:  ('forwarded_request', 'pre')  in replica:  r1
+[2017-11-20 23:23:40,858] replica.Replica<Replica:a0003>:OUTPUT: No failure associated with trigger:  forwarded_request  found in replica:  r0
+[2017-11-20 23:23:40,858] replica.Replica<Replica:a0004>:OUTPUT: No failure associated with trigger:  forwarded_request  found in replica:  r1
+[2017-11-20 23:23:40,859] replica.Replica<Replica:a0006>:OUTPUT: Received request message (source, client_id, operation_id, self_id)  r4 c0 2 r3
+[2017-11-20 23:23:40,859] replica.Replica<Replica:a0005>:OUTPUT: Received request message (source, client_id, operation_id, self_id)  r3 c0 2 r2
+[2017-11-20 23:23:40,860] replica.Replica<Replica:a0006>:OUTPUT: Checking for failure associated with trigger, application:  ('forwarded_request', 'pre')  in replica:  r3
+[2017-11-20 23:23:40,860] client.Client<Client:a0002>:OUTPUT: Sending config request from client:  c1
+[2017-11-20 23:23:40,860] replica.Replica<Replica:a0005>:OUTPUT: Checking for failure associated with trigger, application:  ('forwarded_request', 'pre')  in replica:  r2
+[2017-11-20 23:23:40,860] replica.Replica<Replica:a0006>:OUTPUT: No failure associated with trigger:  forwarded_request  found in replica:  r3
+[2017-11-20 23:23:40,861] replica.Replica<Replica:a0005>:OUTPUT: No failure associated with trigger:  forwarded_request  found in replica:  r2
+[2017-11-20 23:23:40,862] replica.Replica<Replica:a0003>:OUTPUT: Awaiting result shuttle from downstream _replicas
+[2017-11-20 23:23:40,863] olympus.Olympus<Olympus:1c002>:OUTPUT: Config request received from client= c1
+[2017-11-20 23:23:40,867] replica.Replica<Replica:a0003>:OUTPUT: Received request message (source, client_id, operation_id, self_id)  r1 c0 2 r0
+[2017-11-20 23:23:40,868] replica.Replica<Replica:a0003>:OUTPUT: Checking for failure associated with trigger, application:  ('forwarded_request', 'pre')  in replica:  r0
+[2017-11-20 23:23:40,868] replica.Replica<Replica:a0003>:OUTPUT: No failure associated with trigger:  forwarded_request  found in replica:  r0
+[2017-11-20 23:23:40,871] replica.Replica<Replica:a0005>:OUTPUT: Received request message (source, client_id, operation_id, self_id)  r3 c0 2 r2
+[2017-11-20 23:23:40,872] olympus.Olympus<Olympus:1c002>:OUTPUT: Config has been sent to client= c1
+[2017-11-20 23:23:40,872] replica.Replica<Replica:a0003>:OUTPUT: Awaiting result shuttle from downstream _replicas
+[2017-11-20 23:23:40,872] replica.Replica<Replica:a0004>:OUTPUT: Received request message (source, client_id, operation_id, self_id)  r2 c0 2 r1
+[2017-11-20 23:23:40,873] replica.Replica<Replica:a0005>:OUTPUT: Checking for failure associated with trigger, application:  ('forwarded_request', 'pre')  in replica:  r2
+[2017-11-20 23:23:40,873] replica.Replica<Replica:a0004>:OUTPUT: Checking for failure associated with trigger, application:  ('forwarded_request', 'pre')  in replica:  r1
+[2017-11-20 23:23:40,873] replica.Replica<Replica:a0005>:OUTPUT: No failure associated with trigger:  forwarded_request  found in replica:  r2
+[2017-11-20 23:23:40,874] replica.Replica<Replica:a0004>:OUTPUT: No failure associated with trigger:  forwarded_request  found in replica:  r1
+[2017-11-20 23:23:40,877] client.Client<Client:a0002>:OUTPUT: The config was fetched from Olympus: {'id': 'c1', 'workload': ["put('movie1','star1')", "get('movie1')", "append('movie1', '123')", "get('movie1')", "get('movie1');"], 'private_key': b'893eb1761c6af43f7d0fbb32f8c1fcae45f35692e2c1448e0e99b3d4bcdd53f5', 'public_keys': {'o1': b'f7d40da3c32b33c4e1f48fb102ab8d33437e791b1c0e1e57968541e1a90a800a', 'c0': b'0dba56e57256795be46a3e7f73940b9adaf76e38202a837e9640eb7352d1f7fb', 'c1': b'7da0417b4dc60175b6ef50753981301b710fe60571f422ad7eb8269a2f8ef4f4', 'r0': b'33f42f346b3542959c52638f143b9c7fe8a17d0b75caea0dca82aff945699d16', 'r1': b'405231778d29cf164eaef483ea636a49cfe239a213ac3c95447ebbb6c98bd6f7', 'r2': b'16d139f0501f75439dac7ebaa0b99f6de8717aad20c1fa4130c1b523cf52f35d', 'r3': b'194eeb6fde58be3265f6666898c62196eb7c56a3e9f77486551911cdb12853ff', 'r4': b'264e8990d8f678d6864f5bce0dbf5327eca1c8b5ae9f8e7e7bd20b49fa5e090d'}, 'client_timeout': 3.0, 'olympus': {'id': 'o1', 'process_id': <Olympus:1c002>}, 'replicas': {'r0': <Replica:a0003>, 'r1': <Replica:a0004>, 'r2': <Replica:a0005>, 'r3': <Replica:a0006>, 'r4': <Replica:a0007>}, 'head_id': 'r0', 't': 2}
+[2017-11-20 23:23:40,880] client.Client<Client:a0002>:OUTPUT: Retransmitting request to all replicas for operation= {'id': 2, 'client_id': 'c1', 'command_string': "append('movie1', '123')"}
+[2017-11-20 23:23:40,882] replica.Replica<Replica:a0004>:OUTPUT: Received request message (source, client_id, operation_id, self_id)  r2 c0 2 r1
+[2017-11-20 23:23:40,882] replica.Replica<Replica:a0003>:OUTPUT: Received request message (source, client_id, operation_id, self_id)  r1 c0 2 r0
+[2017-11-20 23:23:40,883] replica.Replica<Replica:a0004>:OUTPUT: Checking for failure associated with trigger, application:  ('forwarded_request', 'pre')  in replica:  r1
+[2017-11-20 23:23:40,883] replica.Replica<Replica:a0003>:OUTPUT: Checking for failure associated with trigger, application:  ('forwarded_request', 'pre')  in replica:  r0
+[2017-11-20 23:23:40,883] replica.Replica<Replica:a0004>:OUTPUT: No failure associated with trigger:  forwarded_request  found in replica:  r1
+[2017-11-20 23:23:40,883] replica.Replica<Replica:a0003>:OUTPUT: No failure associated with trigger:  forwarded_request  found in replica:  r0
+[2017-11-20 23:23:40,885] replica.Replica<Replica:a0005>:OUTPUT: Received request message (source, client_id, operation_id, self_id)  c1 c1 2 r2
+[2017-11-20 23:23:40,886] replica.Replica<Replica:a0005>:OUTPUT: Checking for failure associated with trigger, application:  ('client_request', 'pre')  in replica:  r2
+[2017-11-20 23:23:40,887] replica.Replica<Replica:a0005>:OUTPUT: No failure associated with trigger:  client_request  found in replica:  r2
+[2017-11-20 23:23:40,888] replica.Replica<Replica:a0003>:OUTPUT: Awaiting result shuttle from downstream _replicas
+[2017-11-20 23:23:40,888] replica.Replica<Replica:a0003>:OUTPUT: Result Shuttle Timeout in head:  r0
+[2017-11-20 23:23:40,890] replica.Replica<Replica:a0006>:OUTPUT: Received request message (source, client_id, operation_id, self_id)  c1 c1 2 r3
+[2017-11-20 23:23:40,892] replica.Replica<Replica:a0006>:OUTPUT: Checking for failure associated with trigger, application:  ('client_request', 'pre')  in replica:  r3
+[2017-11-20 23:23:40,894] replica.Replica<Replica:a0007>:OUTPUT: Received request message (source, client_id, operation_id, self_id)  c1 c1 2 r4
+[2017-11-20 23:23:40,895] replica.Replica<Replica:a0006>:OUTPUT: No failure associated with trigger:  client_request  found in replica:  r3
+[2017-11-20 23:23:40,895] replica.Replica<Replica:a0007>:OUTPUT: Checking for failure associated with trigger, application:  ('client_request', 'pre')  in replica:  r4
+[2017-11-20 23:23:40,895] replica.Replica<Replica:a0007>:OUTPUT: No failure associated with trigger:  client_request  found in replica:  r4
+[2017-11-20 23:23:40,896] olympus.Olympus<Olympus:1c002>:OUTPUT: Received reconfig request from:  r0
+[2017-11-20 23:23:40,897] olympus.Olympus<Olympus:1c002>:OUTPUT: Received valid reconfiguration request from:  r0
+[2017-11-20 23:23:40,892] replica.Replica<Replica:a0003>:OUTPUT: Sent reconfiguration request to Olympus from : r0
+[2017-11-20 23:23:40,900] olympus.Olympus<Olympus:1c002>:OUTPUT: Sent wedge request to:  r0
+[2017-11-20 23:23:40,898] replica.Replica<Replica:a0003>:OUTPUT: Result Shuttle Timeout in head:  r0
+[2017-11-20 23:23:40,904] olympus.Olympus<Olympus:1c002>:OUTPUT: Sent wedge request to:  r1
+[2017-11-20 23:23:40,904] replica.Replica<Replica:a0006>:OUTPUT: Received request message (source, client_id, operation_id, self_id)  r4 c1 2 r3
+[2017-11-20 23:23:40,903] replica.Replica<Replica:a0005>:OUTPUT: Received request message (source, client_id, operation_id, self_id)  r3 c1 2 r2
+[2017-11-20 23:23:40,905] replica.Replica<Replica:a0006>:OUTPUT: Checking for failure associated with trigger, application:  ('forwarded_request', 'pre')  in replica:  r3
+[2017-11-20 23:23:40,905] replica.Replica<Replica:a0005>:OUTPUT: Checking for failure associated with trigger, application:  ('forwarded_request', 'pre')  in replica:  r2
+[2017-11-20 23:23:40,898] replica.Replica<Replica:a0004>:OUTPUT: Received request message (source, client_id, operation_id, self_id)  c1 c1 2 r1
+[2017-11-20 23:23:40,906] replica.Replica<Replica:a0005>:OUTPUT: No failure associated with trigger:  forwarded_request  found in replica:  r2
+[2017-11-20 23:23:40,906] replica.Replica<Replica:a0006>:OUTPUT: No failure associated with trigger:  forwarded_request  found in replica:  r3
+[2017-11-20 23:23:40,908] olympus.Olympus<Olympus:1c002>:OUTPUT: Sent wedge request to:  r2
+[2017-11-20 23:23:40,906] replica.Replica<Replica:a0004>:OUTPUT: Checking for failure associated with trigger, application:  ('client_request', 'pre')  in replica:  r1
+[2017-11-20 23:23:40,908] replica.Replica<Replica:a0003>:OUTPUT: Sent reconfiguration request to Olympus from : r0
+[2017-11-20 23:23:40,911] olympus.Olympus<Olympus:1c002>:OUTPUT: Sent wedge request to:  r3
+[2017-11-20 23:23:40,909] replica.Replica<Replica:a0004>:OUTPUT: No failure associated with trigger:  client_request  found in replica:  r1
+[2017-11-20 23:23:40,914] replica.Replica<Replica:a0005>:OUTPUT: Received wedge request from Olympus in Replica:  r2
+[2017-11-20 23:23:40,914] olympus.Olympus<Olympus:1c002>:OUTPUT: Sent wedge request to:  r4
+[2017-11-20 23:23:40,915] replica.Replica<Replica:a0005>:OUTPUT: Checking for failure associated with trigger, application:  ('wedge_request', 'pre')  in replica:  r2
+[2017-11-20 23:23:40,915] replica.Replica<Replica:a0007>:OUTPUT: Received wedge request from Olympus in Replica:  r4
+[2017-11-20 23:23:40,915] olympus.Olympus<Olympus:1c002>:OUTPUT: Reconfiguration in progress, ignoring reconfig request from: r0
+[2017-11-20 23:23:40,915] replica.Replica<Replica:a0005>:OUTPUT: No failure associated with trigger:  wedge_request  found in replica:  r2
+[2017-11-20 23:23:40,916] replica.Replica<Replica:a0007>:OUTPUT: Checking for failure associated with trigger, application:  ('wedge_request', 'pre')  in replica:  r4
+[2017-11-20 23:23:40,916] replica.Replica<Replica:a0007>:OUTPUT: No failure associated with trigger:  wedge_request  found in replica:  r4
+[2017-11-20 23:23:40,911] replica.Replica<Replica:a0003>:OUTPUT: Received request message (source, client_id, operation_id, self_id)  c1 c1 2 r0
+[2017-11-20 23:23:40,916] replica.Replica<Replica:a0006>:OUTPUT: Received wedge request from Olympus in Replica:  r3
+[2017-11-20 23:23:40,917] replica.Replica<Replica:a0003>:OUTPUT: Checking for failure associated with trigger, application:  ('client_request', 'pre')  in replica:  r0
+[2017-11-20 23:23:40,917] replica.Replica<Replica:a0006>:OUTPUT: Checking for failure associated with trigger, application:  ('wedge_request', 'pre')  in replica:  r3
+[2017-11-20 23:23:40,919] replica.Replica<Replica:a0003>:OUTPUT: No failure associated with trigger:  client_request  found in replica:  r0
+[2017-11-20 23:23:40,919] replica.Replica<Replica:a0006>:OUTPUT: No failure associated with trigger:  wedge_request  found in replica:  r3
+[2017-11-20 23:23:40,923] replica.Replica<Replica:a0005>:OUTPUT: Checking for failure associated with trigger, application:  ('wedge_request', 'post')  in replica:  r2
+[2017-11-20 23:23:40,923] replica.Replica<Replica:a0005>:OUTPUT: No failure associated with trigger:  wedge_request  found in replica:  r2
+[2017-11-20 23:23:40,924] replica.Replica<Replica:a0007>:OUTPUT: Checking for failure associated with trigger, application:  ('wedge_request', 'post')  in replica:  r4
+[2017-11-20 23:23:40,924] replica.Replica<Replica:a0007>:OUTPUT: No failure associated with trigger:  wedge_request  found in replica:  r4
+[2017-11-20 23:23:40,926] replica.Replica<Replica:a0005>:OUTPUT: Sent Wedged message to Olympus from replica:  r2
+[2017-11-20 23:23:40,922] replica.Replica<Replica:a0004>:OUTPUT: Received request message (source, client_id, operation_id, self_id)  r2 c1 2 r1
+[2017-11-20 23:23:40,928] replica.Replica<Replica:a0007>:OUTPUT: Sent Wedged message to Olympus from replica:  r4
+[2017-11-20 23:23:40,926] replica.Replica<Replica:a0003>:OUTPUT: Head is processing request (operation_id, client_id) (2, 'c1')
+[2017-11-20 23:23:40,928] replica.Replica<Replica:a0005>:OUTPUT: Received request message (source, client_id, operation_id, self_id)  r3 c1 2 r2
+[2017-11-20 23:23:40,929] replica.Replica<Replica:a0004>:OUTPUT: Checking for failure associated with trigger, application:  ('forwarded_request', 'pre')  in replica:  r1
+[2017-11-20 23:23:40,929] olympus.Olympus<Olympus:1c002>:OUTPUT: Received wedged message from replica: r2
+[2017-11-20 23:23:40,930] replica.Replica<Replica:a0005>:OUTPUT: Checking for failure associated with trigger, application:  ('forwarded_request', 'pre')  in replica:  r2
+[2017-11-20 23:23:40,930] replica.Replica<Replica:a0004>:OUTPUT: No failure associated with trigger:  forwarded_request  found in replica:  r1
+[2017-11-20 23:23:40,931] replica.Replica<Replica:a0006>:OUTPUT: Checking for failure associated with trigger, application:  ('wedge_request', 'post')  in replica:  r3
+[2017-11-20 23:23:40,931] replica.Replica<Replica:a0005>:OUTPUT: No failure associated with trigger:  forwarded_request  found in replica:  r2
+[2017-11-20 23:23:40,932] replica.Replica<Replica:a0006>:OUTPUT: No failure associated with trigger:  wedge_request  found in replica:  r3
+[2017-11-20 23:23:40,936] replica.Replica<Replica:a0003>:OUTPUT: Checking for failure associated with trigger, application:  ('client_request', 'post')  in replica:  r0
+[2017-11-20 23:23:40,937] replica.Replica<Replica:a0005>:OUTPUT: Discarded request from  r3  in Replica:  r2  as Replica is in immutable state
+[2017-11-20 23:23:40,937] replica.Replica<Replica:a0003>:OUTPUT: No failure associated with trigger:  client_request  found in replica:  r0
+[2017-11-20 23:23:40,939] replica.Replica<Replica:a0004>:OUTPUT: Received wedge request from Olympus in Replica:  r1
+[2017-11-20 23:23:40,940] replica.Replica<Replica:a0004>:OUTPUT: Checking for failure associated with trigger, application:  ('wedge_request', 'pre')  in replica:  r1
+[2017-11-20 23:23:40,941] replica.Replica<Replica:a0004>:OUTPUT: No failure associated with trigger:  wedge_request  found in replica:  r1
+[2017-11-20 23:23:40,941] replica.Replica<Replica:a0006>:OUTPUT: Sent Wedged message to Olympus from replica:  r3
+[2017-11-20 23:23:40,942] replica.Replica<Replica:a0003>:OUTPUT: Received request message (source, client_id, operation_id, self_id)  r1 c0 2 r0
+[2017-11-20 23:23:40,942] replica.Replica<Replica:a0003>:OUTPUT: Checking for failure associated with trigger, application:  ('forwarded_request', 'pre')  in replica:  r0
+[2017-11-20 23:23:40,943] replica.Replica<Replica:a0003>:OUTPUT: No failure associated with trigger:  forwarded_request  found in replica:  r0
+[2017-11-20 23:23:40,946] replica.Replica<Replica:a0003>:OUTPUT: Head is processing request (operation_id, client_id) (2, 'c0')
+[2017-11-20 23:23:40,948] replica.Replica<Replica:a0004>:OUTPUT: Checking for failure associated with trigger, application:  ('wedge_request', 'post')  in replica:  r1
+[2017-11-20 23:23:40,948] replica.Replica<Replica:a0004>:OUTPUT: No failure associated with trigger:  wedge_request  found in replica:  r1
+[2017-11-20 23:23:40,950] replica.Replica<Replica:a0004>:OUTPUT: Sent Wedged message to Olympus from replica:  r1
+[2017-11-20 23:23:40,951] replica.Replica<Replica:a0004>:OUTPUT: Received request message (source, client_id, operation_id, self_id)  r2 c1 2 r1
+[2017-11-20 23:23:40,952] replica.Replica<Replica:a0004>:OUTPUT: Checking for failure associated with trigger, application:  ('forwarded_request', 'pre')  in replica:  r1
+[2017-11-20 23:23:40,952] replica.Replica<Replica:a0003>:OUTPUT: Checking for failure associated with trigger, application:  ('forwarded_request', 'post')  in replica:  r0
+[2017-11-20 23:23:40,953] replica.Replica<Replica:a0004>:OUTPUT: No failure associated with trigger:  forwarded_request  found in replica:  r1
+[2017-11-20 23:23:40,953] replica.Replica<Replica:a0003>:OUTPUT: No failure associated with trigger:  forwarded_request  found in replica:  r0
+[2017-11-20 23:23:40,957] replica.Replica<Replica:a0003>:OUTPUT: Received wedge request from Olympus in Replica:  r0
+[2017-11-20 23:23:40,958] replica.Replica<Replica:a0003>:OUTPUT: Checking for failure associated with trigger, application:  ('wedge_request', 'pre')  in replica:  r0
+[2017-11-20 23:23:40,958] replica.Replica<Replica:a0003>:OUTPUT: No failure associated with trigger:  wedge_request  found in replica:  r0
+[2017-11-20 23:23:40,959] replica.Replica<Replica:a0004>:OUTPUT: Discarded request from  r2  in Replica:  r1  as Replica is in immutable state
+[2017-11-20 23:23:40,961] replica.Replica<Replica:a0004>:OUTPUT: Received shuttle (source, client_id, operation_id, self_id)  r0 c1 2 r1
+[2017-11-20 23:23:40,962] replica.Replica<Replica:a0004>:OUTPUT: Discarded shuttle from  r0  in Replica:  r1  as Replica is in immutable state
+[2017-11-20 23:23:40,963] replica.Replica<Replica:a0004>:OUTPUT: Received shuttle (source, client_id, operation_id, self_id)  r0 c0 2 r1
+[2017-11-20 23:23:40,964] replica.Replica<Replica:a0004>:OUTPUT: Discarded shuttle from  r0  in Replica:  r1  as Replica is in immutable state
+[2017-11-20 23:23:40,964] olympus.Olympus<Olympus:1c002>:OUTPUT: Adding the following replica to the quorum: r2
+[2017-11-20 23:23:40,964] olympus.Olympus<Olympus:1c002>:OUTPUT: Validated history successfully for wedged message from:  r2
+[2017-11-20 23:23:40,965] replica.Replica<Replica:a0003>:OUTPUT: Checking for failure associated with trigger, application:  ('wedge_request', 'post')  in replica:  r0
+[2017-11-20 23:23:40,966] replica.Replica<Replica:a0003>:OUTPUT: No failure associated with trigger:  wedge_request  found in replica:  r0
+[2017-11-20 23:23:40,967] olympus.Olympus<Olympus:1c002>:OUTPUT: Received wedged message from replica: r4
+[2017-11-20 23:23:40,969] replica.Replica<Replica:a0003>:OUTPUT: Sent Wedged message to Olympus from replica:  r0
+[2017-11-20 23:23:40,970] replica.Replica<Replica:a0003>:OUTPUT: Received request message (source, client_id, operation_id, self_id)  r1 c1 2 r0
+[2017-11-20 23:23:40,970] replica.Replica<Replica:a0003>:OUTPUT: Checking for failure associated with trigger, application:  ('forwarded_request', 'pre')  in replica:  r0
+[2017-11-20 23:23:40,971] replica.Replica<Replica:a0003>:OUTPUT: No failure associated with trigger:  forwarded_request  found in replica:  r0
+[2017-11-20 23:23:40,976] replica.Replica<Replica:a0003>:OUTPUT: Discarded request from  r1  in Replica:  r0  as Replica is in immutable state
+[2017-11-20 23:23:40,977] replica.Replica<Replica:a0003>:OUTPUT: Received request message (source, client_id, operation_id, self_id)  r1 c1 2 r0
+[2017-11-20 23:23:40,978] replica.Replica<Replica:a0003>:OUTPUT: Checking for failure associated with trigger, application:  ('forwarded_request', 'pre')  in replica:  r0
+[2017-11-20 23:23:40,978] replica.Replica<Replica:a0003>:OUTPUT: No failure associated with trigger:  forwarded_request  found in replica:  r0
+[2017-11-20 23:23:40,982] replica.Replica<Replica:a0003>:OUTPUT: Discarded request from  r1  in Replica:  r0  as Replica is in immutable state
+[2017-11-20 23:23:41,014] olympus.Olympus<Olympus:1c002>:OUTPUT: Adding the following replica to the quorum: r4
+[2017-11-20 23:23:41,014] olympus.Olympus<Olympus:1c002>:OUTPUT: Validated history successfully for wedged message from:  r4
+[2017-11-20 23:23:41,016] olympus.Olympus<Olympus:1c002>:OUTPUT: Received wedged message from replica: r3
+[2017-11-20 23:23:41,047] olympus.Olympus<Olympus:1c002>:OUTPUT: Adding the following replica to the quorum: r3
+[2017-11-20 23:23:41,048] olympus.Olympus<Olympus:1c002>:OUTPUT: Validated history successfully for wedged message from:  r3
+[2017-11-20 23:23:41,048] olympus.Olympus<Olympus:1c002>:OUTPUT: Wedged quorum is satisfied, initiating catch-up process in Olympus.
+[2017-11-20 23:23:41,048] olympus.Olympus<Olympus:1c002>:OUTPUT: Finding Longest History from Wedged Messages.
+[2017-11-20 23:23:41,049] olympus.Olympus<Olympus:1c002>:OUTPUT: Longest History found in Replica:  r2
+[2017-11-20 23:23:41,050] olympus.Olympus<Olympus:1c002>:OUTPUT: Sending catch up message to replica:  r2
+[2017-11-20 23:23:41,052] replica.Replica<Replica:a0005>:OUTPUT: Received catch up message from Olympus in = r2
+[2017-11-20 23:23:41,052] replica.Replica<Replica:a0005>:OUTPUT: Checking for failure associated with trigger, application:  ('catch_up', 'pre')  in replica:  r2
+[2017-11-20 23:23:41,053] replica.Replica<Replica:a0005>:OUTPUT: No failure associated with trigger:  catch_up  found in replica:  r2
+[2017-11-20 23:23:41,053] olympus.Olympus<Olympus:1c002>:OUTPUT: Sending catch up message to replica:  r4
+[2017-11-20 23:23:41,055] replica.Replica<Replica:a0007>:OUTPUT: Received catch up message from Olympus in = r4
+[2017-11-20 23:23:41,056] replica.Replica<Replica:a0007>:OUTPUT: Checking for failure associated with trigger, application:  ('catch_up', 'pre')  in replica:  r4
+[2017-11-20 23:23:41,056] replica.Replica<Replica:a0007>:OUTPUT: No failure associated with trigger:  catch_up  found in replica:  r4
+[2017-11-20 23:23:41,057] replica.Replica<Replica:a0005>:OUTPUT: Sending caught up message to Olympus from replica:  r2
+[2017-11-20 23:23:41,060] replica.Replica<Replica:a0005>:OUTPUT: Checking for failure associated with trigger, application:  ('catch_up', 'post')  in replica:  r2
+[2017-11-20 23:23:41,061] replica.Replica<Replica:a0005>:OUTPUT: No failure associated with trigger:  catch_up  found in replica:  r2
+[2017-11-20 23:23:41,062] replica.Replica<Replica:a0007>:OUTPUT: Sending caught up message to Olympus from replica:  r4
+[2017-11-20 23:23:41,058] olympus.Olympus<Olympus:1c002>:OUTPUT: Sending catch up message to replica:  r3
+[2017-11-20 23:23:41,064] replica.Replica<Replica:a0007>:OUTPUT: Checking for failure associated with trigger, application:  ('catch_up', 'post')  in replica:  r4
+[2017-11-20 23:23:41,065] replica.Replica<Replica:a0007>:OUTPUT: No failure associated with trigger:  catch_up  found in replica:  r4
+[2017-11-20 23:23:41,065] replica.Replica<Replica:a0006>:OUTPUT: Received catch up message from Olympus in = r3
+[2017-11-20 23:23:41,066] replica.Replica<Replica:a0006>:OUTPUT: Checking for failure associated with trigger, application:  ('catch_up', 'pre')  in replica:  r3
+[2017-11-20 23:23:41,066] olympus.Olympus<Olympus:1c002>:OUTPUT: Received wedged message from replica: r1
+[2017-11-20 23:23:41,067] replica.Replica<Replica:a0006>:OUTPUT: No failure associated with trigger:  catch_up  found in replica:  r3
+[2017-11-20 23:23:41,070] replica.Replica<Replica:a0006>:OUTPUT: Sending caught up message to Olympus from replica:  r3
+[2017-11-20 23:23:41,073] replica.Replica<Replica:a0006>:OUTPUT: Checking for failure associated with trigger, application:  ('catch_up', 'post')  in replica:  r3
+[2017-11-20 23:23:41,074] replica.Replica<Replica:a0006>:OUTPUT: No failure associated with trigger:  catch_up  found in replica:  r3
+[2017-11-20 23:23:41,083] olympus.Olympus<Olympus:1c002>:OUTPUT: Adding the following replica to the quorum: r1
+[2017-11-20 23:23:41,083] olympus.Olympus<Olympus:1c002>:OUTPUT: Validated history successfully for wedged message from:  r1
+[2017-11-20 23:23:41,086] olympus.Olympus<Olympus:1c002>:OUTPUT: Received wedged message from replica: r0
+[2017-11-20 23:23:41,090] olympus.Olympus<Olympus:1c002>:OUTPUT: Received history with holes:  [{'slot': 1, 'operation': {'id': 0, 'client_id': 'c0', 'command_string': "put('movie','star')"}, 'order_statements': {'r0': {'order_statement': {'slot': 1, 'operation': {'id': 0, 'client_id': 'c0', 'command_string': "put('movie','star')"}}, 'signed_order_statement': b"\xbe4\x9a\x07\x87b56\x1d\xb9\xe5\x18\xb8\x06?7\xb2\xbd\x13\xca\x81J\xf4q\xe7\x95(J\xe5\xe3hL\xb7\xa8\x13\xe3\xa8B8\xf9;\x99@_\x81\xf8\x95\xd25\xbaf\x85\xf0lr\x0c\xe5<&\xcf\x85\xdeB\x01\x80\x03}q\x00(X\x04\x00\x00\x00slotq\x01K\x01X\t\x00\x00\x00operationq\x02}q\x03(X\x02\x00\x00\x00idq\x04K\x00X\t\x00\x00\x00client_idq\x05X\x02\x00\x00\x00c0q\x06X\x0e\x00\x00\x00command_stringq\x07X\x13\x00\x00\x00put('movie','star')q\x08uu."}}, 'client_request_message': {'content': {'is_retry': False, 'operation': {'id': 0, 'client_id': 'c0', 'command_string': "put('movie','star')"}}, 'signed_content': b"\x0e\x05Up\xca\xacw\xe7\x1d\xbc\xef\xbd\xd6\xe4\xd0\xbb\xb1\xef\xb2\xb8n\x85\xe3\x8e1\x03kl\x92\xa8\xb6T{\x00\x1e^\xde\x0e\xb9\x88b\x88\x17\xcd\x16OB\xd8\xb0\xa4S\xbc\xd3\xe8\x90\x85<.\xf2Y\xcb\x88\xba\x03\x80\x03}q\x00(X\x08\x00\x00\x00is_retryq\x01\x89X\t\x00\x00\x00operationq\x02}q\x03(X\x02\x00\x00\x00idq\x04K\x00X\t\x00\x00\x00client_idq\x05X\x02\x00\x00\x00c0q\x06X\x0e\x00\x00\x00command_stringq\x07X\x13\x00\x00\x00put('movie','star')q\x08uu."}}, {'slot': 2, 'operation': {'id': 0, 'client_id': 'c1', 'command_string': "put('movie1','star1')"}, 'order_statements': {'r0': {'order_statement': {'slot': 2, 'operation': {'id': 0, 'client_id': 'c1', 'command_string': "put('movie1','star1')"}}, 'signed_order_statement': b"\xd9>\xf4\x8dz'\xc0\x86\x90\x00J\x1d\xc3Y\x17Q\x8d\x92t\x10\xa0T\xc5\x9b\x92\xf8*\x14\x88\xd5\x19\xf2\x9f\x85\xe9\x16_+\x00&{E]]D\x9f?\x96\x81\xa2^\x15\xb0\xf0\x99,\x9c5\x92\xe1G\x05\xac\n\x80\x03}q\x00(X\x04\x00\x00\x00slotq\x01K\x02X\t\x00\x00\x00operationq\x02}q\x03(X\x02\x00\x00\x00idq\x04K\x00X\t\x00\x00\x00client_idq\x05X\x02\x00\x00\x00c1q\x06X\x0e\x00\x00\x00command_stringq\x07X\x15\x00\x00\x00put('movie1','star1')q\x08uu."}}, 'client_request_message': {'content': {'is_retry': False, 'operation': {'id': 0, 'client_id': 'c1', 'command_string': "put('movie1','star1')"}}, 'signed_content': b'\xb4\xa4\x8a\xe4N\x9b\xb07 |\x9d\x95\xc6<5\x96\x9c\xad\xcb\xbaL>\xaaB\x81\xb7Zg\x85\xa1\xa3!\x1fHs\xc2w\x19xO\xb0-\xc7%g6j\x1b<9\xb8S<\xe7-\x18"\xf3\r{}\xf9\xa3\x0f\x80\x03}q\x00(X\x08\x00\x00\x00is_retryq\x01\x89X\t\x00\x00\x00operationq\x02}q\x03(X\x02\x00\x00\x00idq\x04K\x00X\t\x00\x00\x00client_idq\x05X\x02\x00\x00\x00c1q\x06X\x0e\x00\x00\x00command_stringq\x07X\x15\x00\x00\x00put(\'movie1\',\'star1\')q\x08uu.'}}, {'slot': 3, 'operation': {'id': 1, 'client_id': 'c0', 'command_string': "get('movie')"}, 'order_statements': {'r0': {'order_statement': {'slot': 3, 'operation': {'id': 1, 'client_id': 'c0', 'command_string': "get('movie')"}}, 'signed_order_statement': b"\r\x0c\xdc\xfdB]=\xe3er\x84\xed\xb6dh\x85\xb4<\xf2\x11\xc3\xb9\x9b\xa1a\x94\x06\xe9\xffV\x8a\xa4\xdd\xb1\xe6\xb19A7\xe3\xd6\xf3\xcf\xecm1\x069\x19D.Xr\x81\xbe\x9fPl.;\x92oZ\x0f\x80\x03}q\x00(X\x04\x00\x00\x00slotq\x01K\x03X\t\x00\x00\x00operationq\x02}q\x03(X\x02\x00\x00\x00idq\x04K\x01X\t\x00\x00\x00client_idq\x05X\x02\x00\x00\x00c0q\x06X\x0e\x00\x00\x00command_stringq\x07X\x0c\x00\x00\x00get('movie')q\x08uu."}}, 'client_request_message': {'content': {'is_retry': False, 'operation': {'id': 1, 'client_id': 'c0', 'command_string': "get('movie')"}}, 'signed_content': b"\xb8\xfb\xa0C\x00q{\r\xd8\x8dV\x11\xca\xc2\xfe\xc6;\x9fRNd\x93\xa6\xd6h7\x92|$T\xc4\x96~Q\x18\xceUbc\x82QF\xca\x95\xce\xbeq\x1a\x90\x1e\xaa\xf8fFZ\xd8\xb0\xdd\xbc\xe8\t\xdd%\x04\x80\x03}q\x00(X\x08\x00\x00\x00is_retryq\x01\x89X\t\x00\x00\x00operationq\x02}q\x03(X\x02\x00\x00\x00idq\x04K\x01X\t\x00\x00\x00client_idq\x05X\x02\x00\x00\x00c0q\x06X\x0e\x00\x00\x00command_stringq\x07X\x0c\x00\x00\x00get('movie')q\x08uu."}}, {'slot': 4, 'operation': {'id': 1, 'client_id': 'c1', 'command_string': "get('movie1')"}, 'order_statements': {'r0': {'order_statement': {'slot': 4, 'operation': {'id': 1, 'client_id': 'c1', 'command_string': "get('movie1')"}}, 'signed_order_statement': b'\xb0P\xc9\x96o\xc7\x8dH\x03\xc7=\x98\xefO\x8eO[\x14\xc8\xa30icDk0n\x06a"6\xc4\xc0\xa3\xff\xf2\x1c\x9cO!\xa5,c\xd2F\xf1\xfek\xaesJ\x8a.\xa5^V\x02\x87P\x06\x9c\xd2C\x07\x80\x03}q\x00(X\x04\x00\x00\x00slotq\x01K\x04X\t\x00\x00\x00operationq\x02}q\x03(X\x02\x00\x00\x00idq\x04K\x01X\t\x00\x00\x00client_idq\x05X\x02\x00\x00\x00c1q\x06X\x0e\x00\x00\x00command_stringq\x07X\r\x00\x00\x00get(\'movie1\')q\x08uu.'}}, 'client_request_message': {'content': {'is_retry': False, 'operation': {'id': 1, 'client_id': 'c1', 'command_string': "get('movie1')"}}, 'signed_content': b"jXS6\xc3\xdf\x88;o\xdb5\xe2{\xa3\xce\xd8}\x88\xd6\xf3\x8dd7\xcb\xf3\x85\xda\xb6X\x1dc\xd9}7\xb4\xcb\xbb\xad\x83\xec'\xdd\x84\xf3\xee2\x0cy\xc0{\xaf\x90eH+5\x00#\xbe~\xdf\x07 \x0c\x80\x03}q\x00(X\x08\x00\x00\x00is_retryq\x01\x89X\t\x00\x00\x00operationq\x02}q\x03(X\x02\x00\x00\x00idq\x04K\x01X\t\x00\x00\x00client_idq\x05X\x02\x00\x00\x00c1q\x06X\x0e\x00\x00\x00command_stringq\x07X\r\x00\x00\x00get('movie1')q\x08uu."}}, {'slot': 5, 'operation': {'id': 2, 'client_id': 'c0', 'command_string': "append('movie', '123')"}, 'order_statements': {'r0': {'order_statement': {'slot': 5, 'operation': {'id': 2, 'client_id': 'c0', 'command_string': "append('movie', '123')"}}, 'signed_order_statement': b'\x14\xba\x9fZ\x9aM\xf1\xa5#\xa3\xc6\xfb\xe3\xe0\x98"0\xf1\xa4b\xe8\x95X\x85\xc9%$\xf1\xcfc\xa2\xc4S=Rx;]\xf0\xe8\x87\x89\x8a&\xde\x11${]\xea\xbf\xc6\xdc\x95p\xc0\xa2\xe2A\x7f\xa2\xc9q\x0e\x80\x03}q\x00(X\x04\x00\x00\x00slotq\x01K\x05X\t\x00\x00\x00operationq\x02}q\x03(X\x02\x00\x00\x00idq\x04K\x02X\t\x00\x00\x00client_idq\x05X\x02\x00\x00\x00c0q\x06X\x0e\x00\x00\x00command_stringq\x07X\x16\x00\x00\x00append(\'movie\', \'123\')q\x08uu.'}}, 'client_request_message': {'content': {'is_retry': False, 'operation': {'id': 2, 'client_id': 'c0', 'command_string': "append('movie', '123')"}}, 'signed_content': b"\x9c\xf6\xb7\x06Pb\t\xf4\x9d\xf4\xfc\x02\x9f\xe5\xf1\xba\xe0\xfb\xc04\x1d\tZU\x89\xf6\xd5\x99\xaf\xa1\x99\xe8\x15\x8d`\xdcB\x089Ba`\x87\na{\x05$\x95\xc1\xa3U)H\xffb\xfa\xf0\xf4\xe8\x8e'\xc1\x07\x80\x03}q\x00(X\x08\x00\x00\x00is_retryq\x01\x89X\t\x00\x00\x00operationq\x02}q\x03(X\x02\x00\x00\x00idq\x04K\x02X\t\x00\x00\x00client_idq\x05X\x02\x00\x00\x00c0q\x06X\x0e\x00\x00\x00command_stringq\x07X\x16\x00\x00\x00append('movie', '123')q\x08uu."}}, {'slot': 6, 'operation': {'id': 2, 'client_id': 'c1', 'command_string': "append('movie1', '123')"}, 'order_statements': {'r0': {'order_statement': {'slot': 6, 'operation': {'id': 2, 'client_id': 'c1', 'command_string': "append('movie1', '123')"}}, 'signed_order_statement': b"$\xf0ih\x9eo\x03\xe6\xc8\xb5\xacQ\t\x06x}\x03^\xd2\xad0I\xbd\xbc\t\x90g\xa8\x88\xf6\x84bW\x9d\x87\x10\xc0\x9e\xbf@\xb9\xa7Wd7|\xeb\xba]*\x8f\x9a\x1dk;i=o\t\n\t\x00s\x06\x80\x03}q\x00(X\x04\x00\x00\x00slotq\x01K\x06X\t\x00\x00\x00operationq\x02}q\x03(X\x02\x00\x00\x00idq\x04K\x02X\t\x00\x00\x00client_idq\x05X\x02\x00\x00\x00c1q\x06X\x0e\x00\x00\x00command_stringq\x07X\x17\x00\x00\x00append('movie1', '123')q\x08uu."}}, 'client_request_message': {'content': {'is_retry': False, 'operation': {'id': 2, 'client_id': 'c1', 'command_string': "append('movie1', '123')"}}, 'signed_content': b"\xe45\xa1\xaf!\xd6\xff#\x92ux\x1a\xcaX\xb1av\x95U\xcf\xf8\xd5\x13\xbb_\\\x9a`58\xf9\x97\x17\xc1\xdf\xca\x16\xc8\xf0\x8e\x14mM\x9d\xeb+\x9d\x9a,\xc9]X\x1f\x88\xf45\x9cZT%\xda\xe4\xf4\x00\x80\x03}q\x00(X\x08\x00\x00\x00is_retryq\x01\x89X\t\x00\x00\x00operationq\x02}q\x03(X\x02\x00\x00\x00idq\x04K\x02X\t\x00\x00\x00client_idq\x05X\x02\x00\x00\x00c1q\x06X\x0e\x00\x00\x00command_stringq\x07X\x17\x00\x00\x00append('movie1', '123')q\x08uu."}}, {'slot': 6, 'operation': {'id': 2, 'client_id': 'c1', 'command_string': "append('movie1', '123')"}, 'order_statements': {'r0': {'order_statement': {'slot': 6, 'operation': {'id': 2, 'client_id': 'c1', 'command_string': "append('movie1', '123')"}}, 'signed_order_statement': b"$\xf0ih\x9eo\x03\xe6\xc8\xb5\xacQ\t\x06x}\x03^\xd2\xad0I\xbd\xbc\t\x90g\xa8\x88\xf6\x84bW\x9d\x87\x10\xc0\x9e\xbf@\xb9\xa7Wd7|\xeb\xba]*\x8f\x9a\x1dk;i=o\t\n\t\x00s\x06\x80\x03}q\x00(X\x04\x00\x00\x00slotq\x01K\x06X\t\x00\x00\x00operationq\x02}q\x03(X\x02\x00\x00\x00idq\x04K\x02X\t\x00\x00\x00client_idq\x05X\x02\x00\x00\x00c1q\x06X\x0e\x00\x00\x00command_stringq\x07X\x17\x00\x00\x00append('movie1', '123')q\x08uu."}}, 'client_request_message': {'content': {'is_retry': True, 'operation': {'id': 2, 'client_id': 'c1', 'command_string': "append('movie1', '123')"}}, 'signed_content': b"%\x0c\xd1XO\xc1y\xd6\xbf\xe7-w\xeei\xc2\xae\xe6<\x0e\xcbu\xf2\xc8\x0b#\xb4dS0\xf0\xa6\xe8m\x14\xd8D\x05\xba\xe2\xbe3\xfdvT:\xd2\xb6\x8c4\xcf\xe0\xb3\x0b\x92)z\xe3\xec\xa3\xbf\x81o\x05\x0f\x80\x03}q\x00(X\x08\x00\x00\x00is_retryq\x01\x88X\t\x00\x00\x00operationq\x02}q\x03(X\x02\x00\x00\x00idq\x04K\x02X\t\x00\x00\x00client_idq\x05X\x02\x00\x00\x00c1q\x06X\x0e\x00\x00\x00command_stringq\x07X\x17\x00\x00\x00append('movie1', '123')q\x08uu."}}, {'slot': 5, 'operation': {'id': 2, 'client_id': 'c0', 'command_string': "append('movie', '123')"}, 'order_statements': {'r0': {'order_statement': {'slot': 5, 'operation': {'id': 2, 'client_id': 'c0', 'command_string': "append('movie', '123')"}}, 'signed_order_statement': b'\x14\xba\x9fZ\x9aM\xf1\xa5#\xa3\xc6\xfb\xe3\xe0\x98"0\xf1\xa4b\xe8\x95X\x85\xc9%$\xf1\xcfc\xa2\xc4S=Rx;]\xf0\xe8\x87\x89\x8a&\xde\x11${]\xea\xbf\xc6\xdc\x95p\xc0\xa2\xe2A\x7f\xa2\xc9q\x0e\x80\x03}q\x00(X\x04\x00\x00\x00slotq\x01K\x05X\t\x00\x00\x00operationq\x02}q\x03(X\x02\x00\x00\x00idq\x04K\x02X\t\x00\x00\x00client_idq\x05X\x02\x00\x00\x00c0q\x06X\x0e\x00\x00\x00command_stringq\x07X\x16\x00\x00\x00append(\'movie\', \'123\')q\x08uu.'}}, 'client_request_message': {'content': {'is_retry': True, 'operation': {'id': 2, 'client_id': 'c0', 'command_string': "append('movie', '123')"}}, 'signed_content': b"1Pt\x90\x10\xe0K\xe9\xcc\xbd4YCp\xd6\xd63\xd3\x8fe\n\xa2m'\xdb\x89\xf1\xbfr2\x10jB0\xbc\x0c\xac\x1eH\x9eN\xe1]\x92\xa3\xc5\xe0/t\xfep/\xd0\xcf\x89\x1e\n\xfb\x1c\xe8.\x18\x1f\x04\x80\x03}q\x00(X\x08\x00\x00\x00is_retryq\x01\x88X\t\x00\x00\x00operationq\x02}q\x03(X\x02\x00\x00\x00idq\x04K\x02X\t\x00\x00\x00client_idq\x05X\x02\x00\x00\x00c0q\x06X\x0e\x00\x00\x00command_stringq\x07X\x16\x00\x00\x00append('movie', '123')q\x08uu."}}]  from= r0
+[2017-11-20 23:23:41,101] olympus.Olympus<Olympus:1c002>:OUTPUT: Received caught up message from replica: r2
+[2017-11-20 23:23:41,104] olympus.Olympus<Olympus:1c002>:OUTPUT: Received caught up message from replica: r4
+[2017-11-20 23:23:41,110] olympus.Olympus<Olympus:1c002>:OUTPUT: Received caught up message from replica: r3
+[2017-11-20 23:23:41,113] olympus.Olympus<Olympus:1c002>:OUTPUT: Caught up quorum is satisfied.
+[2017-11-20 23:23:41,116] olympus.Olympus<Olympus:1c002>:OUTPUT: Sending get_running_state message to:  r2
+[2017-11-20 23:23:41,118] replica.Replica<Replica:a0005>:OUTPUT: Received get running state message from Olympus, in = r2
+[2017-11-20 23:23:41,118] replica.Replica<Replica:a0005>:OUTPUT: Checking for failure associated with trigger, application:  ('get_running_state', 'pre')  in replica:  r2
+[2017-11-20 23:23:41,118] replica.Replica<Replica:a0005>:OUTPUT: No failure associated with trigger:  get_running_state  found in replica:  r2
+[2017-11-20 23:23:41,124] replica.Replica<Replica:a0005>:OUTPUT: Checking for failure associated with trigger, application:  ('get_running_state', 'post')  in replica:  r2
+[2017-11-20 23:23:41,124] replica.Replica<Replica:a0005>:OUTPUT: No failure associated with trigger:  get_running_state  found in replica:  r2
+[2017-11-20 23:23:41,124] replica.Replica<Replica:a0005>:OUTPUT: Sending running state message to Olympus from:  r2
+[2017-11-20 23:23:41,126] olympus.Olympus<Olympus:1c002>:OUTPUT: Running state received from:  r2
+[2017-11-20 23:23:41,128] olympus.Olympus<Olympus:1c002>:OUTPUT: Valid running state received in:  r2
+[2017-11-20 23:23:41,129] olympus.Olympus<Olympus:1c002>:OUTPUT: Reconfiguration started
+[2017-11-20 23:23:41,129] olympus.Olympus<Olympus:1c002>:OUTPUT: Terminating replicas..
+[2017-11-20 23:23:41,131] olympus.Olympus<Olympus:1c002>:OUTPUT: Sent abort command to replica : r0
+[2017-11-20 23:23:41,132] replica.Replica<Replica:a0003>:OUTPUT: Received abort message from Olympus in replica:  r0
+[2017-11-20 23:23:41,135] olympus.Olympus<Olympus:1c002>:OUTPUT: Sent abort command to replica : r1
+[2017-11-20 23:23:41,136] replica.Replica<Replica:a0004>:OUTPUT: Received abort message from Olympus in replica:  r1
+[2017-11-20 23:23:41,137] replica.Replica<Replica:a0003>:OUTPUT: Sending aborted message to Olympus from:  r0
+[2017-11-20 23:23:41,139] olympus.Olympus<Olympus:1c002>:OUTPUT: Sent abort command to replica : r2
+[2017-11-20 23:23:41,140] replica.Replica<Replica:a0005>:OUTPUT: Received abort message from Olympus in replica:  r2
+[2017-11-20 23:23:41,141] replica.Replica<Replica:a0004>:OUTPUT: Sending aborted message to Olympus from:  r1
+[2017-11-20 23:23:41,144] olympus.Olympus<Olympus:1c002>:OUTPUT: Sent abort command to replica : r3
+[2017-11-20 23:23:41,145] replica.Replica<Replica:a0005>:OUTPUT: Sending aborted message to Olympus from:  r2
+[2017-11-20 23:23:41,146] replica.Replica<Replica:a0006>:OUTPUT: Received abort message from Olympus in replica:  r3
+[2017-11-20 23:23:41,147] olympus.Olympus<Olympus:1c002>:OUTPUT: Sent abort command to replica : r4
+[2017-11-20 23:23:41,148] replica.Replica<Replica:a0007>:OUTPUT: Received abort message from Olympus in replica:  r4
+[2017-11-20 23:23:41,149] olympus.Olympus<Olympus:1c002>:OUTPUT: Aborted message received from replica:  r0
+[2017-11-20 23:23:41,149] replica.Replica<Replica:a0006>:OUTPUT: Sending aborted message to Olympus from:  r3
+[2017-11-20 23:23:41,152] replica.Replica<Replica:a0007>:OUTPUT: Sending aborted message to Olympus from:  r4
+[2017-11-20 23:23:41,154] olympus.Olympus<Olympus:1c002>:OUTPUT: Aborted message received from replica:  r1
+[2017-11-20 23:23:41,159] olympus.Olympus<Olympus:1c002>:OUTPUT: Aborted message received from replica:  r2
+[2017-11-20 23:23:41,163] olympus.Olympus<Olympus:1c002>:OUTPUT: Aborted message received from replica:  r3
+[2017-11-20 23:23:41,168] olympus.Olympus<Olympus:1c002>:OUTPUT: Aborted message received from replica:  r4
+[2017-11-20 23:23:41,171] olympus.Olympus<Olympus:1c002>:OUTPUT: Received all aborted messages
+[2017-11-20 23:23:41,178] olympus.Olympus<Olympus:1c002>:OUTPUT: Initializing cluster with configuration version:  1
+[2017-11-20 23:23:42,367] replica.Replica<Replica:a0008>:OUTPUT: Spawned and initialized replica:  r0
+[2017-11-20 23:23:42,373] replica.Replica<Replica:a0009>:OUTPUT: Spawned and initialized replica:  r1
+[2017-11-20 23:23:42,383] replica.Replica<Replica:a000a>:OUTPUT: Spawned and initialized replica:  r2
+[2017-11-20 23:23:42,391] replica.Replica<Replica:a000b>:OUTPUT: Spawned and initialized replica:  r3
+[2017-11-20 23:23:42,399] replica.Replica<Replica:a000c>:OUTPUT: Spawned and initialized replica:  r4
+[2017-11-20 23:23:42,402] olympus.Olympus<Olympus:1c002>:OUTPUT: Olympus sent verified, potentially undelivered result to client: c0
+[2017-11-20 23:23:42,406] olympus.Olympus<Olympus:1c002>:OUTPUT: Olympus sent verified, potentially undelivered result to client: c1
+[2017-11-20 23:23:42,407] client.Client<Client:a0001>:OUTPUT: Verified result message received from Olympus
+[2017-11-20 23:23:42,410] client.Client<Client:a0002>:OUTPUT: Verified result message received from Olympus
+[2017-11-20 23:23:42,411] client.Client<Client:a0001>:OUTPUT: Not a pending request (1, 'c0')
+[2017-11-20 23:23:42,413] client.Client<Client:a0002>:OUTPUT: Not a pending request (1, 'c1')
+[2017-11-20 23:23:43,855] client.Client<Client:a0001>:OUTPUT: Wait for result timed out for operation= {'id': 2, 'client_id': 'c0', 'command_string': "append('movie', '123')"}
+[2017-11-20 23:23:43,856] client.Client<Client:a0001>:OUTPUT: Config requested from Olympus by client= c0
+[2017-11-20 23:23:43,862] client.Client<Client:a0001>:OUTPUT: Sending config request from client:  c0
+[2017-11-20 23:23:43,867] olympus.Olympus<Olympus:1c002>:OUTPUT: Config request received from client= c0
+[2017-11-20 23:23:43,883] olympus.Olympus<Olympus:1c002>:OUTPUT: Config has been sent to client= c0
+[2017-11-20 23:23:43,894] client.Client<Client:a0001>:OUTPUT: The config was fetched from Olympus: {'id': 'c0', 'workload': ["put('movie','star')", "get('movie')", "append('movie', '123')", "get('movie')", "get('movie');"], 'private_key': b'2ea561e375e400c6a32211853cd40c9a6f34a4db9a9a0c81710bc966a21b03a8', 'public_keys': {'o1': b'f7d40da3c32b33c4e1f48fb102ab8d33437e791b1c0e1e57968541e1a90a800a', 'c0': b'0dba56e57256795be46a3e7f73940b9adaf76e38202a837e9640eb7352d1f7fb', 'c1': b'7da0417b4dc60175b6ef50753981301b710fe60571f422ad7eb8269a2f8ef4f4', 'r0': b'1583ca04f32ea14b8657149eed8cfd20161b7b58b59dd17daf397c786ac1be5f', 'r1': b'e61f4db2256976f9a5cc5772b827c598a7c050d87ebc67eb27eea5adab8e8bc4', 'r2': b'721ee3be762991a83a42edb899973cfbd82be037791781eb127cb4ec1b2e2ab9', 'r3': b'c515b3bbfca2cc38b5826f63de3b108dead97011adc6208e08637c4e764252f5', 'r4': b'e1e631c950238959ae18c05d187a6b013b30f7b48dd510762da3cbb14906ef7e'}, 'client_timeout': 3.0, 'olympus': {'id': 'o1', 'process_id': <Olympus:1c002>}, 'replicas': {'r0': <Replica:a0008>, 'r1': <Replica:a0009>, 'r2': <Replica:a000a>, 'r3': <Replica:a000b>, 'r4': <Replica:a000c>}, 'head_id': 'r0', 't': 2}
+[2017-11-20 23:23:43,902] client.Client<Client:a0001>:OUTPUT: Retransmitting request to all replicas for operation= {'id': 2, 'client_id': 'c0', 'command_string': "append('movie', '123')"}
+[2017-11-20 23:23:43,902] replica.Replica<Replica:a0007>:OUTPUT: Result Shuttle Timeout in Replica:  r4
+[2017-11-20 23:23:43,904] client.Client<Client:a0002>:OUTPUT: Wait for result timed out for operation= {'id': 2, 'client_id': 'c1', 'command_string': "append('movie1', '123')"}
+[2017-11-20 23:23:43,909] replica.Replica<Replica:a0008>:OUTPUT: Received request message (source, client_id, operation_id, self_id)  c0 c0 2 r0
+[2017-11-20 23:23:43,910] replica.Replica<Replica:a0008>:OUTPUT: Checking for failure associated with trigger, application:  ('client_request', 'pre')  in replica:  r0
+[2017-11-20 23:23:43,911] replica.Replica<Replica:a0008>:OUTPUT: No failure associated with trigger:  client_request  found in replica:  r0
+[2017-11-20 23:23:43,913] replica.Replica<Replica:a0009>:OUTPUT: Received request message (source, client_id, operation_id, self_id)  c0 c0 2 r1
+[2017-11-20 23:23:43,915] replica.Replica<Replica:a0009>:OUTPUT: Checking for failure associated with trigger, application:  ('client_request', 'pre')  in replica:  r1
+[2017-11-20 23:23:43,918] replica.Replica<Replica:a000a>:OUTPUT: Received request message (source, client_id, operation_id, self_id)  c0 c0 2 r2
+[2017-11-20 23:23:43,921] replica.Replica<Replica:a0008>:OUTPUT: Head is processing request (operation_id, client_id) (2, 'c0')
+[2017-11-20 23:23:43,921] replica.Replica<Replica:a000b>:OUTPUT: Received request message (source, client_id, operation_id, self_id)  c0 c0 2 r3
+[2017-11-20 23:23:43,922] replica.Replica<Replica:a0009>:OUTPUT: No failure associated with trigger:  client_request  found in replica:  r1
+[2017-11-20 23:23:43,922] replica.Replica<Replica:a000a>:OUTPUT: Checking for failure associated with trigger, application:  ('client_request', 'pre')  in replica:  r2
+[2017-11-20 23:23:43,923] replica.Replica<Replica:a000c>:OUTPUT: Received request message (source, client_id, operation_id, self_id)  c0 c0 2 r4
+[2017-11-20 23:23:43,923] replica.Replica<Replica:a000b>:OUTPUT: Checking for failure associated with trigger, application:  ('client_request', 'pre')  in replica:  r3
+[2017-11-20 23:23:43,924] replica.Replica<Replica:a000a>:OUTPUT: No failure associated with trigger:  client_request  found in replica:  r2
+[2017-11-20 23:23:43,926] replica.Replica<Replica:a000c>:OUTPUT: Checking for failure associated with trigger, application:  ('client_request', 'pre')  in replica:  r4
+[2017-11-20 23:23:43,927] replica.Replica<Replica:a000b>:OUTPUT: No failure associated with trigger:  client_request  found in replica:  r3
+[2017-11-20 23:23:43,931] replica.Replica<Replica:a000c>:OUTPUT: No failure associated with trigger:  client_request  found in replica:  r4
+[2017-11-20 23:23:43,932] replica.Replica<Replica:a0008>:OUTPUT: Checking for failure associated with trigger, application:  ('client_request', 'post')  in replica:  r0
+[2017-11-20 23:23:43,937] replica.Replica<Replica:a0008>:OUTPUT: No failure associated with trigger:  client_request  found in replica:  r0
+[2017-11-20 23:23:43,938] replica.Replica<Replica:a0009>:OUTPUT: Received request message (source, client_id, operation_id, self_id)  r2 c0 2 r1
+[2017-11-20 23:23:43,939] replica.Replica<Replica:a0009>:OUTPUT: Checking for failure associated with trigger, application:  ('forwarded_request', 'pre')  in replica:  r1
+[2017-11-20 23:23:43,940] replica.Replica<Replica:a0009>:OUTPUT: No failure associated with trigger:  forwarded_request  found in replica:  r1
+[2017-11-20 23:23:43,941] replica.Replica<Replica:a000a>:OUTPUT: Received request message (source, client_id, operation_id, self_id)  r3 c0 2 r2
+[2017-11-20 23:23:43,942] replica.Replica<Replica:a0008>:OUTPUT: Received request message (source, client_id, operation_id, self_id)  r1 c0 2 r0
+[2017-11-20 23:23:43,942] replica.Replica<Replica:a000a>:OUTPUT: Checking for failure associated with trigger, application:  ('forwarded_request', 'pre')  in replica:  r2
+[2017-11-20 23:23:43,943] replica.Replica<Replica:a0008>:OUTPUT: Checking for failure associated with trigger, application:  ('forwarded_request', 'pre')  in replica:  r0
+[2017-11-20 23:23:43,943] replica.Replica<Replica:a000a>:OUTPUT: No failure associated with trigger:  forwarded_request  found in replica:  r2
+[2017-11-20 23:23:43,943] replica.Replica<Replica:a0008>:OUTPUT: No failure associated with trigger:  forwarded_request  found in replica:  r0
+[2017-11-20 23:23:43,945] replica.Replica<Replica:a000b>:OUTPUT: Received request message (source, client_id, operation_id, self_id)  r4 c0 2 r3
+[2017-11-20 23:23:43,945] replica.Replica<Replica:a000b>:OUTPUT: Checking for failure associated with trigger, application:  ('forwarded_request', 'pre')  in replica:  r3
+[2017-11-20 23:23:43,946] replica.Replica<Replica:a000b>:OUTPUT: No failure associated with trigger:  forwarded_request  found in replica:  r3
+[2017-11-20 23:23:43,948] replica.Replica<Replica:a0009>:OUTPUT: Received shuttle (source, client_id, operation_id, self_id)  r0 c0 2 r1
+[2017-11-20 23:23:43,948] replica.Replica<Replica:a0008>:OUTPUT: Awaiting result shuttle from downstream _replicas
+[2017-11-20 23:23:43,949] replica.Replica<Replica:a0009>:OUTPUT: Checking for failure associated with trigger, application:  ('shuttle', 'pre')  in replica:  r1
+[2017-11-20 23:23:43,949] replica.Replica<Replica:a0009>:OUTPUT: No failure associated with trigger:  shuttle  found in replica:  r1
+[2017-11-20 23:23:43,950] replica.Replica<Replica:a0008>:OUTPUT: Received request message (source, client_id, operation_id, self_id)  r1 c0 2 r0
+[2017-11-20 23:23:43,951] replica.Replica<Replica:a0008>:OUTPUT: Checking for failure associated with trigger, application:  ('forwarded_request', 'pre')  in replica:  r0
+[2017-11-20 23:23:43,951] replica.Replica<Replica:a0008>:OUTPUT: No failure associated with trigger:  forwarded_request  found in replica:  r0
+[2017-11-20 23:23:43,955] replica.Replica<Replica:a000a>:OUTPUT: Received request message (source, client_id, operation_id, self_id)  r3 c0 2 r2
+[2017-11-20 23:23:43,955] replica.Replica<Replica:a000a>:OUTPUT: Checking for failure associated with trigger, application:  ('forwarded_request', 'pre')  in replica:  r2
+[2017-11-20 23:23:43,955] replica.Replica<Replica:a000a>:OUTPUT: No failure associated with trigger:  forwarded_request  found in replica:  r2
+[2017-11-20 23:23:43,955] replica.Replica<Replica:a0008>:OUTPUT: Awaiting result shuttle from downstream _replicas
+[2017-11-20 23:23:43,907] client.Client<Client:a0002>:OUTPUT: Config requested from Olympus by client= c1
+[2017-11-20 23:23:43,959] olympus.Olympus<Olympus:1c002>:ERROR: A signature mismatch occurred from source: r4
+[2017-11-20 23:23:43,958] replica.Replica<Replica:a0005>:OUTPUT: Result Shuttle Timeout in Replica:  r2
+[2017-11-20 23:23:43,958] replica.Replica<Replica:a0006>:OUTPUT: Result Shuttle Timeout in Replica:  r3
+[2017-11-20 23:23:43,959] replica.Replica<Replica:a0004>:OUTPUT: Result Shuttle Timeout in Replica:  r1
+[2017-11-20 23:23:43,967] replica.Replica<Replica:a0009>:OUTPUT: Checking for failure associated with trigger, application:  ('shuttle', 'post')  in replica:  r1
+[2017-11-20 23:23:43,968] replica.Replica<Replica:a0009>:OUTPUT: No failure associated with trigger:  shuttle  found in replica:  r1
+[2017-11-20 23:23:43,956] replica.Replica<Replica:a0007>:OUTPUT: Sent reconfiguration request to Olympus from : r4
+[2017-11-20 23:23:43,967] replica.Replica<Replica:a0006>:OUTPUT: Sent reconfiguration request to Olympus from : r3
+[2017-11-20 23:23:43,968] replica.Replica<Replica:a0004>:OUTPUT: Sent reconfiguration request to Olympus from : r1
+[2017-11-20 23:23:43,970] replica.Replica<Replica:a0003>:OUTPUT: Result Shuttle Timeout in head:  r0
+[2017-11-20 23:23:43,972] replica.Replica<Replica:a0009>:OUTPUT: Received request message (source, client_id, operation_id, self_id)  r2 c0 2 r1
+[2017-11-20 23:23:43,970] replica.Replica<Replica:a0006>:OUTPUT: Result Shuttle Timeout in Replica:  r3
+[2017-11-20 23:23:43,973] replica.Replica<Replica:a0009>:OUTPUT: Checking for failure associated with trigger, application:  ('forwarded_request', 'pre')  in replica:  r1
+[2017-11-20 23:23:43,971] olympus.Olympus<Olympus:1c002>:ERROR: A signature mismatch occurred from source: r2
+[2017-11-20 23:23:43,973] replica.Replica<Replica:a000a>:OUTPUT: Received shuttle (source, client_id, operation_id, self_id)  r1 c0 2 r2
+[2017-11-20 23:23:43,973] replica.Replica<Replica:a0009>:OUTPUT: No failure associated with trigger:  forwarded_request  found in replica:  r1
+[2017-11-20 23:23:43,974] replica.Replica<Replica:a000a>:OUTPUT: Checking for failure associated with trigger, application:  ('shuttle', 'pre')  in replica:  r2
+[2017-11-20 23:23:43,974] replica.Replica<Replica:a000a>:OUTPUT: No failure associated with trigger:  shuttle  found in replica:  r2
+[2017-11-20 23:23:43,978] olympus.Olympus<Olympus:1c002>:ERROR: A signature mismatch occurred from source: r3
+[2017-11-20 23:23:43,969] replica.Replica<Replica:a0007>:OUTPUT: Result Shuttle Timeout in Replica:  r4
+[2017-11-20 23:23:43,981] replica.Replica<Replica:a0009>:OUTPUT: Received request message (source, client_id, operation_id, self_id)  r2 c0 2 r1
+[2017-11-20 23:23:43,982] replica.Replica<Replica:a0009>:OUTPUT: Checking for failure associated with trigger, application:  ('forwarded_request', 'pre')  in replica:  r1
+[2017-11-20 23:23:43,982] replica.Replica<Replica:a0009>:OUTPUT: No failure associated with trigger:  forwarded_request  found in replica:  r1
+[2017-11-20 23:23:43,981] replica.Replica<Replica:a0008>:OUTPUT: Received request message (source, client_id, operation_id, self_id)  r1 c0 2 r0
+[2017-11-20 23:23:43,983] olympus.Olympus<Olympus:1c002>:ERROR: A signature mismatch occurred from source: r1
+[2017-11-20 23:23:43,983] replica.Replica<Replica:a0008>:OUTPUT: Checking for failure associated with trigger, application:  ('forwarded_request', 'pre')  in replica:  r0
+[2017-11-20 23:23:43,983] replica.Replica<Replica:a0008>:OUTPUT: No failure associated with trigger:  forwarded_request  found in replica:  r0
+[2017-11-20 23:23:43,987] olympus.Olympus<Olympus:1c002>:ERROR: A signature mismatch occurred from source: r0
+[2017-11-20 23:23:43,988] replica.Replica<Replica:a0008>:OUTPUT: Awaiting result shuttle from downstream _replicas
+[2017-11-20 23:23:43,990] replica.Replica<Replica:a0008>:OUTPUT: Received request message (source, client_id, operation_id, self_id)  r1 c0 2 r0
+[2017-11-20 23:23:43,991] replica.Replica<Replica:a0008>:OUTPUT: Checking for failure associated with trigger, application:  ('forwarded_request', 'pre')  in replica:  r0
+[2017-11-20 23:23:43,976] replica.Replica<Replica:a0003>:OUTPUT: Sent reconfiguration request to Olympus from : r0
+[2017-11-20 23:23:43,989] replica.Replica<Replica:a0006>:OUTPUT: Sent reconfiguration request to Olympus from : r3
+[2017-11-20 23:23:43,992] replica.Replica<Replica:a0008>:OUTPUT: No failure associated with trigger:  forwarded_request  found in replica:  r0
+[2017-11-20 23:23:43,963] client.Client<Client:a0002>:OUTPUT: Sending config request from client:  c1
+[2017-11-20 23:23:43,993] olympus.Olympus<Olympus:1c002>:ERROR: A signature mismatch occurred from source: r3
+[2017-11-20 23:23:43,991] replica.Replica<Replica:a0007>:OUTPUT: Sent reconfiguration request to Olympus from : r4
+[2017-11-20 23:23:43,996] replica.Replica<Replica:a000a>:OUTPUT: Checking for failure associated with trigger, application:  ('shuttle', 'post')  in replica:  r2
+[2017-11-20 23:23:43,993] replica.Replica<Replica:a0006>:OUTPUT: Result Shuttle Timeout in Replica:  r3
+[2017-11-20 23:23:43,997] replica.Replica<Replica:a000a>:OUTPUT: No failure associated with trigger:  shuttle  found in replica:  r2
+[2017-11-20 23:23:43,997] replica.Replica<Replica:a0008>:OUTPUT: Awaiting result shuttle from downstream _replicas
+[2017-11-20 23:23:43,996] replica.Replica<Replica:a0007>:OUTPUT: Result Shuttle Timeout in Replica:  r4
+[2017-11-20 23:23:43,968] replica.Replica<Replica:a0005>:OUTPUT: Sent reconfiguration request to Olympus from : r2
+[2017-11-20 23:23:43,998] olympus.Olympus<Olympus:1c002>:ERROR: A signature mismatch occurred from source: r4
+[2017-11-20 23:23:43,999] replica.Replica<Replica:a0005>:OUTPUT: Result Shuttle Timeout in Replica:  r2
+[2017-11-20 23:23:44,001] olympus.Olympus<Olympus:1c002>:OUTPUT: Config request received from client= c1
+[2017-11-20 23:23:44,002] replica.Replica<Replica:a000b>:OUTPUT: Received shuttle (source, client_id, operation_id, self_id)  r2 c0 2 r3
+[2017-11-20 23:23:44,000] replica.Replica<Replica:a0006>:OUTPUT: Sent reconfiguration request to Olympus from : r3
+[2017-11-20 23:23:44,003] replica.Replica<Replica:a000b>:OUTPUT: Checking for failure associated with trigger, application:  ('shuttle', 'pre')  in replica:  r3
+[2017-11-20 23:23:44,003] replica.Replica<Replica:a000b>:OUTPUT: No failure associated with trigger:  shuttle  found in replica:  r3
+[2017-11-20 23:23:44,002] replica.Replica<Replica:a0007>:OUTPUT: Sent reconfiguration request to Olympus from : r4
+[2017-11-20 23:23:44,004] replica.Replica<Replica:a0007>:OUTPUT: Result Shuttle Timeout in Replica:  r4
+[2017-11-20 23:23:44,005] replica.Replica<Replica:a0005>:OUTPUT: Sent reconfiguration request to Olympus from : r2
+[2017-11-20 23:23:44,007] replica.Replica<Replica:a0005>:OUTPUT: Result Shuttle Timeout in Replica:  r2
+[2017-11-20 23:23:44,009] olympus.Olympus<Olympus:1c002>:OUTPUT: Config has been sent to client= c1
+[2017-11-20 23:23:44,011] replica.Replica<Replica:a0007>:OUTPUT: Sent reconfiguration request to Olympus from : r4
+[2017-11-20 23:23:44,013] olympus.Olympus<Olympus:1c002>:ERROR: A signature mismatch occurred from source: r3
+[2017-11-20 23:23:44,014] client.Client<Client:a0002>:OUTPUT: The config was fetched from Olympus: {'id': 'c1', 'workload': ["put('movie1','star1')", "get('movie1')", "append('movie1', '123')", "get('movie1')", "get('movie1');"], 'private_key': b'893eb1761c6af43f7d0fbb32f8c1fcae45f35692e2c1448e0e99b3d4bcdd53f5', 'public_keys': {'o1': b'f7d40da3c32b33c4e1f48fb102ab8d33437e791b1c0e1e57968541e1a90a800a', 'c0': b'0dba56e57256795be46a3e7f73940b9adaf76e38202a837e9640eb7352d1f7fb', 'c1': b'7da0417b4dc60175b6ef50753981301b710fe60571f422ad7eb8269a2f8ef4f4', 'r0': b'1583ca04f32ea14b8657149eed8cfd20161b7b58b59dd17daf397c786ac1be5f', 'r1': b'e61f4db2256976f9a5cc5772b827c598a7c050d87ebc67eb27eea5adab8e8bc4', 'r2': b'721ee3be762991a83a42edb899973cfbd82be037791781eb127cb4ec1b2e2ab9', 'r3': b'c515b3bbfca2cc38b5826f63de3b108dead97011adc6208e08637c4e764252f5', 'r4': b'e1e631c950238959ae18c05d187a6b013b30f7b48dd510762da3cbb14906ef7e'}, 'client_timeout': 3.0, 'olympus': {'id': 'o1', 'process_id': <Olympus:1c002>}, 'replicas': {'r0': <Replica:a0008>, 'r1': <Replica:a0009>, 'r2': <Replica:a000a>, 'r3': <Replica:a000b>, 'r4': <Replica:a000c>}, 'head_id': 'r0', 't': 2}
+[2017-11-20 23:23:44,017] client.Client<Client:a0002>:OUTPUT: Retransmitting request to all replicas for operation= {'id': 2, 'client_id': 'c1', 'command_string': "append('movie1', '123')"}
+[2017-11-20 23:23:44,018] olympus.Olympus<Olympus:1c002>:ERROR: A signature mismatch occurred from source: r4
+[2017-11-20 23:23:44,021] replica.Replica<Replica:a0008>:OUTPUT: Received request message (source, client_id, operation_id, self_id)  c1 c1 2 r0
+[2017-11-20 23:23:44,023] replica.Replica<Replica:a0009>:OUTPUT: Received request message (source, client_id, operation_id, self_id)  c1 c1 2 r1
+[2017-11-20 23:23:44,023] olympus.Olympus<Olympus:1c002>:ERROR: A signature mismatch occurred from source: r2
+[2017-11-20 23:23:44,024] replica.Replica<Replica:a0008>:OUTPUT: Checking for failure associated with trigger, application:  ('client_request', 'pre')  in replica:  r0
+[2017-11-20 23:23:44,025] replica.Replica<Replica:a0009>:OUTPUT: Checking for failure associated with trigger, application:  ('client_request', 'pre')  in replica:  r1
+[2017-11-20 23:23:44,026] replica.Replica<Replica:a000a>:OUTPUT: Received request message (source, client_id, operation_id, self_id)  c1 c1 2 r2
+[2017-11-20 23:23:44,027] replica.Replica<Replica:a0008>:OUTPUT: No failure associated with trigger:  client_request  found in replica:  r0
+[2017-11-20 23:23:44,028] replica.Replica<Replica:a0009>:OUTPUT: No failure associated with trigger:  client_request  found in replica:  r1
+[2017-11-20 23:23:44,029] replica.Replica<Replica:a000a>:OUTPUT: Checking for failure associated with trigger, application:  ('client_request', 'pre')  in replica:  r2
+[2017-11-20 23:23:44,029] replica.Replica<Replica:a000c>:OUTPUT: Received request message (source, client_id, operation_id, self_id)  c1 c1 2 r4
+[2017-11-20 23:23:44,030] olympus.Olympus<Olympus:1c002>:ERROR: A signature mismatch occurred from source: r4
+[2017-11-20 23:23:44,030] replica.Replica<Replica:a000b>:OUTPUT: Checking for failure associated with trigger, application:  ('shuttle', 'post')  in replica:  r3
+[2017-11-20 23:23:44,031] replica.Replica<Replica:a000a>:OUTPUT: No failure associated with trigger:  client_request  found in replica:  r2
+[2017-11-20 23:23:44,031] replica.Replica<Replica:a000c>:OUTPUT: Checking for failure associated with trigger, application:  ('client_request', 'pre')  in replica:  r4
+[2017-11-20 23:23:44,032] replica.Replica<Replica:a000b>:OUTPUT: No failure associated with trigger:  shuttle  found in replica:  r3
+[2017-11-20 23:23:44,034] replica.Replica<Replica:a0008>:OUTPUT: Head is processing request (operation_id, client_id) (2, 'c1')
+[2017-11-20 23:23:44,035] olympus.Olympus<Olympus:1c002>:ERROR: A signature mismatch occurred from source: r2
+[2017-11-20 23:23:44,034] replica.Replica<Replica:a000c>:OUTPUT: No failure associated with trigger:  client_request  found in replica:  r4
+[2017-11-20 23:23:44,040] replica.Replica<Replica:a000b>:OUTPUT: Received request message (source, client_id, operation_id, self_id)  c1 c1 2 r3
+[2017-11-20 23:23:44,040] replica.Replica<Replica:a000b>:OUTPUT: Checking for failure associated with trigger, application:  ('client_request', 'pre')  in replica:  r3
+[2017-11-20 23:23:44,041] replica.Replica<Replica:a0009>:OUTPUT: Received request message (source, client_id, operation_id, self_id)  r2 c1 2 r1
+[2017-11-20 23:23:44,041] replica.Replica<Replica:a000b>:OUTPUT: No failure associated with trigger:  client_request  found in replica:  r3
+[2017-11-20 23:23:44,041] replica.Replica<Replica:a0009>:OUTPUT: Checking for failure associated with trigger, application:  ('forwarded_request', 'pre')  in replica:  r1
+[2017-11-20 23:23:44,042] replica.Replica<Replica:a0009>:OUTPUT: No failure associated with trigger:  forwarded_request  found in replica:  r1
+[2017-11-20 23:23:44,044] replica.Replica<Replica:a0008>:OUTPUT: Checking for failure associated with trigger, application:  ('client_request', 'post')  in replica:  r0
+[2017-11-20 23:23:44,044] replica.Replica<Replica:a0008>:OUTPUT: No failure associated with trigger:  client_request  found in replica:  r0
+[2017-11-20 23:23:44,047] replica.Replica<Replica:a0008>:OUTPUT: Received request message (source, client_id, operation_id, self_id)  r1 c1 2 r0
+[2017-11-20 23:23:44,048] replica.Replica<Replica:a000c>:OUTPUT: Received shuttle (source, client_id, operation_id, self_id)  r3 c0 2 r4
+[2017-11-20 23:23:44,049] replica.Replica<Replica:a000a>:OUTPUT: Received request message (source, client_id, operation_id, self_id)  r3 c1 2 r2
+ 'pre')  in replica:  r0
+[2017-11-20 23:23:44,049] replica.Replica<Replica:a000b>:OUTPUT: Received request message (source, client_id, operation_id, self_id)  r4 c1 2 r3
+[2017-11-20 23:23:44,050] replica.Replica<Replica:a000c>:OUTPUT: Checking for failure associated with trigger, application:  ('shuttle', 'pre')  in replica:  r4
+[2017-11-20 23:23:44,050] replica.Replica<Replica:a0008>:OUTPUT: No failure associated with trigger:  forwarded_request  found in replica:  r0
+[2017-11-20 23:23:44,050] replica.Replica<Replica:a000a>:OUTPUT: Checking for failure associated with trigger, application:  ('forwarded_request', 'pre')  in replica:  r2
+[2017-11-20 23:23:44,051] replica.Replica<Replica:a000b>:OUTPUT: Checking for failure associated with trigger, application:  ('forwarded_request', 'pre')  in replica:  r3
+[2017-11-20 23:23:44,051] replica.Replica<Replica:a000c>:OUTPUT: No failure associated with trigger:  shuttle  found in replica:  r4
+[2017-11-20 23:23:44,051] replica.Replica<Replica:a0009>:OUTPUT: Received shuttle (source, client_id, operation_id, self_id)  r0 c1 2 r1
+[2017-11-20 23:23:44,051] replica.Replica<Replica:a000a>:OUTPUT: No failure associated with trigger:  forwarded_request  found in replica:  r2
+[2017-11-20 23:23:44,051] replica.Replica<Replica:a000b>:OUTPUT: No failure associated with trigger:  forwarded_request  found in replica:  r3
+[2017-11-20 23:23:44,052] replica.Replica<Replica:a0009>:OUTPUT: Checking for failure associated with trigger, application:  ('shuttle', 'pre')  in replica:  r1
+[2017-11-20 23:23:44,055] replica.Replica<Replica:a0009>:OUTPUT: No failure associated with trigger:  shuttle  found in replica:  r1
+[2017-11-20 23:23:44,061] replica.Replica<Replica:a000a>:OUTPUT: Received request message (source, client_id, operation_id, self_id)  r3 c1 2 r2
+[2017-11-20 23:23:44,061] replica.Replica<Replica:a000a>:OUTPUT: Checking for failure associated with trigger, application:  ('forwarded_request', 'pre')  in replica:  r2
+[2017-11-20 23:23:44,012] replica.Replica<Replica:a0005>:OUTPUT: Sent reconfiguration request to Olympus from : r2
+[2017-11-20 23:23:44,062] replica.Replica<Replica:a000a>:OUTPUT: No failure associated with trigger:  forwarded_request  found in replica:  r2
+[2017-11-20 23:23:44,014] replica.Replica<Replica:a0007>:OUTPUT: Shutting down replica:  r4
+[2017-11-20 23:23:44,062] replica.Replica<Replica:a0008>:OUTPUT: Awaiting result shuttle from downstream _replicas
+[2017-11-20 23:23:44,074] replica.Replica<Replica:a0008>:OUTPUT: Received request message (source, client_id, operation_id, self_id)  r1 c1 2 r0
+[2017-11-20 23:23:44,076] replica.Replica<Replica:a0009>:OUTPUT: Checking for failure associated with trigger, application:  ('shuttle', 'post')  in replica:  r1
+[2017-11-20 23:23:44,080] replica.Replica<Replica:a0008>:OUTPUT: Checking for failure associated with trigger, application:  ('forwarded_request', 'pre')  in replica:  r0
+[2017-11-20 23:23:44,081] replica.Replica<Replica:a0009>:OUTPUT: No failure associated with trigger:  shuttle  found in replica:  r1
+[2017-11-20 23:23:44,081] replica.Replica<Replica:a0008>:OUTPUT: No failure associated with trigger:  forwarded_request  found in replica:  r0
+[2017-11-20 23:23:44,085] replica.Replica<Replica:a000a>:OUTPUT: Received shuttle (source, client_id, operation_id, self_id)  r1 c1 2 r2
+[2017-11-20 23:23:44,085] replica.Replica<Replica:a000a>:OUTPUT: Checking for failure associated with trigger, application:  ('shuttle', 'pre')  in replica:  r2
+[2017-11-20 23:23:44,085] replica.Replica<Replica:a000a>:OUTPUT: No failure associated with trigger:  shuttle  found in replica:  r2
+[2017-11-20 23:23:44,084] replica.Replica<Replica:a0009>:OUTPUT: Received request message (source, client_id, operation_id, self_id)  r2 c1 2 r1
+[2017-11-20 23:23:44,088] replica.Replica<Replica:a0008>:OUTPUT: Awaiting result shuttle from downstream _replicas
+[2017-11-20 23:23:44,089] replica.Replica<Replica:a0009>:OUTPUT: Checking for failure associated with trigger, application:  ('forwarded_request', 'pre')  in replica:  r1
+[2017-11-20 23:23:44,091] replica.Replica<Replica:a0009>:OUTPUT: No failure associated with trigger:  forwarded_request  found in replica:  r1
+[2017-11-20 23:23:44,101] replica.Replica<Replica:a0008>:OUTPUT: Received request message (source, client_id, operation_id, self_id)  r1 c1 2 r0
+[2017-11-20 23:23:44,101] replica.Replica<Replica:a0008>:OUTPUT: Checking for failure associated with trigger, application:  ('forwarded_request', 'pre')  in replica:  r0
+[2017-11-20 23:23:44,102] replica.Replica<Replica:a0008>:OUTPUT: No failure associated with trigger:  forwarded_request  found in replica:  r0
+[2017-11-20 23:23:44,103] replica.Replica<Replica:a0009>:OUTPUT: Received request message (source, client_id, operation_id, self_id)  r2 c1 2 r1
+[2017-11-20 23:23:44,105] replica.Replica<Replica:a0008>:OUTPUT: Awaiting result shuttle from downstream _replicas
+[2017-11-20 23:23:44,103] replica.Replica<Replica:a000c>:OUTPUT: Checking for failure associated with trigger, application:  ('shuttle', 'post')  in replica:  r4
+[2017-11-20 23:23:44,105] replica.Replica<Replica:a0009>:OUTPUT: Checking for failure associated with trigger, application:  ('forwarded_request', 'pre')  in replica:  r1
+[2017-11-20 23:23:44,106] replica.Replica<Replica:a000c>:OUTPUT: No failure associated with trigger:  shuttle  found in replica:  r4
+[2017-11-20 23:23:44,107] replica.Replica<Replica:a0009>:OUTPUT: No failure associated with trigger:  forwarded_request  found in replica:  r1
+[2017-11-20 23:23:44,109] replica.Replica<Replica:a000a>:OUTPUT: Checking for failure associated with trigger, application:  ('shuttle', 'post')  in replica:  r2
+[2017-11-20 23:23:44,113] replica.Replica<Replica:a000b>:OUTPUT: Received result shuttle (source, client_id, operation_id, self_id)  r4 c0 2 r3
+[2017-11-20 23:23:44,110] replica.Replica<Replica:a000a>:OUTPUT: No failure associated with trigger:  shuttle  found in replica:  r2
+[2017-11-20 23:23:44,114] replica.Replica<Replica:a000b>:OUTPUT: Checking for failure associated with trigger, application:  ('result_shuttle', 'pre')  in replica:  r3
+[2017-11-20 23:23:44,114] replica.Replica<Replica:a000b>:OUTPUT: No failure associated with trigger:  result_shuttle  found in replica:  r3
+[2017-11-20 23:23:44,119] replica.Replica<Replica:a0008>:OUTPUT: Received request message (source, client_id, operation_id, self_id)  r1 c1 2 r0
+[2017-11-20 23:23:44,119] replica.Replica<Replica:a0008>:OUTPUT: Checking for failure associated with trigger, application:  ('forwarded_request', 'pre')  in replica:  r0
+[2017-11-20 23:23:44,120] replica.Replica<Replica:a0008>:OUTPUT: No failure associated with trigger:  forwarded_request  found in replica:  r0
+[2017-11-20 23:23:44,123] replica.Replica<Replica:a0008>:OUTPUT: Awaiting result shuttle from downstream _replicas
+[2017-11-20 23:23:44,125] replica.Replica<Replica:a000c>:OUTPUT: Checking for failure associated with trigger, application:  ('shuttle', 'post')  in replica:  r4
+[2017-11-20 23:23:44,126] replica.Replica<Replica:a000c>:OUTPUT: No failure associated with trigger:  shuttle  found in replica:  r4
+[2017-11-20 23:23:44,131] client.Client<Client:a0001>:OUTPUT: A result was received from replica= r4
+[2017-11-20 23:23:44,139] replica.Replica<Replica:a000b>:OUTPUT: Checking for failure associated with trigger, application:  ('result_shuttle', 'post')  in replica:  r3
+[2017-11-20 23:23:44,139] replica.Replica<Replica:a000b>:OUTPUT: No failure associated with trigger:  result_shuttle  found in replica:  r3
+[2017-11-20 23:23:44,145] replica.Replica<Replica:a000a>:OUTPUT: Received result shuttle (source, client_id, operation_id, self_id)  r3 c0 2 r2
+[2017-11-20 23:23:44,145] replica.Replica<Replica:a000a>:OUTPUT: Checking for failure associated with trigger, application:  ('result_shuttle', 'pre')  in replica:  r2
+[2017-11-20 23:23:44,146] replica.Replica<Replica:a000a>:OUTPUT: No failure associated with trigger:  result_shuttle  found in replica:  r2
+[2017-11-20 23:23:44,147] replica.Replica<Replica:a000b>:OUTPUT: Received shuttle (source, client_id, operation_id, self_id)  r2 c1 2 r3
+[2017-11-20 23:23:44,149] replica.Replica<Replica:a000b>:OUTPUT: Checking for failure associated with trigger, application:  ('shuttle', 'pre')  in replica:  r3
+[2017-11-20 23:23:44,150] replica.Replica<Replica:a000b>:OUTPUT: No failure associated with trigger:  shuttle  found in replica:  r3
+[2017-11-20 23:23:44,153] client.Client<Client:a0001>:OUTPUT: The operation result pair is= {'id': 2, 'client_id': 'c0', 'command_string': "append('movie', '123')"} OK
+[2017-11-20 23:23:44,154] client.Client<Client:a0001>:OUTPUT: The result received is valid:(result, operation)= OK {'id': 2, 'client_id': 'c0', 'command_string': "append('movie', '123')"}
+[2017-11-20 23:23:44,154] client.Client<Client:a0001>:OUTPUT: The following operation was created: {'id': 3, 'client_id': 'c0', 'command_string': "get('movie')"}
+[2017-11-20 23:23:44,155] client.Client<Client:a0001>:OUTPUT: return_value= star123
+[2017-11-20 23:23:44,159] client.Client<Client:a0001>:OUTPUT: A request for an operation was made {'content': {'is_retry': False, 'operation': {'id': 3, 'client_id': 'c0', 'command_string': "get('movie')"}}, 'signed_content': b" \xe9u\xbaG\xb4\xda\xf5\xa8>\x91N\x05\xa7\x8b\xa0rS\x87\xe5s\xe8\xe0\xa6R\xdc\x9e\xd3\xb0\xb11\xfd\xf0\xa4\x15H#6L\xb5G\x19\xebBK\x9c\xce&\xe3B\xa4\x99\x18\x18\x9e/Y\xd1\xe8\xc7\x02\xaf\xee\x00\x80\x03}q\x00(X\x08\x00\x00\x00is_retryq\x01\x89X\t\x00\x00\x00operationq\x02}q\x03(X\x02\x00\x00\x00idq\x04K\x03X\t\x00\x00\x00client_idq\x05X\x02\x00\x00\x00c0q\x06X\x0e\x00\x00\x00command_stringq\x07X\x0c\x00\x00\x00get('movie')q\x08uu."}
+[2017-11-20 23:23:44,160] replica.Replica<Replica:a0008>:OUTPUT: Received request message (source, client_id, operation_id, self_id)  c0 c0 3 r0
+[2017-11-20 23:23:44,160] replica.Replica<Replica:a0008>:OUTPUT: Checking for failure associated with trigger, application:  ('client_request', 'pre')  in replica:  r0
+[2017-11-20 23:23:44,161] replica.Replica<Replica:a0008>:OUTPUT: No failure associated with trigger:  client_request  found in replica:  r0
+[2017-11-20 23:23:44,165] replica.Replica<Replica:a0008>:OUTPUT: Head is processing request (operation_id, client_id) (3, 'c0')
+[2017-11-20 23:23:44,172] replica.Replica<Replica:a0008>:OUTPUT: Checking for failure associated with trigger, application:  ('client_request', 'post')  in replica:  r0
+[2017-11-20 23:23:44,173] replica.Replica<Replica:a0008>:OUTPUT: No failure associated with trigger:  client_request  found in replica:  r0
+[2017-11-20 23:23:44,175] replica.Replica<Replica:a000a>:OUTPUT: Checking for failure associated with trigger, application:  ('result_shuttle', 'post')  in replica:  r2
+[2017-11-20 23:23:44,176] replica.Replica<Replica:a000a>:OUTPUT: No failure associated with trigger:  result_shuttle  found in replica:  r2
+[2017-11-20 23:23:44,177] replica.Replica<Replica:a0009>:OUTPUT: Received shuttle (source, client_id, operation_id, self_id)  r0 c0 3 r1
+[2017-11-20 23:23:44,177] replica.Replica<Replica:a0009>:OUTPUT: Checking for failure associated with trigger, application:  ('shuttle', 'pre')  in replica:  r1
+[2017-11-20 23:23:44,178] replica.Replica<Replica:a0009>:OUTPUT: No failure associated with trigger:  shuttle  found in replica:  r1
+[2017-11-20 23:23:44,180] replica.Replica<Replica:a000b>:OUTPUT: Checking for failure associated with trigger, application:  ('shuttle', 'post')  in replica:  r3
+[2017-11-20 23:23:44,181] replica.Replica<Replica:a000b>:OUTPUT: No failure associated with trigger:  shuttle  found in replica:  r3
+[2017-11-20 23:23:44,186] replica.Replica<Replica:a000c>:OUTPUT: Received shuttle (source, client_id, operation_id, self_id)  r3 c1 2 r4
+[2017-11-20 23:23:44,186] replica.Replica<Replica:a000c>:OUTPUT: Checking for failure associated with trigger, application:  ('shuttle', 'pre')  in replica:  r4
+[2017-11-20 23:23:44,187] replica.Replica<Replica:a000c>:OUTPUT: No failure associated with trigger:  shuttle  found in replica:  r4
+[2017-11-20 23:23:44,197] replica.Replica<Replica:a0009>:OUTPUT: Checking for failure associated with trigger, application:  ('shuttle', 'post')  in replica:  r1
+[2017-11-20 23:23:44,197] replica.Replica<Replica:a0009>:OUTPUT: No failure associated with trigger:  shuttle  found in replica:  r1
+[2017-11-20 23:23:44,202] replica.Replica<Replica:a000a>:OUTPUT: Received shuttle (source, client_id, operation_id, self_id)  r1 c0 3 r2
+[2017-11-20 23:23:44,202] replica.Replica<Replica:a000a>:OUTPUT: Checking for failure associated with trigger, application:  ('shuttle', 'pre')  in replica:  r2
+[2017-11-20 23:23:44,203] replica.Replica<Replica:a0009>:OUTPUT: Received result shuttle (source, client_id, operation_id, self_id)  r2 c0 2 r1
+[2017-11-20 23:23:44,203] replica.Replica<Replica:a000a>:OUTPUT: No failure associated with trigger:  shuttle  found in replica:  r2
+[2017-11-20 23:23:44,204] replica.Replica<Replica:a0009>:OUTPUT: Checking for failure associated with trigger, application:  ('result_shuttle', 'pre')  in replica:  r1
+[2017-11-20 23:23:44,204] replica.Replica<Replica:a0009>:OUTPUT: No failure associated with trigger:  result_shuttle  found in replica:  r1
+[2017-11-20 23:23:44,227] replica.Replica<Replica:a000a>:OUTPUT: Checking for failure associated with trigger, application:  ('shuttle', 'post')  in replica:  r2
+[2017-11-20 23:23:44,229] replica.Replica<Replica:a000a>:OUTPUT: No failure associated with trigger:  shuttle  found in replica:  r2
+[2017-11-20 23:23:44,231] replica.Replica<Replica:a0009>:OUTPUT: Checking for failure associated with trigger, application:  ('result_shuttle', 'post')  in replica:  r1
+[2017-11-20 23:23:44,232] replica.Replica<Replica:a0009>:OUTPUT: No failure associated with trigger:  result_shuttle  found in replica:  r1
+[2017-11-20 23:23:44,233] replica.Replica<Replica:a000b>:OUTPUT: Received shuttle (source, client_id, operation_id, self_id)  r2 c0 3 r3
+[2017-11-20 23:23:44,234] replica.Replica<Replica:a000b>:OUTPUT: Checking for failure associated with trigger, application:  ('shuttle', 'pre')  in replica:  r3
+[2017-11-20 23:23:44,234] replica.Replica<Replica:a000b>:OUTPUT: No failure associated with trigger:  shuttle  found in replica:  r3
+[2017-11-20 23:23:44,235] replica.Replica<Replica:a000c>:OUTPUT: Checking for failure associated with trigger, application:  ('shuttle', 'post')  in replica:  r4
+[2017-11-20 23:23:44,235] replica.Replica<Replica:a000c>:OUTPUT: No failure associated with trigger:  shuttle  found in replica:  r4
+[2017-11-20 23:23:44,237] replica.Replica<Replica:a0008>:OUTPUT: Received result shuttle (source, client_id, operation_id, self_id)  r1 c0 2 r0
+[2017-11-20 23:23:44,238] replica.Replica<Replica:a0008>:OUTPUT: Checking for failure associated with trigger, application:  ('result_shuttle', 'pre')  in replica:  r0
+[2017-11-20 23:23:44,238] replica.Replica<Replica:a0008>:OUTPUT: No failure associated with trigger:  result_shuttle  found in replica:  r0
+[2017-11-20 23:23:44,242] replica.Replica<Replica:a000c>:OUTPUT: Checking for failure associated with trigger, application:  ('shuttle', 'post')  in replica:  r4
+[2017-11-20 23:23:44,243] replica.Replica<Replica:a000c>:OUTPUT: No failure associated with trigger:  shuttle  found in replica:  r4
+[2017-11-20 23:23:44,250] client.Client<Client:a0002>:OUTPUT: A result was received from replica= r4
+[2017-11-20 23:23:44,260] replica.Replica<Replica:a000b>:OUTPUT: Checking for failure associated with trigger, application:  ('shuttle', 'post')  in replica:  r3
+[2017-11-20 23:23:44,261] replica.Replica<Replica:a000b>:OUTPUT: No failure associated with trigger:  shuttle  found in replica:  r3
+[2017-11-20 23:23:44,266] replica.Replica<Replica:a000c>:OUTPUT: Received shuttle (source, client_id, operation_id, self_id)  r3 c0 3 r4
+ 2 r3
+[2017-11-20 23:23:44,266] replica.Replica<Replica:a000c>:OUTPUT: Checking for failure associated with trigger, application:  ('shuttle', 'pre')  in replica:  r4
+[2017-11-20 23:23:44,266] replica.Replica<Replica:a000b>:OUTPUT: Checking for failure associated with trigger, application:  ('result_shuttle', 'pre')  in replica:  r3
+[2017-11-20 23:23:44,267] replica.Replica<Replica:a000b>:OUTPUT: No failure associated with trigger:  result_shuttle  found in replica:  r3
+[2017-11-20 23:23:44,276] client.Client<Client:a0002>:OUTPUT: The operation result pair is= {'id': 2, 'client_id': 'c1', 'command_string': "append('movie1', '123')"} OK
+[2017-11-20 23:23:44,277] client.Client<Client:a0002>:OUTPUT: The result received is valid:(result, operation)= OK {'id': 2, 'client_id': 'c1', 'command_string': "append('movie1', '123')"}
+[2017-11-20 23:23:44,277] client.Client<Client:a0002>:OUTPUT: The following operation was created: {'id': 3, 'client_id': 'c1', 'command_string': "get('movie1')"}
+[2017-11-20 23:23:44,278] client.Client<Client:a0002>:OUTPUT: return_value= star1123
+[2017-11-20 23:23:44,282] replica.Replica<Replica:a0008>:OUTPUT: Received request message (source, client_id, operation_id, self_id)  c1 c1 3 r0
+[2017-11-20 23:23:44,283] replica.Replica<Replica:a0008>:OUTPUT: Checking for failure associated with trigger, application:  ('client_request', 'pre')  in replica:  r0
+[2017-11-20 23:23:44,283] replica.Replica<Replica:a0008>:OUTPUT: No failure associated with trigger:  client_request  found in replica:  r0
+[2017-11-20 23:23:44,286] client.Client<Client:a0002>:OUTPUT: A request for an operation was made {'content': {'is_retry': False, 'operation': {'id': 3, 'client_id': 'c1', 'command_string': "get('movie1')"}}, 'signed_content': b"B1\xf4\x8aV\xd8\x7fU\x8b\xf1g\x0c\xcc\xc7&\xaa\xd4Z\x1d1\x15\x81\x93=\x9e\x9d\xbeiSh\xb7{0\xd1Z\x98\xc1\ty\xb3D\xcbd\xed\x1cf\x9aqb\xb5[\xb9D\xa9\xccu%\xae\xdd\x0bn\xa9\xc2\r\x80\x03}q\x00(X\x08\x00\x00\x00is_retryq\x01\x89X\t\x00\x00\x00operationq\x02}q\x03(X\x02\x00\x00\x00idq\x04K\x03X\t\x00\x00\x00client_idq\x05X\x02\x00\x00\x00c1q\x06X\x0e\x00\x00\x00command_stringq\x07X\r\x00\x00\x00get('movie1')q\x08uu."}
+[2017-11-20 23:23:44,288] replica.Replica<Replica:a0008>:OUTPUT: Head is processing request (operation_id, client_id) (3, 'c1')
+[2017-11-20 23:23:44,292] replica.Replica<Replica:a000b>:OUTPUT: Checking for failure associated with trigger, application:  ('result_shuttle', 'post')  in replica:  r3
+[2017-11-20 23:23:44,292] replica.Replica<Replica:a000b>:OUTPUT: No failure associated with trigger:  result_shuttle  found in replica:  r3
+[2017-11-20 23:23:44,297] replica.Replica<Replica:a000a>:OUTPUT: Received result shuttle (source, client_id, operation_id, self_id)  r3 c1 2 r2
+[2017-11-20 23:23:44,297] replica.Replica<Replica:a0008>:OUTPUT: Checking for failure associated with trigger, application:  ('client_request', 'post')  in replica:  r0
+[2017-11-20 23:23:44,298] replica.Replica<Replica:a000a>:OUTPUT: Checking for failure associated with trigger, application:  ('result_shuttle', 'pre')  in replica:  r2
+[2017-11-20 23:23:44,298] replica.Replica<Replica:a0008>:OUTPUT: No failure associated with trigger:  client_request  found in replica:  r0
+[2017-11-20 23:23:44,298] replica.Replica<Replica:a000a>:OUTPUT: No failure associated with trigger:  result_shuttle  found in replica:  r2
+[2017-11-20 23:23:44,301] replica.Replica<Replica:a0009>:OUTPUT: Received shuttle (source, client_id, operation_id, self_id)  r0 c1 3 r1
+[2017-11-20 23:23:44,302] replica.Replica<Replica:a0009>:OUTPUT: Checking for failure associated with trigger, application:  ('shuttle', 'pre')  in replica:  r1
+[2017-11-20 23:23:44,302] replica.Replica<Replica:a0009>:OUTPUT: No failure associated with trigger:  shuttle  found in replica:  r1
+[2017-11-20 23:23:44,316] replica.Replica<Replica:a000c>:OUTPUT: Checking for failure associated with trigger, application:  ('shuttle', 'post')  in replica:  r4
+[2017-11-20 23:23:44,317] replica.Replica<Replica:a000c>:OUTPUT: No failure associated with trigger:  shuttle  found in replica:  r4
+[2017-11-20 23:23:44,321] replica.Replica<Replica:a0009>:OUTPUT: Checking for failure associated with trigger, application:  ('shuttle', 'post')  in replica:  r1
+[2017-11-20 23:23:44,322] replica.Replica<Replica:a000b>:OUTPUT: Received result shuttle (source, client_id, operation_id, self_id)  r4 c0 3 r3
+[2017-11-20 23:23:44,322] replica.Replica<Replica:a0009>:OUTPUT: No failure associated with trigger:  shuttle  found in replica:  r1
+[2017-11-20 23:23:44,323] replica.Replica<Replica:a000b>:OUTPUT: Checking for failure associated with trigger, application:  ('result_shuttle', 'pre')  in replica:  r3
+[2017-11-20 23:23:44,324] replica.Replica<Replica:a000b>:OUTPUT: No failure associated with trigger:  result_shuttle  found in replica:  r3
+[2017-11-20 23:23:44,324] replica.Replica<Replica:a000a>:OUTPUT: Checking for failure associated with trigger, application:  ('result_shuttle', 'post')  in replica:  r2
+[2017-11-20 23:23:44,325] replica.Replica<Replica:a000a>:OUTPUT: No failure associated with trigger:  result_shuttle  found in replica:  r2
+[2017-11-20 23:23:44,329] replica.Replica<Replica:a000c>:OUTPUT: Checking for failure associated with trigger, application:  ('shuttle', 'post')  in replica:  r4
+[2017-11-20 23:23:44,330] replica.Replica<Replica:a000a>:OUTPUT: Received shuttle (source, client_id, operation_id, self_id)  r1 c1 3 r2
+[2017-11-20 23:23:44,330] replica.Replica<Replica:a0009>:OUTPUT: Received result shuttle (source, client_id, operation_id, self_id)  r2 c1 2 r1
+[2017-11-20 23:23:44,331] replica.Replica<Replica:a000a>:OUTPUT: Checking for failure associated with trigger, application:  ('shuttle', 'pre')  in replica:  r2
+[2017-11-20 23:23:44,331] replica.Replica<Replica:a000c>:OUTPUT: No failure associated with trigger:  shuttle  found in replica:  r4
+[2017-11-20 23:23:44,331] replica.Replica<Replica:a0009>:OUTPUT: Checking for failure associated with trigger, application:  ('result_shuttle', 'pre')  in replica:  r1
+[2017-11-20 23:23:44,331] replica.Replica<Replica:a000a>:OUTPUT: No failure associated with trigger:  shuttle  found in replica:  r2
+[2017-11-20 23:23:44,331] replica.Replica<Replica:a0009>:OUTPUT: No failure associated with trigger:  result_shuttle  found in replica:  r1
+[2017-11-20 23:23:44,334] client.Client<Client:a0001>:OUTPUT: A result was received from replica= r4
+[2017-11-20 23:23:44,349] replica.Replica<Replica:a000b>:OUTPUT: Checking for failure associated with trigger, application:  ('result_shuttle', 'post')  in replica:  r3
+[2017-11-20 23:23:44,350] replica.Replica<Replica:a000b>:OUTPUT: No failure associated with trigger:  result_shuttle  found in replica:  r3
+[2017-11-20 23:23:44,355] replica.Replica<Replica:a000a>:OUTPUT: Checking for failure associated with trigger, application:  ('shuttle', 'post')  in replica:  r2
+[2017-11-20 23:23:44,357] replica.Replica<Replica:a000a>:OUTPUT: No failure associated with trigger:  shuttle  found in replica:  r2
+[2017-11-20 23:23:44,358] client.Client<Client:a0001>:OUTPUT: The operation result pair is= {'id': 3, 'client_id': 'c0', 'command_string': "get('movie')"} star123
+[2017-11-20 23:23:44,358] replica.Replica<Replica:a0009>:OUTPUT: Checking for failure associated with trigger, application:  ('result_shuttle', 'post')  in replica:  r1
+[2017-11-20 23:23:44,359] client.Client<Client:a0001>:OUTPUT: The result received is valid:(result, operation)= star123 {'id': 3, 'client_id': 'c0', 'command_string': "get('movie')"}
+[2017-11-20 23:23:44,360] replica.Replica<Replica:a0009>:OUTPUT: No failure associated with trigger:  result_shuttle  found in replica:  r1
+[2017-11-20 23:23:44,360] client.Client<Client:a0001>:OUTPUT: The following operation was created: {'id': 4, 'client_id': 'c0', 'command_string': "get('movie');"}
+[2017-11-20 23:23:44,361] replica.Replica<Replica:a000b>:OUTPUT: Received shuttle (source, client_id, operation_id, self_id)  r2 c1 3 r3
+[2017-11-20 23:23:44,362] client.Client<Client:a0001>:OUTPUT: return_value= star123
+[2017-11-20 23:23:44,362] replica.Replica<Replica:a000a>:OUTPUT: Received result shuttle (source, client_id, operation_id, self_id)  r3 c0 3 r2
+[2017-11-20 23:23:44,363] replica.Replica<Replica:a000a>:OUTPUT: Checking for failure associated with trigger, application:  ('result_shuttle', 'pre')  in replica:  r2
+[2017-11-20 23:23:44,362] replica.Replica<Replica:a000b>:OUTPUT: Checking for failure associated with trigger, application:  ('shuttle', 'pre')  in replica:  r3
+[2017-11-20 23:23:44,364] replica.Replica<Replica:a000a>:OUTPUT: No failure associated with trigger:  result_shuttle  found in replica:  r2
+[2017-11-20 23:23:44,366] replica.Replica<Replica:a0008>:OUTPUT: Received result shuttle (source, client_id, operation_id, self_id)  r1 c1 2 r0
+[2017-11-20 23:23:44,365] replica.Replica<Replica:a000b>:OUTPUT: No failure associated with trigger:  shuttle  found in replica:  r3
+[2017-11-20 23:23:44,366] replica.Replica<Replica:a0008>:OUTPUT: Checking for failure associated with trigger, application:  ('result_shuttle', 'pre')  in replica:  r0
+[2017-11-20 23:23:44,366] client.Client<Client:a0001>:OUTPUT: A request for an operation was made {'content': {'is_retry': False, 'operation': {'id': 4, 'client_id': 'c0', 'command_string': "get('movie');"}}, 'signed_content': b"\xea\xb9A\x98\x0e,\xbd\x8ck\xbd\xff\xa3\xc1\xfe\xd8\xe9\r\x0cxc\xdf\xb7,\x1aI<\x89 \xf3\xb6\xed\\\x1f\xc7i`\xb3\x06I\xb0\xda\tW\x93L\x11\xdea\xae\x97%\xee\x9f\xf3@\xdc\x13rG\xe3\tC-\x00\x80\x03}q\x00(X\x08\x00\x00\x00is_retryq\x01\x89X\t\x00\x00\x00operationq\x02}q\x03(X\x02\x00\x00\x00idq\x04K\x04X\t\x00\x00\x00client_idq\x05X\x02\x00\x00\x00c0q\x06X\x0e\x00\x00\x00command_stringq\x07X\r\x00\x00\x00get('movie');q\x08uu."}
+[2017-11-20 23:23:44,367] replica.Replica<Replica:a0008>:OUTPUT: No failure associated with trigger:  result_shuttle  found in replica:  r0
+[2017-11-20 23:23:44,393] replica.Replica<Replica:a000b>:OUTPUT: Checking for failure associated with trigger, application:  ('shuttle', 'post')  in replica:  r3
+[2017-11-20 23:23:44,394] replica.Replica<Replica:a000b>:OUTPUT: No failure associated with trigger:  shuttle  found in replica:  r3
+[2017-11-20 23:23:44,395] replica.Replica<Replica:a0008>:OUTPUT: Result received at head, now forwarding to client= c1
+[2017-11-20 23:23:44,398] replica.Replica<Replica:a0008>:OUTPUT: Checking for failure associated with trigger, application:  ('client_request', 'post')  in replica:  r0
+[2017-11-20 23:23:44,398] replica.Replica<Replica:a0008>:OUTPUT: No failure associated with trigger:  client_request  found in replica:  r0
+[2017-11-20 23:23:44,399] replica.Replica<Replica:a000c>:OUTPUT: Received shuttle (source, client_id, operation_id, self_id)  r3 c1 3 r4
+[2017-11-20 23:23:44,399] replica.Replica<Replica:a000c>:OUTPUT: Checking for failure associated with trigger, application:  ('shuttle', 'pre')  in replica:  r4
+[2017-11-20 23:23:44,400] replica.Replica<Replica:a000c>:OUTPUT: No failure associated with trigger:  shuttle  found in replica:  r4
+[2017-11-20 23:23:44,404] client.Client<Client:a0002>:OUTPUT: A result was received from replica= r0
+[2017-11-20 23:23:44,410] client.Client<Client:a0002>:OUTPUT: Not a pending request (2, 'c1')
+[2017-11-20 23:23:44,412] replica.Replica<Replica:a0008>:OUTPUT: Result received at head, now forwarding to client= c0
+[2017-11-20 23:23:44,417] replica.Replica<Replica:a000a>:OUTPUT: Checking for failure associated with trigger, application:  ('result_shuttle', 'post')  in replica:  r2
+[2017-11-20 23:23:44,418] replica.Replica<Replica:a0008>:OUTPUT: Checking for failure associated with trigger, application:  ('client_request', 'post')  in replica:  r0
+[2017-11-20 23:23:44,418] replica.Replica<Replica:a000a>:OUTPUT: No failure associated with trigger:  result_shuttle  found in replica:  r2
+[2017-11-20 23:23:44,418] replica.Replica<Replica:a0008>:OUTPUT: No failure associated with trigger:  client_request  found in replica:  r0
+[2017-11-20 23:23:44,423] replica.Replica<Replica:a0008>:OUTPUT: Received request message (source, client_id, operation_id, self_id)  c0 c0 4 r0
+[2017-11-20 23:23:44,425] replica.Replica<Replica:a0008>:OUTPUT: Checking for failure associated with trigger, application:  ('client_request', 'pre')  in replica:  r0
+[2017-11-20 23:23:44,426] replica.Replica<Replica:a0008>:OUTPUT: No failure associated with trigger:  client_request  found in replica:  r0
+[2017-11-20 23:23:44,426] client.Client<Client:a0001>:OUTPUT: A result was received from replica= r0
+[2017-11-20 23:23:44,430] client.Client<Client:a0001>:OUTPUT: Not a pending request (2, 'c0')
+[2017-11-20 23:23:44,430] replica.Replica<Replica:a0008>:OUTPUT: Head is processing request (operation_id, client_id) (4, 'c0')
+[2017-11-20 23:23:44,433] replica.Replica<Replica:a0009>:OUTPUT: Received result shuttle (source, client_id, operation_id, self_id)  r2 c0 3 r1
+[2017-11-20 23:23:44,433] replica.Replica<Replica:a0009>:OUTPUT: Checking for failure associated with trigger, application:  ('result_shuttle', 'pre')  in replica:  r1
+[2017-11-20 23:23:44,434] replica.Replica<Replica:a0009>:OUTPUT: No failure associated with trigger:  result_shuttle  found in replica:  r1
+[2017-11-20 23:23:44,437] replica.Replica<Replica:a0008>:OUTPUT: Checking for failure associated with trigger, application:  ('client_request', 'post')  in replica:  r0
+[2017-11-20 23:23:44,438] replica.Replica<Replica:a0008>:OUTPUT: No failure associated with trigger:  client_request  found in replica:  r0
+[2017-11-20 23:23:44,452] replica.Replica<Replica:a000c>:OUTPUT: Checking for failure associated with trigger, application:  ('shuttle', 'post')  in replica:  r4
+[2017-11-20 23:23:44,453] replica.Replica<Replica:a000c>:OUTPUT: No failure associated with trigger:  shuttle  found in replica:  r4
+[2017-11-20 23:23:44,458] replica.Replica<Replica:a000b>:OUTPUT: Received result shuttle (source, client_id, operation_id, self_id)  r4 c1 3 r3
+[2017-11-20 23:23:44,459] replica.Replica<Replica:a0009>:OUTPUT: Checking for failure associated with trigger, application:  ('result_shuttle', 'post')  in replica:  r1
+[2017-11-20 23:23:44,459] replica.Replica<Replica:a000b>:OUTPUT: Checking for failure associated with trigger, application:  ('result_shuttle', 'pre')  in replica:  r3
+[2017-11-20 23:23:44,460] replica.Replica<Replica:a0009>:OUTPUT: No failure associated with trigger:  result_shuttle  found in replica:  r1
+[2017-11-20 23:23:44,460] replica.Replica<Replica:a000c>:OUTPUT: Checking for failure associated with trigger, application:  ('shuttle', 'post')  in replica:  r4
+[2017-11-20 23:23:44,460] replica.Replica<Replica:a000b>:OUTPUT: No failure associated with trigger:  result_shuttle  found in replica:  r3
+[2017-11-20 23:23:44,460] replica.Replica<Replica:a000c>:OUTPUT: No failure associated with trigger:  shuttle  found in replica:  r4
+[2017-11-20 23:23:44,463] replica.Replica<Replica:a0009>:OUTPUT: Received shuttle (source, client_id, operation_id, self_id)  r0 c0 4 r1
+[2017-11-20 23:23:44,464] client.Client<Client:a0002>:OUTPUT: A result was received from replica= r4
+[2017-11-20 23:23:44,465] replica.Replica<Replica:a0008>:OUTPUT: Received result shuttle (source, client_id, operation_id, self_id)  r1 c0 3 r0
+[2017-11-20 23:23:44,464] replica.Replica<Replica:a0009>:OUTPUT: Checking for failure associated with trigger, application:  ('shuttle', 'pre')  in replica:  r1
+[2017-11-20 23:23:44,465] replica.Replica<Replica:a0008>:OUTPUT: Checking for failure associated with trigger, application:  ('result_shuttle', 'pre')  in replica:  r0
+[2017-11-20 23:23:44,466] replica.Replica<Replica:a0009>:OUTPUT: No failure associated with trigger:  shuttle  found in replica:  r1
+[2017-11-20 23:23:44,466] replica.Replica<Replica:a0008>:OUTPUT: No failure associated with trigger:  result_shuttle  found in replica:  r0
+[2017-11-20 23:23:44,485] replica.Replica<Replica:a000b>:OUTPUT: Checking for failure associated with trigger, application:  ('result_shuttle', 'post')  in replica:  r3
+[2017-11-20 23:23:44,486] replica.Replica<Replica:a000b>:OUTPUT: No failure associated with trigger:  result_shuttle  found in replica:  r3
+[2017-11-20 23:23:44,486] client.Client<Client:a0002>:OUTPUT: The operation result pair is= {'id': 3, 'client_id': 'c1', 'command_string': "get('movie1')"} star1123
+[2017-11-20 23:23:44,487] client.Client<Client:a0002>:OUTPUT: The result received is valid:(result, operation)= star1123 {'id': 3, 'client_id': 'c1', 'command_string': "get('movie1')"}
+[2017-11-20 23:23:44,488] client.Client<Client:a0002>:OUTPUT: The following operation was created: {'id': 4, 'client_id': 'c1', 'command_string': "get('movie1');"}
+[2017-11-20 23:23:44,489] client.Client<Client:a0002>:OUTPUT: return_value= star1123
+[2017-11-20 23:23:44,491] replica.Replica<Replica:a000a>:OUTPUT: Received result shuttle (source, client_id, operation_id, self_id)  r3 c1 3 r2
+[2017-11-20 23:23:44,492] replica.Replica<Replica:a000a>:OUTPUT: Checking for failure associated with trigger, application:  ('result_shuttle', 'pre')  in replica:  r2
+[2017-11-20 23:23:44,492] replica.Replica<Replica:a000a>:OUTPUT: No failure associated with trigger:  result_shuttle  found in replica:  r2
+[2017-11-20 23:23:44,494] client.Client<Client:a0002>:OUTPUT: A request for an operation was made {'content': {'is_retry': False, 'operation': {'id': 4, 'client_id': 'c1', 'command_string': "get('movie1');"}}, 'signed_content': b'\xebx\xa9\x92\x98\xc2\xbc\xe3\xef\nQ9\xc7\xff\xdb\xae.u\x19\xcc\xd1\xc7\xf5 \x8b\n\x97\xe8\xe8\xb9.\x8d\xd6tP\x7f$Dg\x16\xfdF\xe7\xd6E<\xf5\x05L"\xdc\xdd\x07\x0f\xc7\xcdO\xab\xc3\xa0e\xe8\xc0\x01\x80\x03}q\x00(X\x08\x00\x00\x00is_retryq\x01\x89X\t\x00\x00\x00operationq\x02}q\x03(X\x02\x00\x00\x00idq\x04K\x04X\t\x00\x00\x00client_idq\x05X\x02\x00\x00\x00c1q\x06X\x0e\x00\x00\x00command_stringq\x07X\x0e\x00\x00\x00get(\'movie1\');q\x08uu.'}
+[2017-11-20 23:23:44,496] replica.Replica<Replica:a0009>:OUTPUT: Checking for failure associated with trigger, application:  ('shuttle', 'post')  in replica:  r1
+[2017-11-20 23:23:44,496] replica.Replica<Replica:a0008>:OUTPUT: Received request message (source, client_id, operation_id, self_id)  c1 c1 4 r0
+[2017-11-20 23:23:44,496] replica.Replica<Replica:a0008>:OUTPUT: Checking for failure associated with trigger, application:  ('client_request', 'pre')  in replica:  r0
+[2017-11-20 23:23:44,496] replica.Replica<Replica:a0009>:OUTPUT: No failure associated with trigger:  shuttle  found in replica:  r1
+[2017-11-20 23:23:44,497] replica.Replica<Replica:a0008>:OUTPUT: No failure associated with trigger:  client_request  found in replica:  r0
+[2017-11-20 23:23:44,500] replica.Replica<Replica:a0008>:OUTPUT: Head is processing request (operation_id, client_id) (4, 'c1')
+[2017-11-20 23:23:44,508] replica.Replica<Replica:a0008>:OUTPUT: Checking for failure associated with trigger, application:  ('client_request', 'post')  in replica:  r0
+[2017-11-20 23:23:44,508] replica.Replica<Replica:a0008>:OUTPUT: No failure associated with trigger:  client_request  found in replica:  r0
+[2017-11-20 23:23:44,512] replica.Replica<Replica:a0009>:OUTPUT: Received shuttle (source, client_id, operation_id, self_id)  r0 c1 4 r1
+[2017-11-20 23:23:44,512] replica.Replica<Replica:a0009>:OUTPUT: Checking for failure associated with trigger, application:  ('shuttle', 'pre')  in replica:  r1
+[2017-11-20 23:23:44,513] replica.Replica<Replica:a0009>:OUTPUT: No failure associated with trigger:  shuttle  found in replica:  r1
+[2017-11-20 23:23:44,516] replica.Replica<Replica:a000a>:OUTPUT: Checking for failure associated with trigger, application:  ('result_shuttle', 'post')  in replica:  r2
+[2017-11-20 23:23:44,517] replica.Replica<Replica:a000a>:OUTPUT: No failure associated with trigger:  result_shuttle  found in replica:  r2
+[2017-11-20 23:23:44,520] replica.Replica<Replica:a000a>:OUTPUT: Received shuttle (source, client_id, operation_id, self_id)  r1 c0 4 r2
+[2017-11-20 23:23:44,521] replica.Replica<Replica:a000a>:OUTPUT: Checking for failure associated with trigger, application:  ('shuttle', 'pre')  in replica:  r2
+[2017-11-20 23:23:44,521] replica.Replica<Replica:a000a>:OUTPUT: No failure associated with trigger:  shuttle  found in replica:  r2
+[2017-11-20 23:23:44,530] replica.Replica<Replica:a0009>:OUTPUT: Checking for failure associated with trigger, application:  ('shuttle', 'post')  in replica:  r1
+[2017-11-20 23:23:44,530] replica.Replica<Replica:a0009>:OUTPUT: No failure associated with trigger:  shuttle  found in replica:  r1
+[2017-11-20 23:23:44,535] replica.Replica<Replica:a0009>:OUTPUT: Received result shuttle (source, client_id, operation_id, self_id)  r2 c1 3 r1
+[2017-11-20 23:23:44,535] replica.Replica<Replica:a0009>:OUTPUT: Checking for failure associated with trigger, application:  ('result_shuttle', 'pre')  in replica:  r1
+[2017-11-20 23:23:44,536] replica.Replica<Replica:a0009>:OUTPUT: No failure associated with trigger:  result_shuttle  found in replica:  r1
+[2017-11-20 23:23:44,541] replica.Replica<Replica:a000a>:OUTPUT: Checking for failure associated with trigger, application:  ('shuttle', 'post')  in replica:  r2
+[2017-11-20 23:23:44,542] replica.Replica<Replica:a000a>:OUTPUT: No failure associated with trigger:  shuttle  found in replica:  r2
+[2017-11-20 23:23:44,545] replica.Replica<Replica:a000a>:OUTPUT: Received shuttle (source, client_id, operation_id, self_id)  r1 c1 4 r2
+[2017-11-20 23:23:44,546] replica.Replica<Replica:a000b>:OUTPUT: Received shuttle (source, client_id, operation_id, self_id)  r2 c0 4 r3
+[2017-11-20 23:23:44,546] replica.Replica<Replica:a000a>:OUTPUT: Checking for failure associated with trigger, application:  ('shuttle', 'pre')  in replica:  r2
+[2017-11-20 23:23:44,546] replica.Replica<Replica:a000b>:OUTPUT: Checking for failure associated with trigger, application:  ('shuttle', 'pre')  in replica:  r3
+[2017-11-20 23:23:44,546] replica.Replica<Replica:a000a>:OUTPUT: No failure associated with trigger:  shuttle  found in replica:  r2
+[2017-11-20 23:23:44,547] replica.Replica<Replica:a000b>:OUTPUT: No failure associated with trigger:  shuttle  found in replica:  r3
+[2017-11-20 23:23:44,565] replica.Replica<Replica:a0009>:OUTPUT: Checking for failure associated with trigger, application:  ('result_shuttle', 'post')  in replica:  r1
+[2017-11-20 23:23:44,565] replica.Replica<Replica:a0009>:OUTPUT: No failure associated with trigger:  result_shuttle  found in replica:  r1
+[2017-11-20 23:23:44,569] replica.Replica<Replica:a000a>:OUTPUT: Checking for failure associated with trigger, application:  ('shuttle', 'post')  in replica:  r2
+[2017-11-20 23:23:44,570] replica.Replica<Replica:a000a>:OUTPUT: No failure associated with trigger:  shuttle  found in replica:  r2
+1 c1 3 r0
+[2017-11-20 23:23:44,571] replica.Replica<Replica:a0008>:OUTPUT: Checking for failure associated with trigger, application:  ('result_shuttle', 'pre')  in replica:  r0
+[2017-11-20 23:23:44,571] replica.Replica<Replica:a000b>:OUTPUT: Checking for failure associated with trigger, application:  ('shuttle', 'post')  in replica:  r3
+[2017-11-20 23:23:44,571] replica.Replica<Replica:a0008>:OUTPUT: No failure associated with trigger:  result_shuttle  found in replica:  r0
+[2017-11-20 23:23:44,572] replica.Replica<Replica:a000b>:OUTPUT: No failure associated with trigger:  shuttle  found in replica:  r3
+[2017-11-20 23:23:44,577] replica.Replica<Replica:a000b>:OUTPUT: Received shuttle (source, client_id, operation_id, self_id)  r2 c1 4 r3
+[2017-11-20 23:23:44,577] replica.Replica<Replica:a000c>:OUTPUT: Received shuttle (source, client_id, operation_id, self_id)  r3 c0 4 r4
+[2017-11-20 23:23:44,577] replica.Replica<Replica:a000b>:OUTPUT: Checking for failure associated with trigger, application:  ('shuttle', 'pre')  in replica:  r3
+[2017-11-20 23:23:44,578] replica.Replica<Replica:a000c>:OUTPUT: Checking for failure associated with trigger, application:  ('shuttle', 'pre')  in replica:  r4
+[2017-11-20 23:23:44,578] replica.Replica<Replica:a000c>:OUTPUT: No failure associated with trigger:  shuttle  found in replica:  r4
+[2017-11-20 23:23:44,578] replica.Replica<Replica:a000b>:OUTPUT: No failure associated with trigger:  shuttle  found in replica:  r3
+[2017-11-20 23:23:44,606] replica.Replica<Replica:a000b>:OUTPUT: Checking for failure associated with trigger, application:  ('shuttle', 'post')  in replica:  r3
+[2017-11-20 23:23:44,607] replica.Replica<Replica:a000b>:OUTPUT: No failure associated with trigger:  shuttle  found in replica:  r3
+[2017-11-20 23:23:44,619] replica.Replica<Replica:a000c>:OUTPUT: Checking for failure associated with trigger, application:  ('shuttle', 'post')  in replica:  r4
+[2017-11-20 23:23:44,620] replica.Replica<Replica:a000c>:OUTPUT: No failure associated with trigger:  shuttle  found in replica:  r4
+[2017-11-20 23:23:44,624] replica.Replica<Replica:a000b>:OUTPUT: Received result shuttle (source, client_id, operation_id, self_id)  r4 c0 4 r3
+[2017-11-20 23:23:44,625] replica.Replica<Replica:a000c>:OUTPUT: Checking for failure associated with trigger, application:  ('shuttle', 'post')  in replica:  r4
+[2017-11-20 23:23:44,625] replica.Replica<Replica:a000b>:OUTPUT: Checking for failure associated with trigger, application:  ('result_shuttle', 'pre')  in replica:  r3
+[2017-11-20 23:23:44,626] replica.Replica<Replica:a000c>:OUTPUT: No failure associated with trigger:  shuttle  found in replica:  r4
+[2017-11-20 23:23:44,626] replica.Replica<Replica:a000b>:OUTPUT: No failure associated with trigger:  result_shuttle  found in replica:  r3
+[2017-11-20 23:23:44,629] client.Client<Client:a0001>:OUTPUT: A result was received from replica= r4
+[2017-11-20 23:23:44,629] replica.Replica<Replica:a000c>:OUTPUT: Received shuttle (source, client_id, operation_id, self_id)  r3 c1 4 r4
+[2017-11-20 23:23:44,631] replica.Replica<Replica:a000c>:OUTPUT: Checking for failure associated with trigger, application:  ('shuttle', 'pre')  in replica:  r4
+[2017-11-20 23:23:44,631] replica.Replica<Replica:a000c>:OUTPUT: No failure associated with trigger:  shuttle  found in replica:  r4
+[2017-11-20 23:23:44,652] client.Client<Client:a0001>:OUTPUT: The operation result pair is= {'id': 4, 'client_id': 'c0', 'command_string': "get('movie');"} star123
+[2017-11-20 23:23:44,652] replica.Replica<Replica:a000b>:OUTPUT: Checking for failure associated with trigger, application:  ('result_shuttle', 'post')  in replica:  r3
+t('movie');"}
+[2017-11-20 23:23:44,653] client.Client<Client:a0001>:OUTPUT: ~~~~~~~~~~Final state: {'movie': 'star123'}
+[2017-11-20 23:23:44,653] replica.Replica<Replica:a000b>:OUTPUT: No failure associated with trigger:  result_shuttle  found in replica:  r3
+[2017-11-20 23:23:44,654] client.Client<Client:a0001>:OUTPUT: Requesting shared object from head from client: c0
+[2017-11-20 23:23:44,659] replica.Replica<Replica:a0008>:OUTPUT: Received wedge request from Olympus in Replica:  r0
+[2017-11-20 23:23:44,659] replica.Replica<Replica:a000a>:OUTPUT: Received result shuttle (source, client_id, operation_id, self_id)  r3 c0 4 r2
+[2017-11-20 23:23:44,660] replica.Replica<Replica:a000a>:OUTPUT: Checking for failure associated with trigger, application:  ('result_shuttle', 'pre')  in replica:  r2
+[2017-11-20 23:23:44,660] replica.Replica<Replica:a000a>:OUTPUT: No failure associated with trigger:  result_shuttle  found in replica:  r2
+[2017-11-20 23:23:44,663] replica.Replica<Replica:a0008>:OUTPUT: Received shared_object_request from client= c0
+[2017-11-20 23:23:44,667] client.Client<Client:a0001>:OUTPUT: Received shared object from head =  {'movie': 'star123', 'movie1': 'star1123'}
+[2017-11-20 23:23:44,671] client.Client<Client:a0001>:OUTPUT: Final results are consistent
+[2017-11-20 23:23:44,672] client.Client<Client:a0001>:OUTPUT: Workload finished for client:  c0
+[2017-11-20 23:23:44,673] client.Client<Client:a0001>:OUTPUT: Sending done message to Olympus and terminating
+[2017-11-20 23:23:44,678] olympus.Olympus<Olympus:1c002>:OUTPUT: Done message received from client:  c0
+[2017-11-20 23:23:44,680] replica.Replica<Replica:a000c>:OUTPUT: Checking for failure associated with trigger, application:  ('shuttle', 'post')  in replica:  r4
+[2017-11-20 23:23:44,680] replica.Replica<Replica:a000c>:OUTPUT: No failure associated with trigger:  shuttle  found in replica:  r4
+[2017-11-20 23:23:44,683] replica.Replica<Replica:a000a>:OUTPUT: Checking for failure associated with trigger, application:  ('result_shuttle', 'post')  in replica:  r2
+[2017-11-20 23:23:44,684] replica.Replica<Replica:a000a>:OUTPUT: No failure associated with trigger:  result_shuttle  found in replica:  r2
+[2017-11-20 23:23:44,686] replica.Replica<Replica:a000b>:OUTPUT: Received result shuttle (source, client_id, operation_id, self_id)  r4 c1 4 r3
+[2017-11-20 23:23:44,686] replica.Replica<Replica:a000b>:OUTPUT: Checking for failure associated with trigger, application:  ('result_shuttle', 'pre')  in replica:  r3
+[2017-11-20 23:23:44,687] replica.Replica<Replica:a000b>:OUTPUT: No failure associated with trigger:  result_shuttle  found in replica:  r3
+[2017-11-20 23:23:44,690] replica.Replica<Replica:a0009>:OUTPUT: Received result shuttle (source, client_id, operation_id, self_id)  r2 c0 4 r1
+[2017-11-20 23:23:44,692] replica.Replica<Replica:a0009>:OUTPUT: Checking for failure associated with trigger, application:  ('result_shuttle', 'pre')  in replica:  r1
+[2017-11-20 23:23:44,688] replica.Replica<Replica:a000c>:OUTPUT: Checking for failure associated with trigger, application:  ('shuttle', 'post')  in replica:  r4
+[2017-11-20 23:23:44,692] replica.Replica<Replica:a0009>:OUTPUT: No failure associated with trigger:  result_shuttle  found in replica:  r1
+[2017-11-20 23:23:44,693] replica.Replica<Replica:a000c>:OUTPUT: No failure associated with trigger:  shuttle  found in replica:  r4
+[2017-11-20 23:23:44,699] client.Client<Client:a0002>:OUTPUT: A result was received from replica= r4
+[2017-11-20 23:23:44,714] replica.Replica<Replica:a000b>:OUTPUT: Checking for failure associated with trigger, application:  ('result_shuttle', 'post')  in replica:  r3
+[2017-11-20 23:23:44,715] replica.Replica<Replica:a000b>:OUTPUT: No failure associated with trigger:  result_shuttle  found in replica:  r3
+[2017-11-20 23:23:44,718] replica.Replica<Replica:a0009>:OUTPUT: Checking for failure associated with trigger, application:  ('result_shuttle', 'post')  in replica:  r1
+[2017-11-20 23:23:44,718] replica.Replica<Replica:a0009>:OUTPUT: No failure associated with trigger:  result_shuttle  found in replica:  r1
+[2017-11-20 23:23:44,720] replica.Replica<Replica:a000a>:OUTPUT: Received result shuttle (source, client_id, operation_id, self_id)  r3 c1 4 r2
+[2017-11-20 23:23:44,720] replica.Replica<Replica:a000a>:OUTPUT: Checking for failure associated with trigger, application:  ('result_shuttle', 'pre')  in replica:  r2
+[2017-11-20 23:23:44,721] replica.Replica<Replica:a000a>:OUTPUT: No failure associated with trigger:  result_shuttle  found in replica:  r2
+[2017-11-20 23:23:44,721] client.Client<Client:a0002>:OUTPUT: The operation result pair is= {'id': 4, 'client_id': 'c1', 'command_string': "get('movie1');"} star1123
+[2017-11-20 23:23:44,722] client.Client<Client:a0002>:OUTPUT: The result received is valid:(result, operation)= star1123 {'id': 4, 'client_id': 'c1', 'command_string': "get('movie1');"}
+[2017-11-20 23:23:44,722] client.Client<Client:a0002>:OUTPUT: ~~~~~~~~~~Final state: {'movie1': 'star1123'}
+[2017-11-20 23:23:44,723] client.Client<Client:a0002>:OUTPUT: Requesting shared object from head from client: c1
+[2017-11-20 23:23:44,724] replica.Replica<Replica:a0008>:OUTPUT: Received result shuttle (source, client_id, operation_id, self_id)  r1 c0 4 r0
+[2017-11-20 23:23:44,725] replica.Replica<Replica:a0008>:OUTPUT: Checking for failure associated with trigger, application:  ('result_shuttle', 'pre')  in replica:  r0
+[2017-11-20 23:23:44,726] replica.Replica<Replica:a0008>:OUTPUT: No failure associated with trigger:  result_shuttle  found in replica:  r0
+[2017-11-20 23:23:44,746] replica.Replica<Replica:a000a>:OUTPUT: Checking for failure associated with trigger, application:  ('result_shuttle', 'post')  in replica:  r2
+[2017-11-20 23:23:44,746] replica.Replica<Replica:a000a>:OUTPUT: No failure associated with trigger:  result_shuttle  found in replica:  r2
+[2017-11-20 23:23:44,749] replica.Replica<Replica:a0008>:OUTPUT: Received wedge request from Olympus in Replica:  r0
+[2017-11-20 23:23:44,751] replica.Replica<Replica:a0009>:OUTPUT: Received result shuttle (source, client_id, operation_id, self_id)  r2 c1 4 r1
+[2017-11-20 23:23:44,751] replica.Replica<Replica:a0009>:OUTPUT: Checking for failure associated with trigger, application:  ('result_shuttle', 'pre')  in replica:  r1
+[2017-11-20 23:23:44,751] replica.Replica<Replica:a0009>:OUTPUT: No failure associated with trigger:  result_shuttle  found in replica:  r1
+[2017-11-20 23:23:44,753] replica.Replica<Replica:a0008>:OUTPUT: Received shared_object_request from client= c1
+[2017-11-20 23:23:44,757] client.Client<Client:a0002>:OUTPUT: Received shared object from head =  {'movie': 'star123', 'movie1': 'star1123'}
+[2017-11-20 23:23:44,762] client.Client<Client:a0002>:OUTPUT: Final results are consistent
+[2017-11-20 23:23:44,762] client.Client<Client:a0002>:OUTPUT: Workload finished for client:  c1
+[2017-11-20 23:23:44,763] client.Client<Client:a0002>:OUTPUT: Sending done message to Olympus and terminating
+[2017-11-20 23:23:44,768] olympus.Olympus<Olympus:1c002>:OUTPUT: Done message received from client:  c1
+[2017-11-20 23:23:44,772] olympus.Olympus<Olympus:1c002>:OUTPUT: Terminating replicas..
+[2017-11-20 23:23:44,774] replica.Replica<Replica:a0009>:OUTPUT: Checking for failure associated with trigger, application:  ('result_shuttle', 'post')  in replica:  r1
+[2017-11-20 23:23:44,776] replica.Replica<Replica:a0009>:OUTPUT: No failure associated with trigger:  result_shuttle  found in replica:  r1
+[2017-11-20 23:23:44,776] olympus.Olympus<Olympus:1c002>:OUTPUT: Sent abort command to replica : r0
+[2017-11-20 23:23:44,778] replica.Replica<Replica:a0008>:OUTPUT: Received abort message from Olympus in replica:  r0
+[2017-11-20 23:23:44,780] olympus.Olympus<Olympus:1c002>:OUTPUT: Sent abort command to replica : r1
+[2017-11-20 23:23:44,781] replica.Replica<Replica:a0009>:OUTPUT: Received abort message from Olympus in replica:  r1
+[2017-11-20 23:23:44,782] replica.Replica<Replica:a0008>:OUTPUT: Sending aborted message to Olympus from:  r0
+[2017-11-20 23:23:44,783] olympus.Olympus<Olympus:1c002>:OUTPUT: Sent abort command to replica : r2
+[2017-11-20 23:23:44,784] replica.Replica<Replica:a000a>:OUTPUT: Received abort message from Olympus in replica:  r2
+[2017-11-20 23:23:44,786] olympus.Olympus<Olympus:1c002>:OUTPUT: Sent abort command to replica : r3
+[2017-11-20 23:23:44,787] replica.Replica<Replica:a000b>:OUTPUT: Received abort message from Olympus in replica:  r3
+[2017-11-20 23:23:44,788] replica.Replica<Replica:a000a>:OUTPUT: Sending aborted message to Olympus from:  r2
+[2017-11-20 23:23:44,789] olympus.Olympus<Olympus:1c002>:OUTPUT: Sent abort command to replica : r4
+[2017-11-20 23:23:44,790] olympus.Olympus<Olympus:1c002>:OUTPUT: Olympus terminating
+[2017-11-20 23:23:44,790] olympus.Olympus<Olympus:1c002>:OUTPUT: elapsed time (seconds):  12.159626960754395
+[2017-11-20 23:23:44,792] replica.Replica<Replica:a000b>:OUTPUT: Sending aborted message to Olympus from:  r3
+[2017-11-20 23:23:44,792] replica.Replica<Replica:a000a>:OUTPUT: Shutting down replica:  r2
+[2017-11-20 23:23:44,790] replica.Replica<Replica:a000c>:OUTPUT: Received abort message from Olympus in replica:  r4
+[2017-11-20 23:23:44,792] replica.Replica<Replica:a0009>:OUTPUT: Sending aborted message to Olympus from:  r1
+[2017-11-20 23:23:44,796] replica.Replica<Replica:a000b>:OUTPUT: Shutting down replica:  r3
+[2017-11-20 23:23:44,800] replica.Replica<Replica:a000c>:OUTPUT: Shutting down replica:  r4
+[2017-11-20 23:23:44,800] replica.Replica<Replica:a0009>:OUTPUT: Shutting down replica:  r1
+[2017-11-20 23:23:46,972] replica.Replica<Replica:a0004>:OUTPUT: Result Shuttle Timeout in Replica:  r1
+[2017-11-20 23:23:46,980] replica.Replica<Replica:a0004>:OUTPUT: Sent reconfiguration request to Olympus from : r1
+[2017-11-20 23:23:46,994] replica.Replica<Replica:a0003>:OUTPUT: Result Shuttle Timeout in head:  r0
+[2017-11-20 23:23:47,004] replica.Replica<Replica:a0006>:OUTPUT: Result Shuttle Timeout in Replica:  r3
+[2017-11-20 23:23:47,005] replica.Replica<Replica:a0003>:OUTPUT: Sent reconfiguration request to Olympus from : r0
+[2017-11-20 23:23:47,008] replica.Replica<Replica:a0003>:OUTPUT: Shutting down replica:  r0
+[2017-11-20 23:23:47,017] replica.Replica<Replica:a0006>:OUTPUT: Sent reconfiguration request to Olympus from : r3
+[2017-11-20 23:23:47,019] replica.Replica<Replica:a0006>:OUTPUT: Result Shuttle Timeout in Replica:  r3
+[2017-11-20 23:23:47,023] replica.Replica<Replica:a0006>:OUTPUT: Sent reconfiguration request to Olympus from : r3
+[2017-11-20 23:23:47,024] replica.Replica<Replica:a0006>:OUTPUT: Result Shuttle Timeout in Replica:  r3
+[2017-11-20 23:23:47,029] replica.Replica<Replica:a0006>:OUTPUT: Sent reconfiguration request to Olympus from : r3
+[2017-11-20 23:23:47,029] replica.Replica<Replica:a0006>:OUTPUT: Result Shuttle Timeout in Replica:  r3
+[2017-11-20 23:23:47,033] replica.Replica<Replica:a0006>:OUTPUT: Sent reconfiguration request to Olympus from : r3
+[2017-11-20 23:23:47,034] replica.Replica<Replica:a0006>:OUTPUT: Result Shuttle Timeout in Replica:  r3
+[2017-11-20 23:23:47,038] replica.Replica<Replica:a0006>:OUTPUT: Sent reconfiguration request to Olympus from : r3
+[2017-11-20 23:23:47,039] replica.Replica<Replica:a0006>:OUTPUT: Shutting down replica:  r3
+[2017-11-20 23:23:47,065] replica.Replica<Replica:a0005>:OUTPUT: Result Shuttle Timeout in Replica:  r2
+[2017-11-20 23:23:47,070] replica.Replica<Replica:a0005>:OUTPUT: Sent reconfiguration request to Olympus from : r2
+[2017-11-20 23:23:47,071] replica.Replica<Replica:a0005>:OUTPUT: Result Shuttle Timeout in Replica:  r2
+[2017-11-20 23:23:47,074] replica.Replica<Replica:a0005>:OUTPUT: Sent reconfiguration request to Olympus from : r2
+[2017-11-20 23:23:47,075] replica.Replica<Replica:a0005>:OUTPUT: Result Shuttle Timeout in Replica:  r2
+[2017-11-20 23:23:47,078] replica.Replica<Replica:a0005>:OUTPUT: Sent reconfiguration request to Olympus from : r2
+[2017-11-20 23:23:47,078] replica.Replica<Replica:a0005>:OUTPUT: Result Shuttle Timeout in Replica:  r2
+[2017-11-20 23:23:47,083] replica.Replica<Replica:a0005>:OUTPUT: Sent reconfiguration request to Olympus from : r2
+[2017-11-20 23:23:49,981] replica.Replica<Replica:a0004>:OUTPUT: Result Shuttle Timeout in Replica:  r1
+[2017-11-20 23:23:49,989] replica.Replica<Replica:a0004>:OUTPUT: Sent reconfiguration request to Olympus from : r1
+[2017-11-20 23:23:49,991] replica.Replica<Replica:a0004>:OUTPUT: Result Shuttle Timeout in Replica:  r1
+[2017-11-20 23:23:49,999] replica.Replica<Replica:a0004>:OUTPUT: Sent reconfiguration request to Olympus from : r1
+[2017-11-20 23:23:50,000] replica.Replica<Replica:a0004>:OUTPUT: Result Shuttle Timeout in Replica:  r1
+[2017-11-20 23:23:50,009] replica.Replica<Replica:a0004>:OUTPUT: Sent reconfiguration request to Olympus from : r1
+[2017-11-20 23:23:50,010] replica.Replica<Replica:a0004>:OUTPUT: Result Shuttle Timeout in Replica:  r1
+[2017-11-20 23:23:50,020] replica.Replica<Replica:a0004>:OUTPUT: Sent reconfiguration request to Olympus from : r1
+[2017-11-20 23:23:50,021] replica.Replica<Replica:a0004>:OUTPUT: Result Shuttle Timeout in Replica:  r1
+[2017-11-20 23:23:50,024] replica.Replica<Replica:a0004>:OUTPUT: Sent reconfiguration request to Olympus from : r1
+[2017-11-20 23:23:50,025] replica.Replica<Replica:a0004>:OUTPUT: Result Shuttle Timeout in Replica:  r1
+[2017-11-20 23:23:50,028] replica.Replica<Replica:a0004>:OUTPUT: Sent reconfiguration request to Olympus from : r1
+[2017-11-20 23:23:50,030] replica.Replica<Replica:a0004>:OUTPUT: Result Shuttle Timeout in Replica:  r1
+[2017-11-20 23:23:50,033] replica.Replica<Replica:a0004>:OUTPUT: Sent reconfiguration request to Olympus from : r1
+[2017-11-20 23:23:50,034] replica.Replica<Replica:a0004>:OUTPUT: Result Shuttle Timeout in Replica:  r1
+[2017-11-20 23:23:50,038] replica.Replica<Replica:a0004>:OUTPUT: Sent reconfiguration request to Olympus from : r1
+[2017-11-20 23:23:50,038] replica.Replica<Replica:a0004>:OUTPUT: Result Shuttle Timeout in Replica:  r1
+[2017-11-20 23:23:50,042] replica.Replica<Replica:a0004>:OUTPUT: Sent reconfiguration request to Olympus from : r1
+[2017-11-20 23:23:50,084] replica.Replica<Replica:a0005>:OUTPUT: Result Shuttle Timeout in Replica:  r2
+[2017-11-20 23:23:50,086] replica.Replica<Replica:a0005>:OUTPUT: Sent reconfiguration request to Olympus from : r2
+[2017-11-20 23:23:50,087] replica.Replica<Replica:a0005>:OUTPUT: Result Shuttle Timeout in Replica:  r2
+[2017-11-20 23:23:50,089] replica.Replica<Replica:a0005>:OUTPUT: Sent reconfiguration request to Olympus from : r2
+[2017-11-20 23:23:50,089] replica.Replica<Replica:a0005>:OUTPUT: Result Shuttle Timeout in Replica:  r2
+[2017-11-20 23:23:50,092] replica.Replica<Replica:a0005>:OUTPUT: Sent reconfiguration request to Olympus from : r2
+[2017-11-20 23:23:50,092] replica.Replica<Replica:a0005>:OUTPUT: Result Shuttle Timeout in Replica:  r2
+[2017-11-20 23:23:50,095] replica.Replica<Replica:a0005>:OUTPUT: Sent reconfiguration request to Olympus from : r2
+[2017-11-20 23:23:50,095] replica.Replica<Replica:a0005>:OUTPUT: Shutting down replica:  r2
+[2017-11-20 23:23:53,044] replica.Replica<Replica:a0004>:OUTPUT: Result Shuttle Timeout in Replica:  r1
+[2017-11-20 23:23:53,050] replica.Replica<Replica:a0004>:OUTPUT: Sent reconfiguration request to Olympus from : r1
+[2017-11-20 23:23:53,052] replica.Replica<Replica:a0004>:OUTPUT: Result Shuttle Timeout in Replica:  r1
+[2017-11-20 23:23:53,059] replica.Replica<Replica:a0004>:OUTPUT: Sent reconfiguration request to Olympus from : r1
+[2017-11-20 23:23:53,061] replica.Replica<Replica:a0004>:OUTPUT: Result Shuttle Timeout in Replica:  r1
+[2017-11-20 23:23:53,071] replica.Replica<Replica:a0004>:OUTPUT: Sent reconfiguration request to Olympus from : r1
+[2017-11-20 23:23:53,072] replica.Replica<Replica:a0004>:OUTPUT: Shutting down replica:  r1

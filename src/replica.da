@@ -48,10 +48,7 @@ class Replica(process):
         output("Spawned and initialized replica: ", self._id)
 
     def _init_event_counts(event_counts):
-        if event_counts is not None:
-            self._event_counts = event_counts
-            return
-
+        #  todo : remove unused event_counts later
         # init event counts
         self._event_counts = {event_type: -1 for event_type in ['wedge_request', 'new_configuration', 'checkpoint',
                                                                 'completed_checkpoint', 'get_running_state',
@@ -145,7 +142,7 @@ class Replica(process):
 
         slot_skipped = shuttle['content']['slot'] != self._last_signed_slot + 1
         if slot_skipped and not shuttle['content']['is_retry']:
-            output(log_messages.INVALID_SLOT, level=logging.ERROR)  # todo check if reconfig required
+            output(log_messages.INVALID_SLOT, level=logging.ERROR)
             return
 
         valid_order_proof = Commons.is_valid_order_proof(shuttle['content']['order_proof'],
@@ -621,7 +618,12 @@ class Replica(process):
             if selected_failure[0] == 'invalid_order_sig' and payload_type == 'shuttle':
                 cloned_payload['signed_content'] = self._get_invalid_signature()
                 output('Failure invalid_order_sig applied at replica: ', self._id)
-            elif selected_failure[0] == 'invalid_result_sig' and payload_type == 'result_shuttle':
+            elif selected_failure[0] == 'invalid_result_sig' and payload_type == 'result_shuttle' \
+                    and self._config['type'] == 'tail':
+                cloned_payload['content']['result_proof']['result_statements'][self._id]['signed_content'] = \
+                    self._get_invalid_signature()
+                output('Failure invalid_result_sig applied at replica: ', self._id)
+            elif selected_failure[0] == 'invalid_result_sig' and payload_type == 'shuttle':
                 cloned_payload['content']['result_proof']['result_statements'][self._id]['signed_content'] = \
                     self._get_invalid_signature()
                 output('Failure invalid_result_sig applied at replica: ', self._id)
