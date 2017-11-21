@@ -44,7 +44,7 @@ class Commons:
 
     @staticmethod
     def hash(obj):
-        obj_bytes = bytes(str(obj), 'utf-8')
+        obj_bytes = pickle.dumps(obj)
         return sha256(obj_bytes, encoder=HexEncoder)
 
     @staticmethod
