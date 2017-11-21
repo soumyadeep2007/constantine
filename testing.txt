@@ -16,3 +16,8 @@ The name of the log file for each test case has the same name as the test case w
 
 Performance evaluation:
 raft2.da reported time: 12.243465900421143s
+
+perform900:
+single_client:
+    With logs at output level: 38.018301293812911s
+    With logs at critical level: 18.838352918624878s
