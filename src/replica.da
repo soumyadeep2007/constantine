@@ -833,8 +833,6 @@ class Replica(process):
                 }
             }
         }
-        self._latest_cp_slot = -1
-        self._cp_running_state_hash = None
 
         return checkpoint_shuttle
 
