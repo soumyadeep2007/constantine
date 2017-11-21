@@ -28,8 +28,8 @@ class Replica(process):
         self._send_error = False
         self._processed_operations = {}
         self._history = []
-        self._cp_running_state = None
-        self._latest_cp_slot = 0
+        self._cp_running_state_hash = None
+        self._latest_cp_slot = -1
         self._latest_valid_cp = None
         self._latest_result_stmt_result_cache = {}
         self._clone_object = None
@@ -168,7 +168,7 @@ class Replica(process):
             result = Commons.perform_operation(shuttle['content']['operation']['command_string'], self._object)
             self._processed_operations[request_key] = result
             if 0 == shuttle['content']['slot'] % self._config['checkpt_interval']:
-                self._cp_running_state = copy.copy(self._object)
+                self._cp_running_state_hash = Commons.hash(self._object)
                 self._latest_cp_slot = shuttle['content']['slot']
 
         self._update_order_proof(shuttle)
@@ -240,7 +240,7 @@ class Replica(process):
 
         if self._config['type'] == 'head':
             if 0 == shuttle['content']['order_proof']['slot'] % self._config['checkpt_interval']:
-                self._cp_running_state = copy.copy(self._object)
+                self._cp_running_state_hash = Commons.hash(self._object)
                 self._latest_cp_slot = shuttle['content']['order_proof']['slot']
                 self._init_checkpointing()
 
@@ -521,12 +521,16 @@ class Replica(process):
         output("Applied checkpoint until slot: ", checkpoint_proof['slot'], " in: ", self._id)
 
     def _update_checkpoint_proof(checkpoint_shuttle):
-        checkpoint_shuttle['content']['checkpoint_proof']['checkpoint_statements'][self._id] = {
-            'checkpoint_statement': {
-                'slot': self._latest_cp_slot,
-                'cp_running_state_hash': Commons.hash(self._cp_running_state)
+        if self._latest_cp_slot != -1 and self._cp_running_state_hash is not None:
+            checkpoint_shuttle['content']['checkpoint_proof']['checkpoint_statements'][self._id] = {
+                'checkpoint_statement': {
+                    'slot': self._latest_cp_slot,
+                    'cp_running_state_hash': self._cp_running_state_hash
+                }
             }
-        }
+            self._latest_cp_slot = -1
+            self._cp_running_state_hash = None
+
         checkpoint_statement_pair = checkpoint_shuttle['content']['checkpoint_proof']['checkpoint_statements'][self._id]
         checkpoint_statement_pair['signed_checkpoint_statement'] = \
             Commons.sign(checkpoint_statement_pair['checkpoint_statement'], self._config['private_key'])
@@ -829,6 +833,8 @@ class Replica(process):
                 }
             }
         }
+        self._latest_cp_slot = -1
+        self._cp_running_state_hash = None
 
         return checkpoint_shuttle
 

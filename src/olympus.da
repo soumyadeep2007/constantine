@@ -441,7 +441,7 @@ class Olympus(process):
 
         output('Olympus terminating')
         end_time = time.time()
-        output("elapsed time (seconds): ", end_time - start_time)
+        output("elapsed time (seconds): ", end_time - start_time, level=logging.CRITICAL)
 
     # On receipt of a config_request from a client
     def receive(msg=('config_request', message, client_id), from_=self._config['clients'].values()):
@@ -620,12 +620,14 @@ class Olympus(process):
             send(('verified_result', verified_result_message), to=self._config['clients'][client_id])
 
     def _handle_caught_up_quorum_unsatisfied():
-        quorum_replica_ids = list(self._wedged_responses.keys())
+        quorum_replica_ids = list(self._wedged_quorum.keys())
         random_quorum_replica_id = random.choice(quorum_replica_ids)
-        del self._wedged_quorum[random_quorum_replica_id]
-
         wedged_responses_replica_ids = list(self._wedged_responses.keys())
         random_replica_id = random.choice(wedged_responses_replica_ids)
+
+        self._wedged_responses[random_quorum_replica_id] = self._wedged_quorum[random_quorum_replica_id]
+        del self._wedged_quorum[random_quorum_replica_id]
+
         self._wedged_quorum[random_replica_id] = self._wedged_responses[random_replica_id]
         del self._wedged_responses[random_replica_id]
         output('Chosen the following replica as a replacement in the quorum:', random_replica_id)
