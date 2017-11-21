@@ -207,7 +207,6 @@ class Replica(process):
         if not Commons.is_valid_signature(shuttle['content'], shuttle['signed_content'],
                                           self._config['public_keys'][replica_id]):
             output(log_messages.INVALID_SIGNATURE, replica_id)
-            # self._update_failure_trigger(shuttle['content']['operation']['client_id'], 'result_shuttle')
             return
 
         valid_result_proof = Commons.is_valid_result_proof(shuttle['content']['result_proof'], self._config['replicas'],

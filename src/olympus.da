@@ -374,7 +374,9 @@ class Olympus(process):
         self._wedged_responses = {}
         self._wedged_quorum = {}
         self._wedged_slot_operation_pairs = {}
+        self._running_state_requested_replica_id = None
         self._latest_result_stmt_result_pairs = {}
+        self._expected_running_state_hash = None
 
         self._num_caught_up_messages = 0
         self._reconfig_in_progress = True
@@ -599,6 +601,8 @@ class Olympus(process):
             self._valid_running_state_received = False
             if await(self._valid_running_state_received):
                 self._valid_running_state_received = False
+                self._running_state_requested_replica_id = None
+                self._expected_running_state_hash = None
                 break
             elif timeout(self._timeout):
                 continue
