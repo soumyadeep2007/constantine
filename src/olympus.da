@@ -438,7 +438,7 @@ class Olympus(process):
             output('Sent abort command to replica :', replica[0])
 
     def run():
-        await(len(self._done_messages) == len(self._config['clients']))
+        await(len(self._done_messages) == len(self._config['clients']) and not self._reconfig_in_progress)
         self._terminate_replicas()
 
         output('Olympus terminating')
