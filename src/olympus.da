@@ -132,7 +132,7 @@ class Olympus(process):
                 trigger_num = int(trigger_str_split[1].strip())
             failure = failure_trigger.split("),")[1].strip()
             failure_type = failure.split("(")[0].strip()
-            failure_arg = failure.split("(")[1].strip()[:-2]
+            failure_arg = failure.split("(")[1].strip()[:-1]
             if failure_type in DELAYED_FAILURES:
                 trigger_num += 1
 
@@ -643,4 +643,3 @@ def main():
     olympus = new(Olympus)
     setup(olympus, args=(olympus, sys.argv[1]))
     start(olympus)
-    await(False)

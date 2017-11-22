@@ -590,9 +590,13 @@ class Replica(process):
 
     def _apply_failure(trigger_type, payload, payload_type, failure_application='post'):
         cloned_payload = dict(payload) if payload is not None else None
+
+
+
         selected_failures = self._get_failures(trigger_type, failure_application)
         if len(selected_failures) == 0:
-            output("No failure associated with trigger: ", trigger_type, " found in replica: ", self._id)
+            pass
+            # output("No failure associated with trigger: ", trigger_type, " found in replica: ", self._id)
         for selected_failure in selected_failures:
             if selected_failure[0] == 'change_operation' and payload_type == 'payload':
                 cloned_payload['content']['operation']['command_string'] = "get('x')"
@@ -661,8 +665,8 @@ class Replica(process):
         return Commons.sign("ajhsjhdbahsbsuqbkdkjbuhbajlbkkabdslbakjscbajkhbdkl", self._config['private_key'])
 
     def _get_failures(trigger_type, failure_application):
-        output("Checking for failure associated with trigger, application: ", (trigger_type, failure_application),
-               " in replica: ", self._id)
+        # output("Checking for failure associated with trigger, application: ", (trigger_type, failure_application),
+        #        " in replica: ", self._id)
         selected_failures = []
         failures = self._config.get('failures', {})
         if trigger_type not in failures:
