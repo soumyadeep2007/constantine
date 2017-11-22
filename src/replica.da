@@ -33,6 +33,9 @@ class Replica(process):
         self._latest_valid_cp = None
         self._latest_result_stmt_result_cache = {}
         self._clone_object = None
+        self._activated_failures = {failure: False for failure in ['invalid_order_sig', 'invalid_result_sig',
+                                                                   'change_operation', 'change_result',
+                                                                   'drop_result_stmt']}
         self._immediate_failure_triggers = []
         # =================================================================================
 
@@ -468,9 +471,10 @@ class Replica(process):
                 'result': result
             }
 
+        running_state_hash = Commons.hash(sorted(self._clone_object.items()))
         caught_up_message = {
             'content': {
-                'running_state_hash': Commons.hash(self._clone_object),
+                'running_state_hash': running_state_hash,
                 'latest_result_stmt_result_pairs': latest_result_stmt_result_cache_clone,
                 'reconfig_id': catch_up_message['content']['reconfig_id']
             }
@@ -498,6 +502,7 @@ class Replica(process):
             output(log_messages.INVALID_SIGNATURE, 'Olympus')
             return
 
+        output("Replica: ", self._id, " has clone object:", self._clone_object)
         running_state_message = {
             'content': {
                 'running_state': self._clone_object
@@ -548,6 +553,8 @@ class Replica(process):
 
     def _update_history(order_proof):
         self._history.append(order_proof)
+        output("Adding to history (slot, operation): ", order_proof['slot'], ", ", order_proof['operation'],
+               " in Replica: ", self._id)
 
     def _update_result_proof(shuttle, result):
         shuttle['content']['result_proof']['result'] = result
@@ -591,29 +598,58 @@ class Replica(process):
     def _apply_failure(trigger_type, payload, payload_type, failure_application='post'):
         cloned_payload = dict(payload) if payload is not None else None
 
-
+        if self._activated_failures['change_operation'] and payload_type == 'payload':
+            cloned_payload['content']['operation']['command_string'] = "get('x')"
+            output("Failure 'change_operation' applied for (operation, replica_id) ",
+                   cloned_payload['content']['operation'], self._id)
+            self._activated_failures['change_operation'] = False
+        elif self._activated_failures['change_result'] and payload_type == 'result_shuttle':
+            cloned_payload['content']['result_proof']['result_statements'][self._id]['result_statement'][
+                'result_hash'] = Commons.hash('OK')
+            cloned_payload['content']['result_proof']['result_statements'][self._id]['signed_result_statement'] = \
+                Commons.sign(
+                    cloned_payload['content']['result_proof']['result_statements'][self._id]['result_statement'],
+                    self._config['private_key'])
+            output("Failure 'change_result' applied for (operation, replica_id) ",
+                   cloned_payload['content']['operation'], self._id)
+            self._activated_failures['change_result'] = False
+        elif self._activated_failures['drop_result_stmt'] and payload_type == 'result_shuttle':
+            cloned_payload['content']['result_proof']['result_statements'].pop(self._id)
+            output("Failure 'drop_result_stmt' applied for (operation, replica_id) ",
+                   cloned_payload['content']['operation'], self._id)
+            self._activated_failures['drop_result_stmt'] = False
+        elif self._activated_failures['invalid_order_sig'] and payload_type == 'shuttle':
+            cloned_payload['signed_content'] = self._get_invalid_signature()
+            output('Failure invalid_order_sig applied at replica: ', self._id)
+            self._activated_failures['invalid_order_sig'] = False
+        elif self._activated_failures['invalid_result_sig'] and payload_type == 'result_shuttle' \
+                    and self._config['type'] == 'tail':
+            cloned_payload['content']['result_proof']['result_statements'][self._id]['signed_content'] = \
+                self._get_invalid_signature()
+            output('Failure invalid_result_sig applied at replica: ', self._id)
+            self._activated_failures['invalid_result_sig'] = False
+        elif self._activated_failures['invalid_result_sig'] and payload_type == 'shuttle':
+            cloned_payload['content']['result_proof']['result_statements'][self._id]['signed_content'] = \
+                self._get_invalid_signature()
+            output('Failure invalid_result_sig applied at replica: ', self._id)
+            self._activated_failures['invalid_result_sig'] = False
 
         selected_failures = self._get_failures(trigger_type, failure_application)
         if len(selected_failures) == 0:
             pass
             # output("No failure associated with trigger: ", trigger_type, " found in replica: ", self._id)
         for selected_failure in selected_failures:
-            if selected_failure[0] == 'change_operation' and payload_type == 'payload':
-                cloned_payload['content']['operation']['command_string'] = "get('x')"
-                output("Failure 'change_operation' applied for (operation, replica_id) ",
+            if selected_failure[0] == 'change_operation':
+                self._activated_failures['change_operation'] = True
+                output("Failure 'change_operation' activated for (operation, replica_id) ",
                        cloned_payload['content']['operation'], self._id)
-            elif selected_failure[0] == 'change_result' and payload_type == 'result_shuttle':
-                cloned_payload['content']['result_proof']['result_statements'][self._id]['result_statement'][
-                    'result_hash'] = Commons.hash('OK')
-                cloned_payload['content']['result_proof']['result_statements'][self._id]['signed_result_statement'] = \
-                    Commons.sign(
-                        cloned_payload['content']['result_proof']['result_statements'][self._id]['result_statement'],
-                        self._config['private_key'])
-                output("Failure 'change_result' applied for (operation, replica_id) ",
+            elif selected_failure[0] == 'change_result':
+                self._activated_failures['change_result'] = True
+                output("Failure 'change_result' activated for (operation, replica_id) ",
                        cloned_payload['content']['operation'], self._id)
-            elif selected_failure[0] == 'drop_result_stmt' and payload_type == 'result_shuttle':
-                cloned_payload['content']['result_proof']['result_statements'].pop(self._id)
-                output("Failure 'drop_result_stmt' applied for (operation, replica_id) ",
+            elif selected_failure[0] == 'drop_result_stmt':
+                self._activated_failures['drop_result_stmt'] = True
+                output("Failure 'drop_result_stmt' activated for (operation, replica_id) ",
                        cloned_payload['content']['operation'], self._id)
             elif selected_failure[0] == 'crash':
                 output("Applying failure 'crash' to Replica: ", self._id, ". Node going down.......")
@@ -639,25 +675,19 @@ class Replica(process):
                     output('Failure "increment_slot" applied in Head: ', self._id)
             elif selected_failure[0] == 'drop_checkpt_stmts':
                 self._drop_checkpt_stmts = True
-                output('Failure drop_checkpt_stmts activated for replica id: ', self._id)
+                output('Failure "drop_checkpt_stmts" activated for replica id: ', self._id)
             elif selected_failure[0] == 'drop':
                 self._drop_message = True
-                output('Failure drop activated in replica id: ', self._id)
+                output('Failure "drop" activated in replica id: ', self._id)
+            elif selected_failure[0] == 'invalid_order_sig':
+                self._activated_failures['invalid_order_sig'] = True
+                output('Failure "invalid_order_sig" activated at replica: ', self._id)
+            elif selected_failure[0] == 'invalid_result_sig':
+                self._activated_failures['invalid_result_sig'] = True
+                output('Failure "invalid_result_sig" activated at replica: ', self._id)
 
-            if selected_failure[0] == 'invalid_order_sig' and payload_type == 'shuttle':
-                cloned_payload['signed_content'] = self._get_invalid_signature()
-                output('Failure invalid_order_sig applied at replica: ', self._id)
-            elif selected_failure[0] == 'invalid_result_sig' and payload_type == 'result_shuttle' \
-                    and self._config['type'] == 'tail':
-                cloned_payload['content']['result_proof']['result_statements'][self._id]['signed_content'] = \
-                    self._get_invalid_signature()
-                output('Failure invalid_result_sig applied at replica: ', self._id)
-            elif selected_failure[0] == 'invalid_result_sig' and payload_type == 'shuttle':
-                cloned_payload['content']['result_proof']['result_statements'][self._id]['signed_content'] = \
-                    self._get_invalid_signature()
-                output('Failure invalid_result_sig applied at replica: ', self._id)
-            elif cloned_payload is not None:
-                cloned_payload['signed_content'] = Commons.sign(cloned_payload['content'], self._config['private_key'])
+        if cloned_payload is not None:
+            cloned_payload['signed_content'] = Commons.sign(cloned_payload['content'], self._config['private_key'])
 
         return cloned_payload
 
@@ -670,8 +700,6 @@ class Replica(process):
         selected_failures = []
         failures = self._config.get('failures', {})
         if trigger_type not in failures:
-            # if self._id == 'r1':
-            #     output("trigger not found failure")
             return selected_failures
 
         failures = failures.get(trigger_type, [])
@@ -684,6 +712,7 @@ class Replica(process):
             if failure['trigger_point']['application'] == failure_application and \
                             failure['trigger_point']['event_num'] == event_count:
                 selected_failures.append(failure['failure'])
+                failures.remove(failure)
 
         return selected_failures
 
@@ -776,13 +805,10 @@ class Replica(process):
             output(log_messages.RESULT_SENT_AFTER_WAIT, client_id)
             result_shuttle = self._result_cache[request_key]
             self._send_result(result_shuttle, trigger_type)
-            self._active_timers.add(request_key)
+            self._active_timers.discard(request_key)
         elif timeout(self._config['timeout']):
             output('Result Shuttle Timeout in head: ', self._id)
             self._send_reconfig_request({'timeout': True})
-            self._pending_requests.discard(request_key)
-
-        self._active_timers.discard(request_key)
 
     def _process_request(message):
         request_key = (message['content']['operation']['id'], message['content']['operation']['client_id'])
