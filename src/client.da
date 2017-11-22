@@ -76,6 +76,10 @@ class Client(process):
         send(('shared_object_request', shared_object_request_message, self._id), to=self._replicas[self._head_id])
         if await(self._shared_object_received):
             pass
+        elif timeout(self._client_timeout):
+            self._request_config()
+            output(log_messages.REQUEST_TIMEOUT, "Shared Object Request")
+            self._request_shared_object()
 
     def _is_final_result_consistent(client_object, shared_object):
         for client_object_key in client_object.keys():

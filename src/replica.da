@@ -32,7 +32,7 @@ class Replica(process):
         self._latest_cp_slot = -1
         self._latest_valid_cp = None
         self._latest_result_stmt_result_cache = {}
-        self._clone_object = None
+        self._clone_object = {}
         self._activated_failures = {failure: False for failure in ['invalid_order_sig', 'invalid_result_sig',
                                                                    'change_operation', 'change_result',
                                                                    'drop_result_stmt']}
@@ -741,14 +741,19 @@ class Replica(process):
             trigger_type = 'client_request'
 
         result_cache_key = (message['content']['operation']['id'], client_id)
+        if result_cache_key in self._active_timers:
+            output("Timer already started for request: ", result_cache_key, " in Replica: ", self._id, ". Discarding..")
+            return
+
         if result_cache_key in self._result_cache:
             result_shuttle = self._result_cache[result_cache_key]
             self._send_result(result_shuttle, trigger_type)
         else:
             message['signed_content'] = Commons.sign(message['content'], self._config['private_key'])
             send(('request', message, self._id), to=self._config['prev_replica'])
+            self._active_timers.add(result_cache_key)
             if await(result_cache_key in self._result_cache):
-                pass
+                self._active_timers.discard(result_cache_key)
             elif timeout(self._config['timeout']):
                 output('Result Shuttle Timeout in Replica: ', self._id)
                 self._send_reconfig_request({'timeout': True})
