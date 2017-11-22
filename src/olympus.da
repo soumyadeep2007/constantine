@@ -251,8 +251,6 @@ class Olympus(process):
             self._replicas.append(replica_id)
             preceding_replica_ids.append(replica_id)
 
-            self._reconfig_in_progress = False
-
     def receive(msg=('reconfig_request', message, sender_id), from_=self._config['replicas'].values()):
         if self._reconfig_in_progress:
             output('Reconfiguration in progress, ignoring reconfig request from:', sender_id)
@@ -423,6 +421,7 @@ class Olympus(process):
 
         self.generate_keys_for_replicas()
         self.init_hist(running_state)
+        self._reconfig_in_progress = False
 
     def _terminate_replicas():
         output('Terminating replicas..')
@@ -560,7 +559,7 @@ class Olympus(process):
 
     def _get_longest_history():
         max_operation_slot = -1
-        longest_history = None
+        longest_history = {}
         updated_replica_id = None
         output("Finding Longest History from Wedged Messages.")
         for replica_id, wedged_message in self._wedged_quorum.items():

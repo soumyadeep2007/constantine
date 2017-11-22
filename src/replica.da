@@ -32,7 +32,7 @@ class Replica(process):
         self._latest_cp_slot = -1
         self._latest_valid_cp = None
         self._latest_result_stmt_result_cache = {}
-        self._clone_object = None
+        self._clone_object = {}
         self._activated_failures = {failure: False for failure in ['invalid_order_sig', 'invalid_result_sig',
                                                                    'change_operation', 'change_result',
                                                                    'drop_result_stmt']}
@@ -171,8 +171,10 @@ class Replica(process):
             result = Commons.perform_operation(shuttle['content']['operation']['command_string'], self._object)
             self._processed_operations[request_key] = result
             if 0 == shuttle['content']['slot'] % self._config['checkpt_interval']:
-                self._cp_running_state_hash = Commons.hash(self._object)
+                self._cp_running_state_hash = Commons.hash(sorted(self._object.items()))
                 self._latest_cp_slot = shuttle['content']['slot']
+                output("Set '_cp_running_state_hash' in Replica: ", self._id, " based on Running State: ",
+                       self._object, " with hash: ", self._cp_running_state_hash, " for slot: ", self._latest_cp_slot)
 
         self._update_order_proof(shuttle)
         self._update_history(shuttle['content']['order_proof'])
@@ -242,7 +244,7 @@ class Replica(process):
 
         if self._config['type'] == 'head':
             if 0 == shuttle['content']['order_proof']['slot'] % self._config['checkpt_interval']:
-                self._cp_running_state_hash = Commons.hash(self._object)
+                self._cp_running_state_hash = Commons.hash(sorted(self._object.items()))
                 self._latest_cp_slot = shuttle['content']['order_proof']['slot']
                 self._init_checkpointing()
 
@@ -357,7 +359,13 @@ class Replica(process):
             self._send_reconfig_request(reason)
             return
 
-        self._update_checkpoint_proof(checkpoint_shuttle)
+        if await(self._latest_cp_slot == checkpoint_shuttle['content']['checkpoint_proof']['slot']):
+            pass
+        elif timeout(self._config['timeout']):
+            return
+
+        if not self._update_checkpoint_proof(checkpoint_shuttle):
+            return
 
         checkpoint_shuttle['signed_content'] = Commons.sign(checkpoint_shuttle['content'], self._config['private_key'])
 
@@ -525,7 +533,8 @@ class Replica(process):
         output("Applied checkpoint until slot: ", checkpoint_proof['slot'], " in: ", self._id)
 
     def _update_checkpoint_proof(checkpoint_shuttle):
-        if self._latest_cp_slot != -1 and self._cp_running_state_hash is not None:
+        if self._latest_cp_slot != -1 and self._cp_running_state_hash is not None and \
+                        self._latest_cp_slot == checkpoint_shuttle['content']['checkpoint_proof']['slot']:
             checkpoint_shuttle['content']['checkpoint_proof']['checkpoint_statements'][self._id] = {
                 'checkpoint_statement': {
                     'slot': self._latest_cp_slot,
@@ -534,11 +543,12 @@ class Replica(process):
             }
             self._latest_cp_slot = -1
             self._cp_running_state_hash = None
+            checkpoint_statement_pair = checkpoint_shuttle['content']['checkpoint_proof']['checkpoint_statements'][self._id]
+            checkpoint_statement_pair['signed_checkpoint_statement'] = \
+                Commons.sign(checkpoint_statement_pair['checkpoint_statement'], self._config['private_key'])
+            return True
 
-        checkpoint_statement_pair = checkpoint_shuttle['content']['checkpoint_proof']['checkpoint_statements'][self._id]
-        checkpoint_statement_pair['signed_checkpoint_statement'] = \
-            Commons.sign(checkpoint_statement_pair['checkpoint_statement'], self._config['private_key'])
-        #  todo: investigate cp timeout
+        return False
 
     def _update_order_proof(shuttle):
         order_statement = {
@@ -731,14 +741,19 @@ class Replica(process):
             trigger_type = 'client_request'
 
         result_cache_key = (message['content']['operation']['id'], client_id)
+        if result_cache_key in self._active_timers:
+            output("Timer already started for request: ", result_cache_key, " in Replica: ", self._id, ". Discarding..")
+            return
+
         if result_cache_key in self._result_cache:
             result_shuttle = self._result_cache[result_cache_key]
             self._send_result(result_shuttle, trigger_type)
         else:
             message['signed_content'] = Commons.sign(message['content'], self._config['private_key'])
             send(('request', message, self._id), to=self._config['prev_replica'])
+            self._active_timers.add(result_cache_key)
             if await(result_cache_key in self._result_cache):
-                pass
+                self._active_timers.discard(result_cache_key)
             elif timeout(self._config['timeout']):
                 output('Result Shuttle Timeout in Replica: ', self._id)
                 self._send_reconfig_request({'timeout': True})
