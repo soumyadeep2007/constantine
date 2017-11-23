@@ -13,7 +13,7 @@ client_timeout = 3000
 head_timeout = 3000
 nonhead_timeout = 3000
 
-checkpt_interval = 3
+checkpt_interval = 10
 
 # MAPPING OF PROCESSES TO HOSTS
 # to simplify changing the hosts, we first specify a semicolon-separated
@@ -28,4 +28,4 @@ client_hosts = 0;
 replica_hosts = 0; 0; 0
 
 # CLIENT WORKLOAD
-workload[0] = put('movie','star'); append('movie',' wars'); get('movie'); put('movie','star'); append('movie',' wars'); get('movie'); put('movie','star'); append('movie',' wars'); get('movie')
+workload[0] = put('movie','star'); append('movie',' wars'); get('movie'); put('movie','star'); append('movie',' wars'); get('movie'); put('movie','star'); append('movie',' wars'); get('movie'); get('movie'); put('movie','star'); append('movie',' wars'); get('movie'); get('movie'); put('movie','star'); append('movie',' wars'); get('movie'); get('movie'); put('movie','star'); append('movie',' wars'); get('movie'); get('movie'); put('movie','star'); append('movie',' wars'); get('movie'); get('movie'); put('movie','star'); append('movie',' wars'); get('movie'); get('movie'); put('movie','star'); append('movie',' wars'); get('movie'); get('movie'); put('movie','star'); append('movie',' wars'); get('movie')
