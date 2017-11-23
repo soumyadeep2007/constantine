@@ -21,3 +21,6 @@ perform900:
 single_client:
     With logs at output level: 38.018301293812911s
     With logs at critical level: 18.838352918624878s
+
+
+Please note: that failure entries must end with a trailing semicolon

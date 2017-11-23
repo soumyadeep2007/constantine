@@ -23,15 +23,15 @@ checkpt_interval = 100
 hosts = localhost;
 # host on which each client runs.  in this example, client 0 runs
 # on host 1, clients 1 and 2 run on host 0.
-client_hosts = 0; 0; 0
+client_hosts = 0;
 # host on which each replica runs.  same in all configurations.
-replica_hosts = 0; 0; 0
+replica_hosts = 0; 0; 0;
 
 # CLIENT WORKLOAD
 workload[0] = put('movie','star'); put('movie', 'star2'); get('movie')
 
 # FAILURE SCENARIO
-failures[0,0] = client_request(0,1), change_operation()
+failures[0,0] = client_request(0,1), change_operation();
 
 # ----------------EXPECTED RESULT----------------------
 # <copy log here> expected_operation, operation_changed_to
