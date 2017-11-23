@@ -51,6 +51,8 @@ class Replica(process):
 
         output("Spawned and initialized replica: ", self._id)
 
+        self._apply_failure('new_configuration', None, None, 'pre')
+
     def _init_event_counts(event_counts):
         #  todo : remove unused event_counts later
         # init event counts
@@ -65,7 +67,7 @@ class Replica(process):
             for client_id in self._config['clients']:
                 self._event_counts['client_events'][event_type][client_id] = -1
 
-        self._event_counts['new_configuration'] = self._config['current_config'] - 1
+        self._event_counts['new_configuration'] = self._config['current_config']
 
         #  ========================RECEIVERS=============================================
 

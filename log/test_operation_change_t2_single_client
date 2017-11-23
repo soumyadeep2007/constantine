@@ -1,0 +1,959 @@
+[2017-11-22 21:20:35,771] olympus.Olympus<Olympus:4f002>:OUTPUT: Parsed config: {'clients': {}, 'replicas': {}, 'failures': {0: {'r0': {'client_request': [{'failure': ('change_operation', ''), 'trigger_point': {'event_num': 1, 'application': 'post', 'client_id': 'c0'}}]}}}, 'test_case_name': 'test_operation_change_t2_single_client', 't': 2, 'num_client': 1, 'client_timeout': 3000, 'head_timeout': 3000, 'nonhead_timeout': 3000, 'checkpt_interval': 100, 'hosts': {0: 'localhost;'}, 'client_hosts': {'c0': 'localhost;'}, 'replica_hosts': {'r0': '0', 'r1': '0', 'r2': '0', 'r3': '0', 'r4': '0'}, 'workloads': {'c0': ["put('movie','star')", "put('movie', 'star2')", "get('movie')", "get('movie')", "get('movie')", "get('movie')", "get('movie')", "get('movie')", "get('movie')", "get('movie')", "get('movie')", "get('movie')", "get('movie')", "get('movie')", "get('movie')", "get('movie')", "get('movie')", "get('movie')", "get('movie')", "get('movie')", "get('movie')", "get('movie')", "get('movie');"]}}
+[2017-11-22 21:20:35,777] olympus.Olympus<Olympus:4f002>:OUTPUT: Generated keys: {'private_keys': {'o1': b'590f1805d1ca4e6b39d75349b4b73c2dcec8d09e7d80eff3df9c6809e2cbcbc2', 'c0': b'f164d144069a2b12eb99c120bc07b7647480f7dacb1fda9756e44f14ff89932a', 'r0': b'8fbd5639f6aa7bfd6e12fbba9199bab78fd6086211e17f49832a2d4309e99499', 'r1': b'0769561287bc9f09bc2d2b64f770bdbfbf60d7a836bdc3bd9b3005c876cc0c73', 'r2': b'709b1ad992e8c310010655de0ec71115638310385bfc556b5451e7681de291c8', 'r3': b'd6a8ce34a413546c40f5faf5a5a381052790c312c20ab5e33dee20bcf7ea81dc', 'r4': b'3b28b0dda81eadea42d41a7e9501208ebf106a220d9e5525bdde5ebfc2c35dff'}, 'public_keys': {'o1': b'482272cc9d46a937aac449ae9db7c95251c73474c96f54b2b605c18f54213804', 'c0': b'b7296d24f56b1ef7003688375cd9e4a442996820325a66800720708c4ff022aa', 'r0': b'37109a36756d1855593ce9f4716cf2ee7dc61ae3796364c6e56e83a9a6bba2be', 'r1': b'abfcb71cd7bc2b96ea1a2ba6ff128d85ea85da299ea945ee543f377cdbd13483', 'r2': b'd200a7021f8ccbaef8644373b4d45645800bdac8040db539322cddba48e69daa', 'r3': b'302ffa497334a3eadad765259981bcc4fa5acf2301b33ba351b7918a4ed26ed8', 'r4': b'c9655a5f68ce8b0f39af301f78579f1298feb73f096e5fbf9e76715a3b76b7e5'}}
+[2017-11-22 21:20:36,031] olympus.Olympus<Olympus:4f002>:OUTPUT: Initializing cluster with configuration version:  0
+[2017-11-22 21:20:37,319] replica.Replica<Replica:8a002>:OUTPUT: Spawned and initialized replica:  r0
+[2017-11-22 21:20:37,333] replica.Replica<Replica:8a003>:OUTPUT: Spawned and initialized replica:  r1
+[2017-11-22 21:20:37,348] replica.Replica<Replica:8a004>:OUTPUT: Spawned and initialized replica:  r2
+[2017-11-22 21:20:37,363] replica.Replica<Replica:8a005>:OUTPUT: Spawned and initialized replica:  r3
+[2017-11-22 21:20:37,378] replica.Replica<Replica:8a006>:OUTPUT: Spawned and initialized replica:  r4
+[2017-11-22 21:20:37,392] client.Client<Client:8a001>:OUTPUT: c0  initialized with config= {'id': 'c0', 'workload': ["put('movie','star')", "put('movie', 'star2')", "get('movie')", "get('movie')", "get('movie')", "get('movie')", "get('movie')", "get('movie')", "get('movie')", "get('movie')", "get('movie')", "get('movie')", "get('movie')", "get('movie')", "get('movie')", "get('movie')", "get('movie')", "get('movie')", "get('movie')", "get('movie')", "get('movie')", "get('movie')", "get('movie');"], 'private_key': b'f164d144069a2b12eb99c120bc07b7647480f7dacb1fda9756e44f14ff89932a', 'public_keys': {'o1': b'482272cc9d46a937aac449ae9db7c95251c73474c96f54b2b605c18f54213804', 'c0': b'b7296d24f56b1ef7003688375cd9e4a442996820325a66800720708c4ff022aa', 'r0': b'37109a36756d1855593ce9f4716cf2ee7dc61ae3796364c6e56e83a9a6bba2be', 'r1': b'abfcb71cd7bc2b96ea1a2ba6ff128d85ea85da299ea945ee543f377cdbd13483', 'r2': b'd200a7021f8ccbaef8644373b4d45645800bdac8040db539322cddba48e69daa', 'r3': b'302ffa497334a3eadad765259981bcc4fa5acf2301b33ba351b7918a4ed26ed8', 'r4': b'c9655a5f68ce8b0f39af301f78579f1298feb73f096e5fbf9e76715a3b76b7e5'}, 'client_timeout': 3.0, 'olympus': {'id': 'o1', 'process_id': <Olympus:4f002>}, 'replicas': {'r0': <Replica:8a002>, 'r1': <Replica:8a003>, 'r2': <Replica:8a004>, 'r3': <Replica:8a005>, 'r4': <Replica:8a006>}, 'head_id': 'r0', 't': 2}
+[2017-11-22 21:20:37,395] client.Client<Client:8a001>:OUTPUT: The following operation was created: {'id': 0, 'client_id': 'c0', 'command_string': "put('movie','star')"}
+[2017-11-22 21:20:37,395] client.Client<Client:8a001>:OUTPUT: return_value= OK
+[2017-11-22 21:20:37,411] client.Client<Client:8a001>:OUTPUT: A request for an operation was made {'content': {'is_retry': False, 'operation': {'id': 0, 'client_id': 'c0', 'command_string': "put('movie','star')"}}, 'signed_content': b"\x02K\xd4T\xe3\x7f\x14\x1f\x8b\xe8\xc8\x1fIG\x9c!_\x900\x16\xce6;)Q:\xf6\xde+P\xf0\x86\x065`\xa1x\xcd\x14EH\xeb\x89/\x13\xfb\xa7&\xb8\xff\xfa\x04V\x02\x1d\x9f\x0e\x91\x16\xf2\x9cs\x0b\t\x80\x03}q\x00(X\x08\x00\x00\x00is_retryq\x01\x89X\t\x00\x00\x00operationq\x02}q\x03(X\x02\x00\x00\x00idq\x04K\x00X\t\x00\x00\x00client_idq\x05X\x02\x00\x00\x00c0q\x06X\x0e\x00\x00\x00command_stringq\x07X\x13\x00\x00\x00put('movie','star')q\x08uu."}
+[2017-11-22 21:20:37,412] replica.Replica<Replica:8a002>:OUTPUT: Received request message (source, client_id, operation_id, self_id)  c0 c0 0 r0
+[2017-11-22 21:20:37,416] replica.Replica<Replica:8a002>:OUTPUT: Head is processing request (operation_id, client_id) (0, 'c0')
+[2017-11-22 21:20:37,419] replica.Replica<Replica:8a002>:OUTPUT: Adding to history (slot, operation):  1 ,  {'id': 0, 'client_id': 'c0', 'command_string': "put('movie','star')"}  in Replica:  r0
+[2017-11-22 21:20:37,440] replica.Replica<Replica:8a003>:OUTPUT: Received shuttle (source, client_id, operation_id, self_id)  r0 c0 0 r1
+[2017-11-22 21:20:37,450] replica.Replica<Replica:8a003>:OUTPUT: Adding to history (slot, operation):  1 ,  {'id': 0, 'client_id': 'c0', 'command_string': "put('movie','star')"}  in Replica:  r1
+[2017-11-22 21:20:37,469] replica.Replica<Replica:8a004>:OUTPUT: Received shuttle (source, client_id, operation_id, self_id)  r1 c0 0 r2
+[2017-11-22 21:20:37,480] replica.Replica<Replica:8a004>:OUTPUT: Adding to history (slot, operation):  1 ,  {'id': 0, 'client_id': 'c0', 'command_string': "put('movie','star')"}  in Replica:  r2
+[2017-11-22 21:20:37,501] replica.Replica<Replica:8a005>:OUTPUT: Received shuttle (source, client_id, operation_id, self_id)  r2 c0 0 r3
+[2017-11-22 21:20:37,515] replica.Replica<Replica:8a005>:OUTPUT: Adding to history (slot, operation):  1 ,  {'id': 0, 'client_id': 'c0', 'command_string': "put('movie','star')"}  in Replica:  r3
+[2017-11-22 21:20:37,534] replica.Replica<Replica:8a006>:OUTPUT: Received shuttle (source, client_id, operation_id, self_id)  r3 c0 0 r4
+[2017-11-22 21:20:37,551] replica.Replica<Replica:8a006>:OUTPUT: Adding to history (slot, operation):  1 ,  {'id': 0, 'client_id': 'c0', 'command_string': "put('movie','star')"}  in Replica:  r4
+[2017-11-22 21:20:37,583] replica.Replica<Replica:8a005>:OUTPUT: Received result shuttle (source, client_id, operation_id, self_id)  r4 c0 0 r3
+[2017-11-22 21:20:37,602] client.Client<Client:8a001>:OUTPUT: A result was received from replica= r4
+[2017-11-22 21:20:37,622] client.Client<Client:8a001>:OUTPUT: The operation result pair is= {'id': 0, 'client_id': 'c0', 'command_string': "put('movie','star')"} OK
+[2017-11-22 21:20:37,624] client.Client<Client:8a001>:OUTPUT: The result received is valid:(result, operation)= OK {'id': 0, 'client_id': 'c0', 'command_string': "put('movie','star')"}
+[2017-11-22 21:20:37,625] client.Client<Client:8a001>:OUTPUT: The following operation was created: {'id': 1, 'client_id': 'c0', 'command_string': "put('movie', 'star2')"}
+[2017-11-22 21:20:37,626] client.Client<Client:8a001>:OUTPUT: return_value= OK
+[2017-11-22 21:20:37,627] replica.Replica<Replica:8a004>:OUTPUT: Received result shuttle (source, client_id, operation_id, self_id)  r3 c0 0 r2
+[2017-11-22 21:20:37,629] client.Client<Client:8a001>:OUTPUT: A request for an operation was made {'content': {'is_retry': False, 'operation': {'id': 1, 'client_id': 'c0', 'command_string': "put('movie', 'star2')"}}, 'signed_content': b"\xa0\xe9\x14\xa3\xec\xcc\x1d\x94\xf3\xa5\xd3\x88\x14PA\x03\x10[I\xdc\xda\x8f\x9e\x15be-\xd4[B\xb8\x17\xa9eG\x89\xfd6\x10\x0b\xbb\x1b\x8b\xa4\xbb\xee\xaa\x08\xbd\x84R\x11i9\xa6fdJ\x10P\r9-\x0f\x80\x03}q\x00(X\x08\x00\x00\x00is_retryq\x01\x89X\t\x00\x00\x00operationq\x02}q\x03(X\x02\x00\x00\x00idq\x04K\x01X\t\x00\x00\x00client_idq\x05X\x02\x00\x00\x00c0q\x06X\x0e\x00\x00\x00command_stringq\x07X\x15\x00\x00\x00put('movie', 'star2')q\x08uu."}
+[2017-11-22 21:20:37,630] replica.Replica<Replica:8a002>:OUTPUT: Received request message (source, client_id, operation_id, self_id)  c0 c0 1 r0
+[2017-11-22 21:20:37,634] replica.Replica<Replica:8a002>:OUTPUT: Head is processing request (operation_id, client_id) (1, 'c0')
+[2017-11-22 21:20:37,637] replica.Replica<Replica:8a002>:OUTPUT: Adding to history (slot, operation):  2 ,  {'id': 1, 'client_id': 'c0', 'command_string': "put('movie', 'star2')"}  in Replica:  r0
+[2017-11-22 21:20:37,642] replica.Replica<Replica:8a002>:OUTPUT: Failure 'change_operation' activated for (operation, replica_id)  {'id': 1, 'client_id': 'c0', 'command_string': "put('movie', 'star2')"} r0
+[2017-11-22 21:20:37,648] replica.Replica<Replica:8a003>:OUTPUT: Received shuttle (source, client_id, operation_id, self_id)  r0 c0 1 r1
+[2017-11-22 21:20:37,668] replica.Replica<Replica:8a003>:OUTPUT: Adding to history (slot, operation):  2 ,  {'id': 1, 'client_id': 'c0', 'command_string': "put('movie', 'star2')"}  in Replica:  r1
+[2017-11-22 21:20:37,677] replica.Replica<Replica:8a004>:OUTPUT: Received shuttle (source, client_id, operation_id, self_id)  r1 c0 1 r2
+[2017-11-22 21:20:37,677] replica.Replica<Replica:8a003>:OUTPUT: Received result shuttle (source, client_id, operation_id, self_id)  r2 c0 0 r1
+[2017-11-22 21:20:37,693] replica.Replica<Replica:8a004>:OUTPUT: Adding to history (slot, operation):  2 ,  {'id': 1, 'client_id': 'c0', 'command_string': "put('movie', 'star2')"}  in Replica:  r2
+[2017-11-22 21:20:37,709] replica.Replica<Replica:8a005>:OUTPUT: Received shuttle (source, client_id, operation_id, self_id)  r2 c0 1 r3
+[2017-11-22 21:20:37,717] replica.Replica<Replica:8a002>:OUTPUT: Received result shuttle (source, client_id, operation_id, self_id)  r1 c0 0 r0
+[2017-11-22 21:20:37,731] replica.Replica<Replica:8a005>:OUTPUT: Adding to history (slot, operation):  2 ,  {'id': 1, 'client_id': 'c0', 'command_string': "put('movie', 'star2')"}  in Replica:  r3
+[2017-11-22 21:20:37,743] replica.Replica<Replica:8a006>:OUTPUT: Received shuttle (source, client_id, operation_id, self_id)  r3 c0 1 r4
+[2017-11-22 21:20:37,765] replica.Replica<Replica:8a006>:OUTPUT: Adding to history (slot, operation):  2 ,  {'id': 1, 'client_id': 'c0', 'command_string': "put('movie', 'star2')"}  in Replica:  r4
+[2017-11-22 21:20:37,787] replica.Replica<Replica:8a005>:OUTPUT: Received result shuttle (source, client_id, operation_id, self_id)  r4 c0 1 r3
+[2017-11-22 21:20:37,793] client.Client<Client:8a001>:OUTPUT: A result was received from replica= r4
+[2017-11-22 21:20:37,813] client.Client<Client:8a001>:OUTPUT: The operation result pair is= {'id': 1, 'client_id': 'c0', 'command_string': "put('movie', 'star2')"} OK
+[2017-11-22 21:20:37,814] client.Client<Client:8a001>:OUTPUT: The result received is valid:(result, operation)= OK {'id': 1, 'client_id': 'c0', 'command_string': "put('movie', 'star2')"}
+[2017-11-22 21:20:37,814] client.Client<Client:8a001>:OUTPUT: The following operation was created: {'id': 2, 'client_id': 'c0', 'command_string': "get('movie')"}
+[2017-11-22 21:20:37,815] client.Client<Client:8a001>:OUTPUT: return_value= star2
+[2017-11-22 21:20:37,816] replica.Replica<Replica:8a004>:OUTPUT: Received result shuttle (source, client_id, operation_id, self_id)  r3 c0 1 r2
+[2017-11-22 21:20:37,817] client.Client<Client:8a001>:OUTPUT: A request for an operation was made {'content': {'is_retry': False, 'operation': {'id': 2, 'client_id': 'c0', 'command_string': "get('movie')"}}, 'signed_content': b'\xc2\xa3\xc8\x13\x90\x98W\x855p"\x19<\xc5?\x06\xe9\xd6\xaa9\xb0\x1e\x0c"dAx\xd7\xcfn\x8ad\xc3F$\xa0tl\xc7r\x07\x9b\xcc\x0e\xf1\x04SlLE@\x97\xe4v\xd9\xe4\x9a_A\x1a.\xc7\\\x0e\x80\x03}q\x00(X\x08\x00\x00\x00is_retryq\x01\x89X\t\x00\x00\x00operationq\x02}q\x03(X\x02\x00\x00\x00idq\x04K\x02X\t\x00\x00\x00client_idq\x05X\x02\x00\x00\x00c0q\x06X\x0e\x00\x00\x00command_stringq\x07X\x0c\x00\x00\x00get(\'movie\')q\x08uu.'}
+[2017-11-22 21:20:37,818] replica.Replica<Replica:8a002>:OUTPUT: Received request message (source, client_id, operation_id, self_id)  c0 c0 2 r0
+[2017-11-22 21:20:37,822] replica.Replica<Replica:8a002>:OUTPUT: Head is processing request (operation_id, client_id) (2, 'c0')
+[2017-11-22 21:20:37,825] replica.Replica<Replica:8a002>:OUTPUT: Adding to history (slot, operation):  3 ,  {'id': 2, 'client_id': 'c0', 'command_string': "get('movie')"}  in Replica:  r0
+[2017-11-22 21:20:37,831] replica.Replica<Replica:8a002>:OUTPUT: Failure 'change_operation' applied for (operation, replica_id)  {'id': 2, 'client_id': 'c0', 'command_string': "get('x')"} r0
+[2017-11-22 21:20:37,837] replica.Replica<Replica:8a003>:OUTPUT: Received shuttle (source, client_id, operation_id, self_id)  r0 c0 2 r1
+[2017-11-22 21:20:37,844] replica.Replica<Replica:8a003>:OUTPUT: Invalid client request message(signature mismatch) received in: r1
+[2017-11-22 21:20:37,847] replica.Replica<Replica:8a003>:OUTPUT: Sent reconfiguration request to Olympus from : r1
+[2017-11-22 21:20:37,849] replica.Replica<Replica:8a003>:OUTPUT: Received result shuttle (source, client_id, operation_id, self_id)  r2 c0 1 r1
+[2017-11-22 21:20:37,852] olympus.Olympus<Olympus:4f002>:OUTPUT: Received reconfig request from:  r1
+[2017-11-22 21:20:37,856] olympus.Olympus<Olympus:4f002>:OUTPUT: Received valid reconfiguration request from:  r1
+[2017-11-22 21:20:37,860] olympus.Olympus<Olympus:4f002>:OUTPUT: Sent wedge request to:  r0
+[2017-11-22 21:20:37,862] replica.Replica<Replica:8a002>:OUTPUT: Received wedge request from Olympus in Replica:  r0
+[2017-11-22 21:20:37,864] olympus.Olympus<Olympus:4f002>:OUTPUT: Sent wedge request to:  r1
+[2017-11-22 21:20:37,868] olympus.Olympus<Olympus:4f002>:OUTPUT: Sent wedge request to:  r2
+[2017-11-22 21:20:37,869] replica.Replica<Replica:8a004>:OUTPUT: Received wedge request from Olympus in Replica:  r2
+[2017-11-22 21:20:37,872] replica.Replica<Replica:8a002>:OUTPUT: Sent Wedged message to Olympus from replica:  r0
+[2017-11-22 21:20:37,872] olympus.Olympus<Olympus:4f002>:OUTPUT: Sent wedge request to:  r3
+[2017-11-22 21:20:37,874] replica.Replica<Replica:8a005>:OUTPUT: Received wedge request from Olympus in Replica:  r3
+[2017-11-22 21:20:37,877] olympus.Olympus<Olympus:4f002>:OUTPUT: Sent wedge request to:  r4
+[2017-11-22 21:20:37,878] replica.Replica<Replica:8a006>:OUTPUT: Received wedge request from Olympus in Replica:  r4
+[2017-11-22 21:20:37,880] olympus.Olympus<Olympus:4f002>:OUTPUT: Received wedged message from replica: r0
+[2017-11-22 21:20:37,881] replica.Replica<Replica:8a004>:OUTPUT: Sent Wedged message to Olympus from replica:  r2
+[2017-11-22 21:20:37,885] olympus.Olympus<Olympus:4f002>:OUTPUT: Adding the following replica to the quorum: r0
+[2017-11-22 21:20:37,887] replica.Replica<Replica:8a005>:OUTPUT: Sent Wedged message to Olympus from replica:  r3
+[2017-11-22 21:20:37,887] olympus.Olympus<Olympus:4f002>:OUTPUT: Validated history successfully for wedged message from:  r0
+[2017-11-22 21:20:37,892] replica.Replica<Replica:8a006>:OUTPUT: Sent Wedged message to Olympus from replica:  r4
+[2017-11-22 21:20:37,892] olympus.Olympus<Olympus:4f002>:OUTPUT: Received wedged message from replica: r2
+[2017-11-22 21:20:37,903] replica.Replica<Replica:8a002>:OUTPUT: Received result shuttle (source, client_id, operation_id, self_id)  r1 c0 1 r0
+[2017-11-22 21:20:37,905] replica.Replica<Replica:8a003>:OUTPUT: Received wedge request from Olympus in Replica:  r1
+[2017-11-22 21:20:37,906] replica.Replica<Replica:8a002>:OUTPUT: Discarded result shuttle from  r1  in Replica:  r0  as Replica is in immutable state
+[2017-11-22 21:20:37,915] olympus.Olympus<Olympus:4f002>:OUTPUT: Adding the following replica to the quorum: r2
+[2017-11-22 21:20:37,916] olympus.Olympus<Olympus:4f002>:OUTPUT: Validated history successfully for wedged message from:  r2
+[2017-11-22 21:20:37,917] replica.Replica<Replica:8a003>:OUTPUT: Sent Wedged message to Olympus from replica:  r1
+[2017-11-22 21:20:37,918] olympus.Olympus<Olympus:4f002>:OUTPUT: Received wedged message from replica: r3
+[2017-11-22 21:20:37,936] olympus.Olympus<Olympus:4f002>:OUTPUT: Adding the following replica to the quorum: r3
+[2017-11-22 21:20:37,937] olympus.Olympus<Olympus:4f002>:OUTPUT: Validated history successfully for wedged message from:  r3
+[2017-11-22 21:20:37,937] olympus.Olympus<Olympus:4f002>:OUTPUT: Wedged quorum is satisfied, initiating catch-up process in Olympus. Members =  dict_keys(['r0', 'r2', 'r3'])
+[2017-11-22 21:20:37,938] olympus.Olympus<Olympus:4f002>:OUTPUT: Finding Longest History from Wedged Messages.
+[2017-11-22 21:20:37,938] olympus.Olympus<Olympus:4f002>:OUTPUT: Longest History found in Replica:  r0
+[2017-11-22 21:20:37,939] olympus.Olympus<Olympus:4f002>:OUTPUT: Sending catch up message to replica:  r0
+[2017-11-22 21:20:37,942] replica.Replica<Replica:8a002>:OUTPUT: Received catch up message from Olympus in = r0
+[2017-11-22 21:20:37,943] olympus.Olympus<Olympus:4f002>:OUTPUT: Sending catch up message to replica:  r2
+[2017-11-22 21:20:37,946] replica.Replica<Replica:8a004>:OUTPUT: Received catch up message from Olympus in = r2
+[2017-11-22 21:20:37,946] replica.Replica<Replica:8a002>:OUTPUT: Sending caught up message to Olympus from replica:  r0
+[2017-11-22 21:20:37,946] olympus.Olympus<Olympus:4f002>:OUTPUT: Sending catch up message to replica:  r3
+[2017-11-22 21:20:37,949] replica.Replica<Replica:8a005>:OUTPUT: Received catch up message from Olympus in = r3
+[2017-11-22 21:20:37,950] replica.Replica<Replica:8a004>:OUTPUT: Sending caught up message to Olympus from replica:  r2
+[2017-11-22 21:20:37,950] olympus.Olympus<Olympus:4f002>:OUTPUT: Received wedged message from replica: r4
+[2017-11-22 21:20:37,954] replica.Replica<Replica:8a005>:OUTPUT: Sending caught up message to Olympus from replica:  r3
+[2017-11-22 21:20:37,978] olympus.Olympus<Olympus:4f002>:OUTPUT: Adding wedged response to wedged_responses: r4
+[2017-11-22 21:20:37,978] olympus.Olympus<Olympus:4f002>:OUTPUT: Validated history successfully for wedged message from:  r4
+[2017-11-22 21:20:37,979] olympus.Olympus<Olympus:4f002>:OUTPUT: Received wedged message from replica: r1
+[2017-11-22 21:20:37,987] olympus.Olympus<Olympus:4f002>:OUTPUT: Adding wedged response to wedged_responses: r1
+[2017-11-22 21:20:37,988] olympus.Olympus<Olympus:4f002>:OUTPUT: Validated history successfully for wedged message from:  r1
+[2017-11-22 21:20:37,989] olympus.Olympus<Olympus:4f002>:OUTPUT: Received caught up message from replica: r0
+[2017-11-22 21:20:37,992] olympus.Olympus<Olympus:4f002>:OUTPUT: Updated the _expected_running_state_hash in Olympus:  b'ad9a39fd841b4541936a9cecbae355e67a9d84f344b1500a89b0cba2c3fda833' , on Value sent by replica:  r0
+[2017-11-22 21:20:37,993] olympus.Olympus<Olympus:4f002>:OUTPUT: Added Replica to caught up quorum:  r0
+[2017-11-22 21:20:37,994] olympus.Olympus<Olympus:4f002>:OUTPUT: Received caught up message from replica: r2
+[2017-11-22 21:20:37,997] olympus.Olympus<Olympus:4f002>:OUTPUT: Invalid result statement and result pair found in potentially unserved client requests for replica:  r2
+[2017-11-22 21:20:37,997] olympus.Olympus<Olympus:4f002>:OUTPUT: Chosen the following replica as a replacement in the caught-up quorum: r4  Members =  dict_keys(['r0', 'r3', 'r4'])
+[2017-11-22 21:20:37,997] olympus.Olympus<Olympus:4f002>:OUTPUT: Wedged quorum is satisfied, initiating catch-up process in Olympus. Members =  dict_keys(['r0', 'r3', 'r4'])
+[2017-11-22 21:20:37,998] olympus.Olympus<Olympus:4f002>:OUTPUT: Finding Longest History from Wedged Messages.
+[2017-11-22 21:20:37,998] olympus.Olympus<Olympus:4f002>:OUTPUT: Longest History found in Replica:  r0
+[2017-11-22 21:20:38,000] olympus.Olympus<Olympus:4f002>:OUTPUT: Sending catch up message to replica:  r0
+[2017-11-22 21:20:38,002] replica.Replica<Replica:8a002>:OUTPUT: Received catch up message from Olympus in = r0
+[2017-11-22 21:20:38,003] olympus.Olympus<Olympus:4f002>:OUTPUT: Sending catch up message to replica:  r3
+[2017-11-22 21:20:38,005] replica.Replica<Replica:8a002>:OUTPUT: Sending caught up message to Olympus from replica:  r0
+[2017-11-22 21:20:38,005] replica.Replica<Replica:8a005>:OUTPUT: Received catch up message from Olympus in = r3
+[2017-11-22 21:20:38,006] olympus.Olympus<Olympus:4f002>:OUTPUT: Sending catch up message to replica:  r4
+[2017-11-22 21:20:38,010] replica.Replica<Replica:8a005>:OUTPUT: Sending caught up message to Olympus from replica:  r3
+[2017-11-22 21:20:38,010] replica.Replica<Replica:8a006>:OUTPUT: Received catch up message from Olympus in = r4
+[2017-11-22 21:20:38,015] replica.Replica<Replica:8a006>:OUTPUT: Sending caught up message to Olympus from replica:  r4
+[2017-11-22 21:20:38,019] olympus.Olympus<Olympus:4f002>:OUTPUT: Received caught up message from replica: r3
+[2017-11-22 21:20:38,024] olympus.Olympus<Olympus:4f002>:OUTPUT: Invalid result statement and result pair found in potentially unserved client requests for replica:  r3
+[2017-11-22 21:20:38,024] olympus.Olympus<Olympus:4f002>:OUTPUT: Chosen the following replica as a replacement in the caught-up quorum: r1  Members =  dict_keys(['r0', 'r4', 'r1'])
+[2017-11-22 21:20:38,025] olympus.Olympus<Olympus:4f002>:OUTPUT: Wedged quorum is satisfied, initiating catch-up process in Olympus. Members =  dict_keys(['r0', 'r4', 'r1'])
+[2017-11-22 21:20:38,025] olympus.Olympus<Olympus:4f002>:OUTPUT: Finding Longest History from Wedged Messages.
+[2017-11-22 21:20:38,026] olympus.Olympus<Olympus:4f002>:OUTPUT: Longest History found in Replica:  r0
+[2017-11-22 21:20:38,029] olympus.Olympus<Olympus:4f002>:OUTPUT: Sending catch up message to replica:  r0
+[2017-11-22 21:20:38,030] replica.Replica<Replica:8a002>:OUTPUT: Received catch up message from Olympus in = r0
+[2017-11-22 21:20:38,032] olympus.Olympus<Olympus:4f002>:OUTPUT: Sending catch up message to replica:  r4
+[2017-11-22 21:20:38,035] replica.Replica<Replica:8a002>:OUTPUT: Sending caught up message to Olympus from replica:  r0
+[2017-11-22 21:20:38,036] replica.Replica<Replica:8a006>:OUTPUT: Received catch up message from Olympus in = r4
+[2017-11-22 21:20:38,041] replica.Replica<Replica:8a006>:OUTPUT: Sending caught up message to Olympus from replica:  r4
+[2017-11-22 21:20:38,044] olympus.Olympus<Olympus:4f002>:OUTPUT: Sending catch up message to replica:  r1
+[2017-11-22 21:20:38,046] olympus.Olympus<Olympus:4f002>:OUTPUT: Received caught up message from replica: r0
+[2017-11-22 21:20:38,047] replica.Replica<Replica:8a003>:OUTPUT: Received catch up message from Olympus in = r1
+[2017-11-22 21:20:38,051] olympus.Olympus<Olympus:4f002>:OUTPUT: Added Replica to caught up quorum:  r0
+[2017-11-22 21:20:38,052] replica.Replica<Replica:8a003>:OUTPUT: Sending caught up message to Olympus from replica:  r1
+[2017-11-22 21:20:38,053] olympus.Olympus<Olympus:4f002>:OUTPUT: Received caught up message from replica: r3
+[2017-11-22 21:20:38,059] olympus.Olympus<Olympus:4f002>:OUTPUT: Received caught up message from replica: r4
+[2017-11-22 21:20:38,063] olympus.Olympus<Olympus:4f002>:OUTPUT: Invalid result statement and result pair found in potentially unserved client requests for replica:  r4
+[2017-11-22 21:20:38,063] olympus.Olympus<Olympus:4f002>:OUTPUT: Chosen the following replica as a replacement in the caught-up quorum: r2  Members =  dict_keys(['r0', 'r4', 'r2'])
+[2017-11-22 21:20:38,064] olympus.Olympus<Olympus:4f002>:OUTPUT: Wedged quorum is satisfied, initiating catch-up process in Olympus. Members =  dict_keys(['r0', 'r4', 'r2'])
+[2017-11-22 21:20:38,064] olympus.Olympus<Olympus:4f002>:OUTPUT: Finding Longest History from Wedged Messages.
+[2017-11-22 21:20:38,064] olympus.Olympus<Olympus:4f002>:OUTPUT: Longest History found in Replica:  r0
+[2017-11-22 21:20:38,066] olympus.Olympus<Olympus:4f002>:OUTPUT: Sending catch up message to replica:  r0
+[2017-11-22 21:20:38,067] replica.Replica<Replica:8a002>:OUTPUT: Received catch up message from Olympus in = r0
+[2017-11-22 21:20:38,068] olympus.Olympus<Olympus:4f002>:OUTPUT: Sending catch up message to replica:  r4
+[2017-11-22 21:20:38,071] replica.Replica<Replica:8a006>:OUTPUT: Received catch up message from Olympus in = r4
+[2017-11-22 21:20:38,071] replica.Replica<Replica:8a002>:OUTPUT: Sending caught up message to Olympus from replica:  r0
+[2017-11-22 21:20:38,072] olympus.Olympus<Olympus:4f002>:OUTPUT: Sending catch up message to replica:  r2
+[2017-11-22 21:20:38,075] replica.Replica<Replica:8a006>:OUTPUT: Sending caught up message to Olympus from replica:  r4
+[2017-11-22 21:20:38,077] replica.Replica<Replica:8a004>:OUTPUT: Received catch up message from Olympus in = r2
+[2017-11-22 21:20:38,078] olympus.Olympus<Olympus:4f002>:OUTPUT: Received caught up message from replica: r0
+[2017-11-22 21:20:38,081] replica.Replica<Replica:8a004>:OUTPUT: Sending caught up message to Olympus from replica:  r2
+[2017-11-22 21:20:38,083] olympus.Olympus<Olympus:4f002>:OUTPUT: Added Replica to caught up quorum:  r0
+[2017-11-22 21:20:38,084] olympus.Olympus<Olympus:4f002>:OUTPUT: Caught up quorum is satisfied. Members =  dict_keys(['r0', 'r4', 'r2'])
+[2017-11-22 21:20:38,086] olympus.Olympus<Olympus:4f002>:OUTPUT: Sending get_running_state message to:  r0
+[2017-11-22 21:20:38,087] olympus.Olympus<Olympus:4f002>:OUTPUT: Received caught up message from replica: r4
+[2017-11-22 21:20:38,088] replica.Replica<Replica:8a002>:OUTPUT: Received get running state message from Olympus, in = r0
+[2017-11-22 21:20:38,091] olympus.Olympus<Olympus:4f002>:OUTPUT: Invalid result statement and result pair found in potentially unserved client requests for replica:  r4
+[2017-11-22 21:20:38,091] replica.Replica<Replica:8a002>:OUTPUT: Replica:  r0  has clone object: {'movie': 'star2'}
+[2017-11-22 21:20:38,091] olympus.Olympus<Olympus:4f002>:OUTPUT: Chosen the following replica as a replacement in the caught-up quorum: r1  Members =  dict_keys(['r4', 'r2', 'r1'])
+[2017-11-22 21:20:38,092] olympus.Olympus<Olympus:4f002>:OUTPUT: Wedged quorum is satisfied, initiating catch-up process in Olympus. Members =  dict_keys(['r4', 'r2', 'r1'])
+[2017-11-22 21:20:38,093] olympus.Olympus<Olympus:4f002>:OUTPUT: Finding Longest History from Wedged Messages.
+[2017-11-22 21:20:38,094] olympus.Olympus<Olympus:4f002>:OUTPUT: Longest History found in Replica:  r4
+[2017-11-22 21:20:38,096] olympus.Olympus<Olympus:4f002>:OUTPUT: Sending catch up message to replica:  r4
+[2017-11-22 21:20:38,096] replica.Replica<Replica:8a002>:OUTPUT: Sending running state message to Olympus from:  r0
+[2017-11-22 21:20:38,098] replica.Replica<Replica:8a006>:OUTPUT: Received catch up message from Olympus in = r4
+[2017-11-22 21:20:38,099] olympus.Olympus<Olympus:4f002>:OUTPUT: Sending catch up message to replica:  r2
+[2017-11-22 21:20:38,102] replica.Replica<Replica:8a004>:OUTPUT: Received catch up message from Olympus in = r2
+[2017-11-22 21:20:38,102] replica.Replica<Replica:8a006>:OUTPUT: Sending caught up message to Olympus from replica:  r4
+[2017-11-22 21:20:38,104] olympus.Olympus<Olympus:4f002>:OUTPUT: Sending catch up message to replica:  r1
+[2017-11-22 21:20:38,106] replica.Replica<Replica:8a004>:OUTPUT: Sending caught up message to Olympus from replica:  r2
+[2017-11-22 21:20:38,108] olympus.Olympus<Olympus:4f002>:OUTPUT: Received caught up message from replica: r1
+[2017-11-22 21:20:38,106] replica.Replica<Replica:8a003>:OUTPUT: Received catch up message from Olympus in = r1
+[2017-11-22 21:20:38,113] olympus.Olympus<Olympus:4f002>:OUTPUT: Invalid result statement and result pair found in potentially unserved client requests for replica:  r1
+[2017-11-22 21:20:38,114] olympus.Olympus<Olympus:4f002>:OUTPUT: Chosen the following replica as a replacement in the caught-up quorum: r3  Members =  dict_keys(['r2', 'r1', 'r3'])
+[2017-11-22 21:20:38,114] replica.Replica<Replica:8a003>:OUTPUT: Sending caught up message to Olympus from replica:  r1
+[2017-11-22 21:20:38,114] olympus.Olympus<Olympus:4f002>:OUTPUT: Wedged quorum is satisfied, initiating catch-up process in Olympus. Members =  dict_keys(['r2', 'r1', 'r3'])
+[2017-11-22 21:20:38,114] olympus.Olympus<Olympus:4f002>:OUTPUT: Finding Longest History from Wedged Messages.
+[2017-11-22 21:20:38,115] olympus.Olympus<Olympus:4f002>:OUTPUT: Longest History found in Replica:  r2
+[2017-11-22 21:20:38,117] olympus.Olympus<Olympus:4f002>:OUTPUT: Sending catch up message to replica:  r2
+[2017-11-22 21:20:38,119] replica.Replica<Replica:8a004>:OUTPUT: Received catch up message from Olympus in = r2
+[2017-11-22 21:20:38,120] olympus.Olympus<Olympus:4f002>:OUTPUT: Sending catch up message to replica:  r1
+[2017-11-22 21:20:38,123] replica.Replica<Replica:8a003>:OUTPUT: Received catch up message from Olympus in = r1
+[2017-11-22 21:20:38,123] replica.Replica<Replica:8a004>:OUTPUT: Sending caught up message to Olympus from replica:  r2
+[2017-11-22 21:20:38,124] olympus.Olympus<Olympus:4f002>:OUTPUT: Sending catch up message to replica:  r3
+[2017-11-22 21:20:38,127] olympus.Olympus<Olympus:4f002>:OUTPUT: Received caught up message from replica: r0
+[2017-11-22 21:20:38,128] replica.Replica<Replica:8a003>:OUTPUT: Sending caught up message to Olympus from replica:  r1
+[2017-11-22 21:20:38,128] replica.Replica<Replica:8a005>:OUTPUT: Received catch up message from Olympus in = r3
+[2017-11-22 21:20:38,132] olympus.Olympus<Olympus:4f002>:OUTPUT: Caught up quorum is satisfied. Members =  dict_keys(['r2', 'r1', 'r3'])
+[2017-11-22 21:20:38,134] replica.Replica<Replica:8a005>:OUTPUT: Sending caught up message to Olympus from replica:  r3
+[2017-11-22 21:20:38,135] olympus.Olympus<Olympus:4f002>:OUTPUT: Sending get_running_state message to:  r2
+[2017-11-22 21:20:38,136] olympus.Olympus<Olympus:4f002>:OUTPUT: Received caught up message from replica: r4
+[2017-11-22 21:20:38,137] replica.Replica<Replica:8a004>:OUTPUT: Received get running state message from Olympus, in = r2
+[2017-11-22 21:20:38,141] replica.Replica<Replica:8a004>:OUTPUT: Replica:  r2  has clone object: {'movie': 'star2'}
+[2017-11-22 21:20:38,141] olympus.Olympus<Olympus:4f002>:OUTPUT: Received caught up message from replica: r2
+[2017-11-22 21:20:38,146] replica.Replica<Replica:8a004>:OUTPUT: Sending running state message to Olympus from:  r2
+[2017-11-22 21:20:38,146] olympus.Olympus<Olympus:4f002>:OUTPUT: Invalid result statement and result pair found in potentially unserved client requests for replica:  r2
+[2017-11-22 21:20:38,147] olympus.Olympus<Olympus:4f002>:OUTPUT: Chosen the following replica as a replacement in the caught-up quorum: r4  Members =  dict_keys(['r1', 'r3', 'r4'])
+[2017-11-22 21:20:38,148] olympus.Olympus<Olympus:4f002>:OUTPUT: Wedged quorum is satisfied, initiating catch-up process in Olympus. Members =  dict_keys(['r1', 'r3', 'r4'])
+[2017-11-22 21:20:38,148] olympus.Olympus<Olympus:4f002>:OUTPUT: Finding Longest History from Wedged Messages.
+[2017-11-22 21:20:38,148] olympus.Olympus<Olympus:4f002>:OUTPUT: Longest History found in Replica:  r1
+[2017-11-22 21:20:38,150] olympus.Olympus<Olympus:4f002>:OUTPUT: Sending catch up message to replica:  r1
+[2017-11-22 21:20:38,152] replica.Replica<Replica:8a003>:OUTPUT: Received catch up message from Olympus in = r1
+[2017-11-22 21:20:38,153] olympus.Olympus<Olympus:4f002>:OUTPUT: Sending catch up message to replica:  r3
+[2017-11-22 21:20:38,156] replica.Replica<Replica:8a005>:OUTPUT: Received catch up message from Olympus in = r3
+[2017-11-22 21:20:38,156] replica.Replica<Replica:8a003>:OUTPUT: Sending caught up message to Olympus from replica:  r1
+[2017-11-22 21:20:38,157] olympus.Olympus<Olympus:4f002>:OUTPUT: Sending catch up message to replica:  r4
+[2017-11-22 21:20:38,160] olympus.Olympus<Olympus:4f002>:OUTPUT: Running state received from:  r2
+[2017-11-22 21:20:38,161] replica.Replica<Replica:8a005>:OUTPUT: Sending caught up message to Olympus from replica:  r3
+[2017-11-22 21:20:38,162] replica.Replica<Replica:8a006>:OUTPUT: Received catch up message from Olympus in = r4
+[2017-11-22 21:20:38,165] olympus.Olympus<Olympus:4f002>:ERROR: A signature mismatch occurred from source: r2
+[2017-11-22 21:20:38,166] olympus.Olympus<Olympus:4f002>:OUTPUT: Caught up quorum is satisfied. Members =  dict_keys(['r1', 'r3', 'r4'])
+[2017-11-22 21:20:38,167] replica.Replica<Replica:8a006>:OUTPUT: Sending caught up message to Olympus from replica:  r4
+[2017-11-22 21:20:38,169] olympus.Olympus<Olympus:4f002>:OUTPUT: Sending get_running_state message to:  r1
+[2017-11-22 21:20:38,172] replica.Replica<Replica:8a003>:OUTPUT: Received get running state message from Olympus, in = r1
+[2017-11-22 21:20:38,173] olympus.Olympus<Olympus:4f002>:OUTPUT: Received caught up message from replica: r4
+[2017-11-22 21:20:38,177] replica.Replica<Replica:8a003>:OUTPUT: Replica:  r1  has clone object: {'movie': 'star2'}
+[2017-11-22 21:20:38,179] olympus.Olympus<Olympus:4f002>:OUTPUT: Invalid result statement and result pair found in potentially unserved client requests for replica:  r4
+[2017-11-22 21:20:38,179] olympus.Olympus<Olympus:4f002>:OUTPUT: Chosen the following replica as a replacement in the caught-up quorum: r0  Members =  dict_keys(['r1', 'r4', 'r0'])
+[2017-11-22 21:20:38,180] olympus.Olympus<Olympus:4f002>:OUTPUT: Wedged quorum is satisfied, initiating catch-up process in Olympus. Members =  dict_keys(['r1', 'r4', 'r0'])
+[2017-11-22 21:20:38,181] olympus.Olympus<Olympus:4f002>:OUTPUT: Finding Longest History from Wedged Messages.
+[2017-11-22 21:20:38,181] olympus.Olympus<Olympus:4f002>:OUTPUT: Longest History found in Replica:  r0
+[2017-11-22 21:20:38,183] replica.Replica<Replica:8a003>:OUTPUT: Sending running state message to Olympus from:  r1
+[2017-11-22 21:20:38,184] olympus.Olympus<Olympus:4f002>:OUTPUT: Sending catch up message to replica:  r1
+[2017-11-22 21:20:38,187] replica.Replica<Replica:8a003>:OUTPUT: Received catch up message from Olympus in = r1
+[2017-11-22 21:20:38,188] olympus.Olympus<Olympus:4f002>:OUTPUT: Sending catch up message to replica:  r4
+[2017-11-22 21:20:38,190] replica.Replica<Replica:8a006>:OUTPUT: Received catch up message from Olympus in = r4
+[2017-11-22 21:20:38,191] replica.Replica<Replica:8a003>:OUTPUT: Sending caught up message to Olympus from replica:  r1
+[2017-11-22 21:20:38,196] replica.Replica<Replica:8a006>:OUTPUT: Sending caught up message to Olympus from replica:  r4
+[2017-11-22 21:20:38,198] olympus.Olympus<Olympus:4f002>:OUTPUT: Sending catch up message to replica:  r0
+[2017-11-22 21:20:38,201] replica.Replica<Replica:8a002>:OUTPUT: Received catch up message from Olympus in = r0
+[2017-11-22 21:20:38,203] olympus.Olympus<Olympus:4f002>:OUTPUT: Received caught up message from replica: r2
+[2017-11-22 21:20:38,205] replica.Replica<Replica:8a002>:OUTPUT: Sending caught up message to Olympus from replica:  r0
+[2017-11-22 21:20:38,208] olympus.Olympus<Olympus:4f002>:OUTPUT: Caught up quorum is satisfied. Members =  dict_keys(['r1', 'r4', 'r0'])
+[2017-11-22 21:20:38,211] olympus.Olympus<Olympus:4f002>:OUTPUT: Sending get_running_state message to:  r1
+[2017-11-22 21:20:38,212] olympus.Olympus<Olympus:4f002>:OUTPUT: Received caught up message from replica: r1
+[2017-11-22 21:20:38,213] replica.Replica<Replica:8a003>:OUTPUT: Received get running state message from Olympus, in = r1
+[2017-11-22 21:20:38,217] olympus.Olympus<Olympus:4f002>:OUTPUT: Invalid result statement and result pair found in potentially unserved client requests for replica:  r1
+[2017-11-22 21:20:38,217] replica.Replica<Replica:8a003>:OUTPUT: Replica:  r1  has clone object: {'movie': 'star2'}
+[2017-11-22 21:20:38,218] olympus.Olympus<Olympus:4f002>:OUTPUT: Chosen the following replica as a replacement in the caught-up quorum: r2  Members =  dict_keys(['r1', 'r0', 'r2'])
+[2017-11-22 21:20:38,219] olympus.Olympus<Olympus:4f002>:OUTPUT: Wedged quorum is satisfied, initiating catch-up process in Olympus. Members =  dict_keys(['r1', 'r0', 'r2'])
+[2017-11-22 21:20:38,220] olympus.Olympus<Olympus:4f002>:OUTPUT: Finding Longest History from Wedged Messages.
+[2017-11-22 21:20:38,220] olympus.Olympus<Olympus:4f002>:OUTPUT: Longest History found in Replica:  r0
+[2017-11-22 21:20:38,222] olympus.Olympus<Olympus:4f002>:OUTPUT: Sending catch up message to replica:  r1
+[2017-11-22 21:20:38,222] replica.Replica<Replica:8a003>:OUTPUT: Sending running state message to Olympus from:  r1
+[2017-11-22 21:20:38,225] replica.Replica<Replica:8a003>:OUTPUT: Received catch up message from Olympus in = r1
+[2017-11-22 21:20:38,226] olympus.Olympus<Olympus:4f002>:OUTPUT: Sending catch up message to replica:  r0
+[2017-11-22 21:20:38,228] replica.Replica<Replica:8a002>:OUTPUT: Received catch up message from Olympus in = r0
+[2017-11-22 21:20:38,229] replica.Replica<Replica:8a003>:OUTPUT: Sending caught up message to Olympus from replica:  r1
+[2017-11-22 21:20:38,229] olympus.Olympus<Olympus:4f002>:OUTPUT: Sending catch up message to replica:  r2
+[2017-11-22 21:20:38,232] replica.Replica<Replica:8a004>:OUTPUT: Received catch up message from Olympus in = r2
+[2017-11-22 21:20:38,232] replica.Replica<Replica:8a002>:OUTPUT: Sending caught up message to Olympus from replica:  r0
+[2017-11-22 21:20:38,231] olympus.Olympus<Olympus:4f002>:OUTPUT: Received caught up message from replica: r2
+[2017-11-22 21:20:38,237] replica.Replica<Replica:8a004>:OUTPUT: Sending caught up message to Olympus from replica:  r2
+[2017-11-22 21:20:38,241] olympus.Olympus<Olympus:4f002>:OUTPUT: Invalid result statement and result pair found in potentially unserved client requests for replica:  r2
+[2017-11-22 21:20:38,242] olympus.Olympus<Olympus:4f002>:OUTPUT: Chosen the following replica as a replacement in the caught-up quorum: r4  Members =  dict_keys(['r0', 'r2', 'r4'])
+[2017-11-22 21:20:38,243] olympus.Olympus<Olympus:4f002>:OUTPUT: Wedged quorum is satisfied, initiating catch-up process in Olympus. Members =  dict_keys(['r0', 'r2', 'r4'])
+[2017-11-22 21:20:38,244] olympus.Olympus<Olympus:4f002>:OUTPUT: Finding Longest History from Wedged Messages.
+[2017-11-22 21:20:38,245] olympus.Olympus<Olympus:4f002>:OUTPUT: Longest History found in Replica:  r0
+[2017-11-22 21:20:38,248] olympus.Olympus<Olympus:4f002>:OUTPUT: Sending catch up message to replica:  r0
+[2017-11-22 21:20:38,250] replica.Replica<Replica:8a002>:OUTPUT: Received catch up message from Olympus in = r0
+[2017-11-22 21:20:38,251] olympus.Olympus<Olympus:4f002>:OUTPUT: Sending catch up message to replica:  r2
+[2017-11-22 21:20:38,253] replica.Replica<Replica:8a004>:OUTPUT: Received catch up message from Olympus in = r2
+[2017-11-22 21:20:38,254] replica.Replica<Replica:8a002>:OUTPUT: Sending caught up message to Olympus from replica:  r0
+[2017-11-22 21:20:38,254] olympus.Olympus<Olympus:4f002>:OUTPUT: Sending catch up message to replica:  r4
+[2017-11-22 21:20:38,256] olympus.Olympus<Olympus:4f002>:OUTPUT: Received caught up message from replica: r1
+[2017-11-22 21:20:38,257] replica.Replica<Replica:8a004>:OUTPUT: Sending caught up message to Olympus from replica:  r2
+[2017-11-22 21:20:38,257] replica.Replica<Replica:8a006>:OUTPUT: Received catch up message from Olympus in = r4
+[2017-11-22 21:20:38,261] olympus.Olympus<Olympus:4f002>:OUTPUT: Caught up quorum is satisfied. Members =  dict_keys(['r0', 'r2', 'r4'])
+[2017-11-22 21:20:38,262] replica.Replica<Replica:8a006>:OUTPUT: Sending caught up message to Olympus from replica:  r4
+[2017-11-22 21:20:38,264] olympus.Olympus<Olympus:4f002>:OUTPUT: Sending get_running_state message to:  r0
+[2017-11-22 21:20:38,266] olympus.Olympus<Olympus:4f002>:OUTPUT: Received caught up message from replica: r3
+[2017-11-22 21:20:38,267] replica.Replica<Replica:8a002>:OUTPUT: Received get running state message from Olympus, in = r0
+[2017-11-22 21:20:38,271] olympus.Olympus<Olympus:4f002>:OUTPUT: Running state received from:  r0
+[2017-11-22 21:20:38,272] replica.Replica<Replica:8a002>:OUTPUT: Replica:  r0  has clone object: {'movie': 'star2'}
+[2017-11-22 21:20:38,276] replica.Replica<Replica:8a002>:OUTPUT: Sending running state message to Olympus from:  r0
+[2017-11-22 21:20:38,276] olympus.Olympus<Olympus:4f002>:ERROR: A signature mismatch occurred from source: r0
+[2017-11-22 21:20:38,278] olympus.Olympus<Olympus:4f002>:OUTPUT: Received caught up message from replica: r1
+[2017-11-22 21:20:38,283] olympus.Olympus<Olympus:4f002>:OUTPUT: Received caught up message from replica: r3
+[2017-11-22 21:20:38,288] olympus.Olympus<Olympus:4f002>:OUTPUT: Received caught up message from replica: r4
+[2017-11-22 21:20:38,292] olympus.Olympus<Olympus:4f002>:OUTPUT: Invalid result statement and result pair found in potentially unserved client requests for replica:  r4
+[2017-11-22 21:20:38,292] olympus.Olympus<Olympus:4f002>:OUTPUT: Chosen the following replica as a replacement in the caught-up quorum: r1  Members =  dict_keys(['r0', 'r2', 'r1'])
+[2017-11-22 21:20:38,293] olympus.Olympus<Olympus:4f002>:OUTPUT: Wedged quorum is satisfied, initiating catch-up process in Olympus. Members =  dict_keys(['r0', 'r2', 'r1'])
+[2017-11-22 21:20:38,293] olympus.Olympus<Olympus:4f002>:OUTPUT: Finding Longest History from Wedged Messages.
+[2017-11-22 21:20:38,294] olympus.Olympus<Olympus:4f002>:OUTPUT: Longest History found in Replica:  r0
+[2017-11-22 21:20:38,296] olympus.Olympus<Olympus:4f002>:OUTPUT: Sending catch up message to replica:  r0
+[2017-11-22 21:20:38,298] replica.Replica<Replica:8a002>:OUTPUT: Received catch up message from Olympus in = r0
+[2017-11-22 21:20:38,300] olympus.Olympus<Olympus:4f002>:OUTPUT: Sending catch up message to replica:  r2
+[2017-11-22 21:20:38,302] replica.Replica<Replica:8a002>:OUTPUT: Sending caught up message to Olympus from replica:  r0
+[2017-11-22 21:20:38,303] replica.Replica<Replica:8a004>:OUTPUT: Received catch up message from Olympus in = r2
+[2017-11-22 21:20:38,303] olympus.Olympus<Olympus:4f002>:OUTPUT: Sending catch up message to replica:  r1
+[2017-11-22 21:20:38,305] olympus.Olympus<Olympus:4f002>:OUTPUT: Running state received from:  r0
+[2017-11-22 21:20:38,306] replica.Replica<Replica:8a003>:OUTPUT: Received catch up message from Olympus in = r1
+[2017-11-22 21:20:38,307] replica.Replica<Replica:8a004>:OUTPUT: Sending caught up message to Olympus from replica:  r2
+[2017-11-22 21:20:38,310] replica.Replica<Replica:8a003>:OUTPUT: Sending caught up message to Olympus from replica:  r1
+[2017-11-22 21:20:38,310] olympus.Olympus<Olympus:4f002>:ERROR: A signature mismatch occurred from source: r0
+[2017-11-22 21:20:38,312] olympus.Olympus<Olympus:4f002>:OUTPUT: Caught up quorum is satisfied. Members =  dict_keys(['r0', 'r2', 'r1'])
+[2017-11-22 21:20:38,315] olympus.Olympus<Olympus:4f002>:OUTPUT: Sending get_running_state message to:  r0
+[2017-11-22 21:20:38,317] olympus.Olympus<Olympus:4f002>:OUTPUT: Received caught up message from replica: r1
+[2017-11-22 21:20:38,318] replica.Replica<Replica:8a002>:OUTPUT: Received get running state message from Olympus, in = r0
+[2017-11-22 21:20:38,322] olympus.Olympus<Olympus:4f002>:OUTPUT: Invalid result statement and result pair found in potentially unserved client requests for replica:  r1
+[2017-11-22 21:20:38,322] replica.Replica<Replica:8a002>:OUTPUT: Replica:  r0  has clone object: {'movie': 'star2'}
+[2017-11-22 21:20:38,323] olympus.Olympus<Olympus:4f002>:OUTPUT: Chosen the following replica as a replacement in the caught-up quorum: r3  Members =  dict_keys(['r0', 'r1', 'r3'])
+[2017-11-22 21:20:38,323] olympus.Olympus<Olympus:4f002>:OUTPUT: Wedged quorum is satisfied, initiating catch-up process in Olympus. Members =  dict_keys(['r0', 'r1', 'r3'])
+[2017-11-22 21:20:38,324] olympus.Olympus<Olympus:4f002>:OUTPUT: Finding Longest History from Wedged Messages.
+[2017-11-22 21:20:38,324] olympus.Olympus<Olympus:4f002>:OUTPUT: Longest History found in Replica:  r0
+[2017-11-22 21:20:38,328] replica.Replica<Replica:8a002>:OUTPUT: Sending running state message to Olympus from:  r0
+[2017-11-22 21:20:38,328] olympus.Olympus<Olympus:4f002>:OUTPUT: Sending catch up message to replica:  r0
+[2017-11-22 21:20:38,331] replica.Replica<Replica:8a002>:OUTPUT: Received catch up message from Olympus in = r0
+[2017-11-22 21:20:38,333] olympus.Olympus<Olympus:4f002>:OUTPUT: Sending catch up message to replica:  r1
+[2017-11-22 21:20:38,335] replica.Replica<Replica:8a003>:OUTPUT: Received catch up message from Olympus in = r1
+[2017-11-22 21:20:38,336] replica.Replica<Replica:8a002>:OUTPUT: Sending caught up message to Olympus from replica:  r0
+[2017-11-22 21:20:38,336] olympus.Olympus<Olympus:4f002>:OUTPUT: Sending catch up message to replica:  r3
+[2017-11-22 21:20:38,338] olympus.Olympus<Olympus:4f002>:OUTPUT: Received caught up message from replica: r4
+[2017-11-22 21:20:38,339] replica.Replica<Replica:8a005>:OUTPUT: Received catch up message from Olympus in = r3
+[2017-11-22 21:20:38,340] replica.Replica<Replica:8a003>:OUTPUT: Sending caught up message to Olympus from replica:  r1
+[2017-11-22 21:20:38,344] olympus.Olympus<Olympus:4f002>:OUTPUT: Caught up quorum is satisfied. Members =  dict_keys(['r0', 'r1', 'r3'])
+[2017-11-22 21:20:38,348] replica.Replica<Replica:8a005>:OUTPUT: Sending caught up message to Olympus from replica:  r3
+[2017-11-22 21:20:38,352] olympus.Olympus<Olympus:4f002>:OUTPUT: Sending get_running_state message to:  r0
+[2017-11-22 21:20:38,355] replica.Replica<Replica:8a002>:OUTPUT: Received get running state message from Olympus, in = r0
+[2017-11-22 21:20:38,355] olympus.Olympus<Olympus:4f002>:OUTPUT: Received caught up message from replica: r0
+[2017-11-22 21:20:38,359] olympus.Olympus<Olympus:4f002>:OUTPUT: Added Replica to caught up quorum:  r0
+[2017-11-22 21:20:38,359] replica.Replica<Replica:8a002>:OUTPUT: Replica:  r0  has clone object: {'movie': 'star2'}
+[2017-11-22 21:20:38,360] olympus.Olympus<Olympus:4f002>:OUTPUT: Running state received from:  r0
+[2017-11-22 21:20:38,364] olympus.Olympus<Olympus:4f002>:ERROR: A signature mismatch occurred from source: r0
+[2017-11-22 21:20:38,365] replica.Replica<Replica:8a002>:OUTPUT: Sending running state message to Olympus from:  r0
+[2017-11-22 21:20:38,365] olympus.Olympus<Olympus:4f002>:OUTPUT: Received caught up message from replica: r1
+[2017-11-22 21:20:38,370] olympus.Olympus<Olympus:4f002>:OUTPUT: Invalid result statement and result pair found in potentially unserved client requests for replica:  r1
+[2017-11-22 21:20:38,371] olympus.Olympus<Olympus:4f002>:OUTPUT: Chosen the following replica as a replacement in the caught-up quorum: r2  Members =  dict_keys(['r1', 'r3', 'r2'])
+[2017-11-22 21:20:38,371] olympus.Olympus<Olympus:4f002>:OUTPUT: Wedged quorum is satisfied, initiating catch-up process in Olympus. Members =  dict_keys(['r1', 'r3', 'r2'])
+[2017-11-22 21:20:38,372] olympus.Olympus<Olympus:4f002>:OUTPUT: Finding Longest History from Wedged Messages.
+[2017-11-22 21:20:38,372] olympus.Olympus<Olympus:4f002>:OUTPUT: Longest History found in Replica:  r1
+[2017-11-22 21:20:38,375] olympus.Olympus<Olympus:4f002>:OUTPUT: Sending catch up message to replica:  r1
+[2017-11-22 21:20:38,378] replica.Replica<Replica:8a003>:OUTPUT: Received catch up message from Olympus in = r1
+[2017-11-22 21:20:38,379] olympus.Olympus<Olympus:4f002>:OUTPUT: Sending catch up message to replica:  r3
+[2017-11-22 21:20:38,382] replica.Replica<Replica:8a005>:OUTPUT: Received catch up message from Olympus in = r3
+[2017-11-22 21:20:38,382] olympus.Olympus<Olympus:4f002>:OUTPUT: Sending catch up message to replica:  r2
+[2017-11-22 21:20:38,382] replica.Replica<Replica:8a003>:OUTPUT: Sending caught up message to Olympus from replica:  r1
+[2017-11-22 21:20:38,384] olympus.Olympus<Olympus:4f002>:OUTPUT: Received caught up message from replica: r0
+[2017-11-22 21:20:38,385] replica.Replica<Replica:8a004>:OUTPUT: Received catch up message from Olympus in = r2
+[2017-11-22 21:20:38,386] replica.Replica<Replica:8a005>:OUTPUT: Sending caught up message to Olympus from replica:  r3
+[2017-11-22 21:20:38,391] replica.Replica<Replica:8a004>:OUTPUT: Sending caught up message to Olympus from replica:  r2
+[2017-11-22 21:20:38,392] olympus.Olympus<Olympus:4f002>:OUTPUT: Received caught up message from replica: r2
+[2017-11-22 21:20:38,396] olympus.Olympus<Olympus:4f002>:OUTPUT: Invalid result statement and result pair found in potentially unserved client requests for replica:  r2
+[2017-11-22 21:20:38,397] olympus.Olympus<Olympus:4f002>:OUTPUT: Chosen the following replica as a replacement in the caught-up quorum: r4  Members =  dict_keys(['r1', 'r2', 'r4'])
+[2017-11-22 21:20:38,397] olympus.Olympus<Olympus:4f002>:OUTPUT: Wedged quorum is satisfied, initiating catch-up process in Olympus. Members =  dict_keys(['r1', 'r2', 'r4'])
+[2017-11-22 21:20:38,397] olympus.Olympus<Olympus:4f002>:OUTPUT: Finding Longest History from Wedged Messages.
+[2017-11-22 21:20:38,397] olympus.Olympus<Olympus:4f002>:OUTPUT: Longest History found in Replica:  r1
+[2017-11-22 21:20:38,399] olympus.Olympus<Olympus:4f002>:OUTPUT: Sending catch up message to replica:  r1
+[2017-11-22 21:20:38,401] replica.Replica<Replica:8a003>:OUTPUT: Received catch up message from Olympus in = r1
+[2017-11-22 21:20:38,401] olympus.Olympus<Olympus:4f002>:OUTPUT: Sending catch up message to replica:  r2
+[2017-11-22 21:20:38,403] replica.Replica<Replica:8a004>:OUTPUT: Received catch up message from Olympus in = r2
+[2017-11-22 21:20:38,404] olympus.Olympus<Olympus:4f002>:OUTPUT: Sending catch up message to replica:  r4
+[2017-11-22 21:20:38,405] replica.Replica<Replica:8a003>:OUTPUT: Sending caught up message to Olympus from replica:  r1
+[2017-11-22 21:20:38,406] olympus.Olympus<Olympus:4f002>:OUTPUT: Received caught up message from replica: r2
+[2017-11-22 21:20:38,407] replica.Replica<Replica:8a006>:OUTPUT: Received catch up message from Olympus in = r4
+[2017-11-22 21:20:38,409] replica.Replica<Replica:8a004>:OUTPUT: Sending caught up message to Olympus from replica:  r2
+[2017-11-22 21:20:38,412] olympus.Olympus<Olympus:4f002>:OUTPUT: Invalid result statement and result pair found in potentially unserved client requests for replica:  r2
+[2017-11-22 21:20:38,412] olympus.Olympus<Olympus:4f002>:OUTPUT: Chosen the following replica as a replacement in the caught-up quorum: r3  Members =  dict_keys(['r1', 'r4', 'r3'])
+[2017-11-22 21:20:38,413] olympus.Olympus<Olympus:4f002>:OUTPUT: Wedged quorum is satisfied, initiating catch-up process in Olympus. Members =  dict_keys(['r1', 'r4', 'r3'])
+[2017-11-22 21:20:38,414] replica.Replica<Replica:8a006>:OUTPUT: Sending caught up message to Olympus from replica:  r4
+[2017-11-22 21:20:38,414] olympus.Olympus<Olympus:4f002>:OUTPUT: Finding Longest History from Wedged Messages.
+[2017-11-22 21:20:38,415] olympus.Olympus<Olympus:4f002>:OUTPUT: Longest History found in Replica:  r1
+[2017-11-22 21:20:38,417] olympus.Olympus<Olympus:4f002>:OUTPUT: Sending catch up message to replica:  r1
+[2017-11-22 21:20:38,419] replica.Replica<Replica:8a003>:OUTPUT: Received catch up message from Olympus in = r1
+[2017-11-22 21:20:38,420] olympus.Olympus<Olympus:4f002>:OUTPUT: Sending catch up message to replica:  r4
+[2017-11-22 21:20:38,422] replica.Replica<Replica:8a006>:OUTPUT: Received catch up message from Olympus in = r4
+[2017-11-22 21:20:38,423] olympus.Olympus<Olympus:4f002>:OUTPUT: Sending catch up message to replica:  r3
+[2017-11-22 21:20:38,423] replica.Replica<Replica:8a003>:OUTPUT: Sending caught up message to Olympus from replica:  r1
+[2017-11-22 21:20:38,425] olympus.Olympus<Olympus:4f002>:OUTPUT: Received caught up message from replica: r0
+[2017-11-22 21:20:38,426] replica.Replica<Replica:8a005>:OUTPUT: Received catch up message from Olympus in = r3
+[2017-11-22 21:20:38,428] replica.Replica<Replica:8a006>:OUTPUT: Sending caught up message to Olympus from replica:  r4
+[2017-11-22 21:20:38,432] olympus.Olympus<Olympus:4f002>:OUTPUT: Received caught up message from replica: r4
+[2017-11-22 21:20:38,433] replica.Replica<Replica:8a005>:OUTPUT: Sending caught up message to Olympus from replica:  r3
+[2017-11-22 21:20:38,436] olympus.Olympus<Olympus:4f002>:OUTPUT: Invalid result statement and result pair found in potentially unserved client requests for replica:  r4
+[2017-11-22 21:20:38,436] olympus.Olympus<Olympus:4f002>:OUTPUT: Chosen the following replica as a replacement in the caught-up quorum: r0  Members =  dict_keys(['r1', 'r4', 'r0'])
+[2017-11-22 21:20:38,437] olympus.Olympus<Olympus:4f002>:OUTPUT: Wedged quorum is satisfied, initiating catch-up process in Olympus. Members =  dict_keys(['r1', 'r4', 'r0'])
+[2017-11-22 21:20:38,437] olympus.Olympus<Olympus:4f002>:OUTPUT: Finding Longest History from Wedged Messages.
+[2017-11-22 21:20:38,438] olympus.Olympus<Olympus:4f002>:OUTPUT: Longest History found in Replica:  r0
+[2017-11-22 21:20:38,439] olympus.Olympus<Olympus:4f002>:OUTPUT: Sending catch up message to replica:  r1
+[2017-11-22 21:20:38,442] replica.Replica<Replica:8a003>:OUTPUT: Received catch up message from Olympus in = r1
+[2017-11-22 21:20:38,443] olympus.Olympus<Olympus:4f002>:OUTPUT: Sending catch up message to replica:  r4
+[2017-11-22 21:20:38,446] replica.Replica<Replica:8a006>:OUTPUT: Received catch up message from Olympus in = r4
+[2017-11-22 21:20:38,446] replica.Replica<Replica:8a003>:OUTPUT: Sending caught up message to Olympus from replica:  r1
+[2017-11-22 21:20:38,447] olympus.Olympus<Olympus:4f002>:OUTPUT: Sending catch up message to replica:  r0
+[2017-11-22 21:20:38,449] olympus.Olympus<Olympus:4f002>:OUTPUT: Running state received from:  r0
+[2017-11-22 21:20:38,450] replica.Replica<Replica:8a002>:OUTPUT: Received catch up message from Olympus in = r0
+[2017-11-22 21:20:38,452] replica.Replica<Replica:8a006>:OUTPUT: Sending caught up message to Olympus from replica:  r4
+[2017-11-22 21:20:38,455] olympus.Olympus<Olympus:4f002>:OUTPUT: Valid running state received in:  r0
+[2017-11-22 21:20:38,456] olympus.Olympus<Olympus:4f002>:OUTPUT: Reconfiguration started
+[2017-11-22 21:20:38,456] olympus.Olympus<Olympus:4f002>:OUTPUT: Terminating replicas..
+[2017-11-22 21:20:38,457] replica.Replica<Replica:8a002>:OUTPUT: Sending caught up message to Olympus from replica:  r0
+[2017-11-22 21:20:38,461] olympus.Olympus<Olympus:4f002>:OUTPUT: Sent abort command to replica : r0
+[2017-11-22 21:20:38,463] replica.Replica<Replica:8a002>:OUTPUT: Received abort message from Olympus in replica:  r0
+[2017-11-22 21:20:38,465] olympus.Olympus<Olympus:4f002>:OUTPUT: Sent abort command to replica : r1
+[2017-11-22 21:20:38,466] replica.Replica<Replica:8a003>:OUTPUT: Received abort message from Olympus in replica:  r1
+[2017-11-22 21:20:38,467] replica.Replica<Replica:8a002>:OUTPUT: Sending aborted message to Olympus from:  r0
+[2017-11-22 21:20:38,467] olympus.Olympus<Olympus:4f002>:OUTPUT: Sent abort command to replica : r2
+[2017-11-22 21:20:38,469] replica.Replica<Replica:8a004>:OUTPUT: Received abort message from Olympus in replica:  r2
+[2017-11-22 21:20:38,470] replica.Replica<Replica:8a003>:OUTPUT: Sending aborted message to Olympus from:  r1
+[2017-11-22 21:20:38,470] replica.Replica<Replica:8a002>:OUTPUT: Shutting down replica:  r0
+[2017-11-22 21:20:38,473] replica.Replica<Replica:8a004>:OUTPUT: Sending aborted message to Olympus from:  r2
+[2017-11-22 21:20:38,474] replica.Replica<Replica:8a003>:OUTPUT: Shutting down replica:  r1
+[2017-11-22 21:20:38,474] replica.Replica<Replica:8a005>:OUTPUT: Received abort message from Olympus in replica:  r3
+[2017-11-22 21:20:38,478] replica.Replica<Replica:8a004>:OUTPUT: Shutting down replica:  r2
+[2017-11-22 21:20:38,479] replica.Replica<Replica:8a005>:OUTPUT: Sending aborted message to Olympus from:  r3
+[2017-11-22 21:20:38,475] olympus.Olympus<Olympus:4f002>:OUTPUT: Sent abort command to replica : r3
+[2017-11-22 21:20:38,483] replica.Replica<Replica:8a005>:OUTPUT: Shutting down replica:  r3
+[2017-11-22 21:20:38,484] olympus.Olympus<Olympus:4f002>:OUTPUT: Sent abort command to replica : r4
+[2017-11-22 21:20:38,486] replica.Replica<Replica:8a006>:OUTPUT: Received abort message from Olympus in replica:  r4
+[2017-11-22 21:20:38,490] olympus.Olympus<Olympus:4f002>:OUTPUT: Initializing cluster with configuration version:  1
+[2017-11-22 21:20:38,490] replica.Replica<Replica:8a006>:OUTPUT: Sending aborted message to Olympus from:  r4
+[2017-11-22 21:20:38,498] replica.Replica<Replica:8a006>:OUTPUT: Shutting down replica:  r4
+[2017-11-22 21:20:39,904] replica.Replica<Replica:8a007>:OUTPUT: Spawned and initialized replica:  r0
+[2017-11-22 21:20:39,919] replica.Replica<Replica:8a008>:OUTPUT: Spawned and initialized replica:  r1
+[2017-11-22 21:20:39,934] replica.Replica<Replica:8a009>:OUTPUT: Spawned and initialized replica:  r2
+[2017-11-22 21:20:39,950] replica.Replica<Replica:8a00a>:OUTPUT: Spawned and initialized replica:  r3
+[2017-11-22 21:20:39,968] replica.Replica<Replica:8a00b>:OUTPUT: Spawned and initialized replica:  r4
+[2017-11-22 21:20:39,972] olympus.Olympus<Olympus:4f002>:OUTPUT: Dropping extraneous caught_up message as valid running state has already been received.
+[2017-11-22 21:20:39,973] olympus.Olympus<Olympus:4f002>:OUTPUT: Dropping extraneous caught_up message as valid running state has already been received.
+[2017-11-22 21:20:39,973] olympus.Olympus<Olympus:4f002>:OUTPUT: Dropping extraneous caught_up message as valid running state has already been received.
+[2017-11-22 21:20:39,973] olympus.Olympus<Olympus:4f002>:OUTPUT: Dropping extraneous running_state message as valid running state has already been received.
+[2017-11-22 21:20:39,974] olympus.Olympus<Olympus:4f002>:OUTPUT: Dropping extraneous caught_up message as valid running state has already been received.
+[2017-11-22 21:20:39,974] olympus.Olympus<Olympus:4f002>:OUTPUT: Dropping extraneous caught_up message as valid running state has already been received.
+[2017-11-22 21:20:39,974] olympus.Olympus<Olympus:4f002>:OUTPUT: Dropping extraneous caught_up message as valid running state has already been received.
+[2017-11-22 21:20:39,974] olympus.Olympus<Olympus:4f002>:OUTPUT: Dropping extraneous running_state message as valid running state has already been received.
+[2017-11-22 21:20:39,975] olympus.Olympus<Olympus:4f002>:OUTPUT: Dropping extraneous caught_up message as valid running state has already been received.
+[2017-11-22 21:20:39,975] olympus.Olympus<Olympus:4f002>:OUTPUT: Dropping extraneous caught_up message as valid running state has already been received.
+[2017-11-22 21:20:39,975] olympus.Olympus<Olympus:4f002>:OUTPUT: Dropping extraneous caught_up message as valid running state has already been received.
+[2017-11-22 21:20:39,976] olympus.Olympus<Olympus:4f002>:OUTPUT: Dropping extraneous caught_up message as valid running state has already been received.
+[2017-11-22 21:20:39,976] olympus.Olympus<Olympus:4f002>:OUTPUT: Dropping extraneous caught_up message as valid running state has already been received.
+[2017-11-22 21:20:39,976] olympus.Olympus<Olympus:4f002>:OUTPUT: Dropping extraneous caught_up message as valid running state has already been received.
+[2017-11-22 21:20:39,976] olympus.Olympus<Olympus:4f002>:OUTPUT: Dropping extraneous caught_up message as valid running state has already been received.
+[2017-11-22 21:20:39,977] olympus.Olympus<Olympus:4f002>:OUTPUT: Dropping extraneous caught_up message as valid running state has already been received.
+[2017-11-22 21:20:39,977] olympus.Olympus<Olympus:4f002>:OUTPUT: Dropping extraneous caught_up message as valid running state has already been received.
+[2017-11-22 21:20:39,977] olympus.Olympus<Olympus:4f002>:OUTPUT: Dropping extraneous caught_up message as valid running state has already been received.
+[2017-11-22 21:20:39,978] olympus.Olympus<Olympus:4f002>:OUTPUT: Dropping extraneous caught_up message as valid running state has already been received.
+[2017-11-22 21:20:39,979] olympus.Olympus<Olympus:4f002>:OUTPUT: Dropping extraneous caught_up message as valid running state has already been received.
+[2017-11-22 21:20:39,980] olympus.Olympus<Olympus:4f002>:OUTPUT: Aborted message received from replica:  r0
+[2017-11-22 21:20:39,984] olympus.Olympus<Olympus:4f002>:ERROR: A signature mismatch occurred from source: r0
+[2017-11-22 21:20:39,984] olympus.Olympus<Olympus:4f002>:OUTPUT: Aborted message received from replica:  r1
+[2017-11-22 21:20:39,987] olympus.Olympus<Olympus:4f002>:ERROR: A signature mismatch occurred from source: r1
+[2017-11-22 21:20:39,988] olympus.Olympus<Olympus:4f002>:OUTPUT: Aborted message received from replica:  r2
+[2017-11-22 21:20:40,003] olympus.Olympus<Olympus:4f002>:ERROR: A signature mismatch occurred from source: r2
+[2017-11-22 21:20:40,006] olympus.Olympus<Olympus:4f002>:OUTPUT: Aborted message received from replica:  r3
+[2017-11-22 21:20:40,010] olympus.Olympus<Olympus:4f002>:ERROR: A signature mismatch occurred from source: r3
+[2017-11-22 21:20:40,011] olympus.Olympus<Olympus:4f002>:OUTPUT: Aborted message received from replica:  r4
+[2017-11-22 21:20:40,015] olympus.Olympus<Olympus:4f002>:ERROR: A signature mismatch occurred from source: r4
+[2017-11-22 21:20:40,016] olympus.Olympus<Olympus:4f002>:OUTPUT: Running state has already been received, not handling caught_up quorum satisfaction
+[2017-11-22 21:20:40,016] olympus.Olympus<Olympus:4f002>:OUTPUT: Running state has already been received, not handling caught_up quorum satisfaction
+[2017-11-22 21:20:40,017] olympus.Olympus<Olympus:4f002>:OUTPUT: Running state has already been received, not handling caught_up quorum satisfaction
+[2017-11-22 21:20:40,018] olympus.Olympus<Olympus:4f002>:OUTPUT: Running state has already been received, not handling caught_up quorum satisfaction
+[2017-11-22 21:20:40,018] olympus.Olympus<Olympus:4f002>:OUTPUT: Olympus sent verified, potentially undelivered result to client: c0
+[2017-11-22 21:20:40,022] olympus.Olympus<Olympus:4f002>:OUTPUT: Olympus sent verified, potentially undelivered result to client: c0
+[2017-11-22 21:20:40,024] client.Client<Client:8a001>:OUTPUT: Verified result message received from Olympus
+[2017-11-22 21:20:40,025] olympus.Olympus<Olympus:4f002>:OUTPUT: Olympus sent verified, potentially undelivered result to client: c0
+[2017-11-22 21:20:40,028] client.Client<Client:8a001>:OUTPUT: The operation result pair is= {'id': 2, 'client_id': 'c0', 'command_string': "get('movie')"} star2
+[2017-11-22 21:20:40,029] olympus.Olympus<Olympus:4f002>:OUTPUT: Running state has already been received, not handling caught_up quorum satisfaction
+[2017-11-22 21:20:40,029] client.Client<Client:8a001>:OUTPUT: The result received is valid:(result, operation)= star2 {'id': 2, 'client_id': 'c0', 'command_string': "get('movie')"}
+[2017-11-22 21:20:40,030] olympus.Olympus<Olympus:4f002>:OUTPUT: Olympus sent verified, potentially undelivered result to client: c0
+[2017-11-22 21:20:40,030] client.Client<Client:8a001>:OUTPUT: The following operation was created: {'id': 3, 'client_id': 'c0', 'command_string': "get('movie')"}
+[2017-11-22 21:20:40,031] client.Client<Client:8a001>:OUTPUT: return_value= star2
+[2017-11-22 21:20:40,034] olympus.Olympus<Olympus:4f002>:OUTPUT: Olympus sent verified, potentially undelivered result to client: c0
+[2017-11-22 21:20:40,039] olympus.Olympus<Olympus:4f002>:OUTPUT: Olympus sent verified, potentially undelivered result to client: c0
+[2017-11-22 21:20:40,043] olympus.Olympus<Olympus:4f002>:OUTPUT: Running state has already been received, not handling caught_up quorum satisfaction
+[2017-11-22 21:20:40,043] olympus.Olympus<Olympus:4f002>:OUTPUT: Olympus sent verified, potentially undelivered result to client: c0
+[2017-11-22 21:20:40,047] olympus.Olympus<Olympus:4f002>:OUTPUT: Running state has already been received, not handling caught_up quorum satisfaction
+[2017-11-22 21:20:40,048] olympus.Olympus<Olympus:4f002>:OUTPUT: Running state has already been received, not handling caught_up quorum satisfaction
+[2017-11-22 21:20:40,049] olympus.Olympus<Olympus:4f002>:OUTPUT: Running state has already been received, not handling caught_up quorum satisfaction
+[2017-11-22 21:20:41,035] da.sim.Router<OSProcessContainer-1:1>:ERROR: Could not send message due to: TransportException("connection refused by ('127.0.0.1', 17547)",)
+[2017-11-22 21:20:41,038] client.Client<Client:8a001>:OUTPUT: A request for an operation was made {'content': {'is_retry': False, 'operation': {'id': 3, 'client_id': 'c0', 'command_string': "get('movie')"}}, 'signed_content': b'{\x1e\x05\xc9\x14,~\xbc#\xb3/\xde\xf5\t\xbe\x1eR\xc8\x1ax\x9c`\xd0\x9b\x8a\xb7\xc4\xd5\x89\xa7\x83\xab\x01\x82\xeb\xd3"\xc4*\x07\xf2\xc2\xe5\xd9\xc0>\x85\x15\xa0/\xc0\xd4\x9do\xb3B\xdf\xec:{\x1c\x12t\x07\x80\x03}q\x00(X\x08\x00\x00\x00is_retryq\x01\x89X\t\x00\x00\x00operationq\x02}q\x03(X\x02\x00\x00\x00idq\x04K\x03X\t\x00\x00\x00client_idq\x05X\x02\x00\x00\x00c0q\x06X\x0e\x00\x00\x00command_stringq\x07X\x0c\x00\x00\x00get(\'movie\')q\x08uu.'}
+[2017-11-22 21:20:41,041] client.Client<Client:8a001>:OUTPUT: Verified result message received from Olympus
+[2017-11-22 21:20:41,049] client.Client<Client:8a001>:OUTPUT: Not a pending request (2, 'c0')
+[2017-11-22 21:20:41,051] client.Client<Client:8a001>:OUTPUT: Verified result message received from Olympus
+[2017-11-22 21:20:41,059] client.Client<Client:8a001>:OUTPUT: Not a pending request (2, 'c0')
+[2017-11-22 21:20:41,062] client.Client<Client:8a001>:OUTPUT: Verified result message received from Olympus
+[2017-11-22 21:20:41,068] client.Client<Client:8a001>:OUTPUT: Not a pending request (2, 'c0')
+[2017-11-22 21:20:41,069] client.Client<Client:8a001>:OUTPUT: Verified result message received from Olympus
+[2017-11-22 21:20:41,076] client.Client<Client:8a001>:OUTPUT: Not a pending request (2, 'c0')
+[2017-11-22 21:20:41,077] client.Client<Client:8a001>:OUTPUT: Verified result message received from Olympus
+[2017-11-22 21:20:41,084] client.Client<Client:8a001>:OUTPUT: Not a pending request (2, 'c0')
+[2017-11-22 21:20:41,085] client.Client<Client:8a001>:OUTPUT: Verified result message received from Olympus
+[2017-11-22 21:20:41,091] client.Client<Client:8a001>:OUTPUT: Not a pending request (2, 'c0')
+[2017-11-22 21:20:44,053] client.Client<Client:8a001>:OUTPUT: Wait for result timed out for operation= {'id': 3, 'client_id': 'c0', 'command_string': "get('movie')"}
+[2017-11-22 21:20:44,054] client.Client<Client:8a001>:OUTPUT: Config requested from Olympus by client= c0
+[2017-11-22 21:20:44,061] client.Client<Client:8a001>:OUTPUT: Sending config request from client:  c0
+[2017-11-22 21:20:44,066] olympus.Olympus<Olympus:4f002>:OUTPUT: Config request received from client= c0
+[2017-11-22 21:20:44,076] olympus.Olympus<Olympus:4f002>:OUTPUT: Config has been sent to client= c0
+[2017-11-22 21:20:44,084] client.Client<Client:8a001>:OUTPUT: The config was fetched from Olympus: {'id': 'c0', 'workload': ["put('movie','star')", "put('movie', 'star2')", "get('movie')", "get('movie')", "get('movie')", "get('movie')", "get('movie')", "get('movie')", "get('movie')", "get('movie')", "get('movie')", "get('movie')", "get('movie')", "get('movie')", "get('movie')", "get('movie')", "get('movie')", "get('movie')", "get('movie')", "get('movie')", "get('movie')", "get('movie')", "get('movie');"], 'private_key': b'f164d144069a2b12eb99c120bc07b7647480f7dacb1fda9756e44f14ff89932a', 'public_keys': {'o1': b'482272cc9d46a937aac449ae9db7c95251c73474c96f54b2b605c18f54213804', 'c0': b'b7296d24f56b1ef7003688375cd9e4a442996820325a66800720708c4ff022aa', 'r0': b'bb8e1a1aa25f94bd8c67751a5397a0218b14dd463ab1a17df29861f4997d2e04', 'r1': b'e43e8a659278893f1c4a20fd17210c590f07480e5d94073b4c5dca36421aea53', 'r2': b'4ec60f14e446671123fe4e96b7a0fee44b666b5bf98ef2083444b67671d3af91', 'r3': b'a324ab381ab9565f0109c1477bbd2203b802e20020ffeac2de0095e7d58d9068', 'r4': b'a5ce6cb0bd9ca0dd972fcf4c2ea99678e0bb2bd782d04bc179c5aecf494bde78'}, 'client_timeout': 3.0, 'olympus': {'id': 'o1', 'process_id': <Olympus:4f002>}, 'replicas': {'r0': <Replica:8a007>, 'r1': <Replica:8a008>, 'r2': <Replica:8a009>, 'r3': <Replica:8a00a>, 'r4': <Replica:8a00b>}, 'head_id': 'r0', 't': 2}
+[2017-11-22 21:20:44,089] client.Client<Client:8a001>:OUTPUT: Retransmitting request to all replicas for operation= {'id': 3, 'client_id': 'c0', 'command_string': "get('movie')"}
+[2017-11-22 21:20:44,106] replica.Replica<Replica:8a007>:OUTPUT: Received request message (source, client_id, operation_id, self_id)  c0 c0 3 r0
+[2017-11-22 21:20:44,112] replica.Replica<Replica:8a007>:OUTPUT: Head is processing request (operation_id, client_id) (3, 'c0')
+[2017-11-22 21:20:44,115] replica.Replica<Replica:8a007>:OUTPUT: Adding to history (slot, operation):  1 ,  {'id': 3, 'client_id': 'c0', 'command_string': "get('movie')"}  in Replica:  r0
+[2017-11-22 21:20:44,119] replica.Replica<Replica:8a008>:OUTPUT: Received request message (source, client_id, operation_id, self_id)  c0 c0 3 r1
+[2017-11-22 21:20:44,130] replica.Replica<Replica:8a009>:OUTPUT: Received request message (source, client_id, operation_id, self_id)  c0 c0 3 r2
+[2017-11-22 21:20:44,158] replica.Replica<Replica:8a007>:OUTPUT: Received request message (source, client_id, operation_id, self_id)  r1 c0 3 r0
+[2017-11-22 21:20:44,147] replica.Replica<Replica:8a00a>:OUTPUT: Received request message (source, client_id, operation_id, self_id)  c0 c0 3 r3
+[2017-11-22 21:20:44,158] replica.Replica<Replica:8a00b>:OUTPUT: Received request message (source, client_id, operation_id, self_id)  c0 c0 3 r4
+[2017-11-22 21:20:44,160] replica.Replica<Replica:8a008>:OUTPUT: Received shuttle (source, client_id, operation_id, self_id)  r0 c0 3 r1
+[2017-11-22 21:20:44,162] replica.Replica<Replica:8a007>:OUTPUT: Awaiting result shuttle from downstream _replicas
+[2017-11-22 21:20:44,174] replica.Replica<Replica:8a008>:OUTPUT: Adding to history (slot, operation):  1 ,  {'id': 3, 'client_id': 'c0', 'command_string': "get('movie')"}  in Replica:  r1
+[2017-11-22 21:20:44,178] replica.Replica<Replica:8a009>:OUTPUT: Received request message (source, client_id, operation_id, self_id)  r3 c0 3 r2
+[2017-11-22 21:20:44,183] replica.Replica<Replica:8a009>:OUTPUT: Timer already started for request:  (3, 'c0')  in Replica:  r2 . Discarding..
+[2017-11-22 21:20:44,188] replica.Replica<Replica:8a00a>:OUTPUT: Received request message (source, client_id, operation_id, self_id)  r4 c0 3 r3
+[2017-11-22 21:20:44,192] replica.Replica<Replica:8a00a>:OUTPUT: Timer already started for request:  (3, 'c0')  in Replica:  r3 . Discarding..
+[2017-11-22 21:20:44,196] replica.Replica<Replica:8a008>:OUTPUT: Received request message (source, client_id, operation_id, self_id)  r2 c0 3 r1
+[2017-11-22 21:20:44,196] replica.Replica<Replica:8a009>:OUTPUT: Received shuttle (source, client_id, operation_id, self_id)  r1 c0 3 r2
+[2017-11-22 21:20:44,200] replica.Replica<Replica:8a008>:OUTPUT: Timer already started for request:  (3, 'c0')  in Replica:  r1 . Discarding..
+[2017-11-22 21:20:44,211] replica.Replica<Replica:8a009>:OUTPUT: Adding to history (slot, operation):  1 ,  {'id': 3, 'client_id': 'c0', 'command_string': "get('movie')"}  in Replica:  r2
+[2017-11-22 21:20:44,231] replica.Replica<Replica:8a00a>:OUTPUT: Received shuttle (source, client_id, operation_id, self_id)  r2 c0 3 r3
+[2017-11-22 21:20:44,245] replica.Replica<Replica:8a00a>:OUTPUT: Adding to history (slot, operation):  1 ,  {'id': 3, 'client_id': 'c0', 'command_string': "get('movie')"}  in Replica:  r3
+[2017-11-22 21:20:44,266] replica.Replica<Replica:8a00b>:OUTPUT: Received shuttle (source, client_id, operation_id, self_id)  r3 c0 3 r4
+[2017-11-22 21:20:44,285] replica.Replica<Replica:8a00b>:OUTPUT: Adding to history (slot, operation):  1 ,  {'id': 3, 'client_id': 'c0', 'command_string': "get('movie')"}  in Replica:  r4
+[2017-11-22 21:20:44,306] replica.Replica<Replica:8a00a>:OUTPUT: Received result shuttle (source, client_id, operation_id, self_id)  r4 c0 3 r3
+[2017-11-22 21:20:44,321] client.Client<Client:8a001>:OUTPUT: A result was received from replica= r4
+[2017-11-22 21:20:44,332] replica.Replica<Replica:8a009>:OUTPUT: Received result shuttle (source, client_id, operation_id, self_id)  r3 c0 3 r2
+[2017-11-22 21:20:44,339] client.Client<Client:8a001>:OUTPUT: The operation result pair is= {'id': 3, 'client_id': 'c0', 'command_string': "get('movie')"} star2
+[2017-11-22 21:20:44,340] client.Client<Client:8a001>:OUTPUT: The result received is valid:(result, operation)= star2 {'id': 3, 'client_id': 'c0', 'command_string': "get('movie')"}
+[2017-11-22 21:20:44,340] client.Client<Client:8a001>:OUTPUT: The following operation was created: {'id': 4, 'client_id': 'c0', 'command_string': "get('movie')"}
+[2017-11-22 21:20:44,341] client.Client<Client:8a001>:OUTPUT: return_value= star2
+[2017-11-22 21:20:44,343] client.Client<Client:8a001>:OUTPUT: A request for an operation was made {'content': {'is_retry': False, 'operation': {'id': 4, 'client_id': 'c0', 'command_string': "get('movie')"}}, 'signed_content': b"\x95\x86 \x8f)\x80\x83\xa8r\xbd4\xc3\x19\xe1l\xbd\xc0\xd1K\x1c\x8c\xe4\x05i\xa1\xdbv\xd3\xf2$\xbf\xb9a\x94r\xa8[\xe6O[\xb4\x93\xdfcX\xf8M!r-i\x97\xe6\x94\xa5\xff L\xb6\xf8\xb3\xb6\xd7\x02\x80\x03}q\x00(X\x08\x00\x00\x00is_retryq\x01\x89X\t\x00\x00\x00operationq\x02}q\x03(X\x02\x00\x00\x00idq\x04K\x04X\t\x00\x00\x00client_idq\x05X\x02\x00\x00\x00c0q\x06X\x0e\x00\x00\x00command_stringq\x07X\x0c\x00\x00\x00get('movie')q\x08uu."}
+[2017-11-22 21:20:44,345] replica.Replica<Replica:8a007>:OUTPUT: Received request message (source, client_id, operation_id, self_id)  c0 c0 4 r0
+[2017-11-22 21:20:44,349] replica.Replica<Replica:8a007>:OUTPUT: Head is processing request (operation_id, client_id) (4, 'c0')
+[2017-11-22 21:20:44,352] replica.Replica<Replica:8a007>:OUTPUT: Adding to history (slot, operation):  2 ,  {'id': 4, 'client_id': 'c0', 'command_string': "get('movie')"}  in Replica:  r0
+[2017-11-22 21:20:44,361] replica.Replica<Replica:8a008>:OUTPUT: Received result shuttle (source, client_id, operation_id, self_id)  r2 c0 3 r1
+[2017-11-22 21:20:44,384] replica.Replica<Replica:8a008>:OUTPUT: Received shuttle (source, client_id, operation_id, self_id)  r0 c0 4 r1
+[2017-11-22 21:20:44,385] replica.Replica<Replica:8a007>:OUTPUT: Received result shuttle (source, client_id, operation_id, self_id)  r1 c0 3 r0
+[2017-11-22 21:20:44,397] replica.Replica<Replica:8a008>:OUTPUT: Adding to history (slot, operation):  2 ,  {'id': 4, 'client_id': 'c0', 'command_string': "get('movie')"}  in Replica:  r1
+[2017-11-22 21:20:44,410] replica.Replica<Replica:8a007>:OUTPUT: Result received at head, now forwarding to client= c0
+[2017-11-22 21:20:44,413] replica.Replica<Replica:8a009>:OUTPUT: Received shuttle (source, client_id, operation_id, self_id)  r1 c0 4 r2
+[2017-11-22 21:20:44,430] client.Client<Client:8a001>:OUTPUT: A result was received from replica= r0
+[2017-11-22 21:20:44,432] replica.Replica<Replica:8a009>:OUTPUT: Adding to history (slot, operation):  2 ,  {'id': 4, 'client_id': 'c0', 'command_string': "get('movie')"}  in Replica:  r2
+[2017-11-22 21:20:44,434] client.Client<Client:8a001>:OUTPUT: Not a pending request (3, 'c0')
+[2017-11-22 21:20:44,442] replica.Replica<Replica:8a00a>:OUTPUT: Received shuttle (source, client_id, operation_id, self_id)  r2 c0 4 r3
+[2017-11-22 21:20:44,457] replica.Replica<Replica:8a00a>:OUTPUT: Adding to history (slot, operation):  2 ,  {'id': 4, 'client_id': 'c0', 'command_string': "get('movie')"}  in Replica:  r3
+[2017-11-22 21:20:44,466] replica.Replica<Replica:8a00b>:OUTPUT: Received shuttle (source, client_id, operation_id, self_id)  r3 c0 4 r4
+[2017-11-22 21:20:44,482] replica.Replica<Replica:8a00b>:OUTPUT: Adding to history (slot, operation):  2 ,  {'id': 4, 'client_id': 'c0', 'command_string': "get('movie')"}  in Replica:  r4
+[2017-11-22 21:20:44,505] replica.Replica<Replica:8a00a>:OUTPUT: Received result shuttle (source, client_id, operation_id, self_id)  r4 c0 4 r3
+[2017-11-22 21:20:44,509] client.Client<Client:8a001>:OUTPUT: A result was received from replica= r4
+[2017-11-22 21:20:44,532] client.Client<Client:8a001>:OUTPUT: The operation result pair is= {'id': 4, 'client_id': 'c0', 'command_string': "get('movie')"} star2
+[2017-11-22 21:20:44,532] client.Client<Client:8a001>:OUTPUT: The result received is valid:(result, operation)= star2 {'id': 4, 'client_id': 'c0', 'command_string': "get('movie')"}
+[2017-11-22 21:20:44,534] client.Client<Client:8a001>:OUTPUT: The following operation was created: {'id': 5, 'client_id': 'c0', 'command_string': "get('movie')"}
+[2017-11-22 21:20:44,535] client.Client<Client:8a001>:OUTPUT: return_value= star2
+[2017-11-22 21:20:44,536] replica.Replica<Replica:8a009>:OUTPUT: Received result shuttle (source, client_id, operation_id, self_id)  r3 c0 4 r2
+[2017-11-22 21:20:44,538] client.Client<Client:8a001>:OUTPUT: A request for an operation was made {'content': {'is_retry': False, 'operation': {'id': 5, 'client_id': 'c0', 'command_string': "get('movie')"}}, 'signed_content': b"`qV'\x13D\x88\x90+g\xdc\xb3?\x19n\xeeT\xa7$%%d\xa4pK!\x90\\\xc4\x1e\x9e\x91\xbc\xc0\xf2\x8d\xd5\xbcZ6\x17\xbd\xe0\x86\xe4\xa6j\x8f1\xc8\x04N\x8cO9or\x03>\xdf\x9c\xa1\x9b\x0b\x80\x03}q\x00(X\x08\x00\x00\x00is_retryq\x01\x89X\t\x00\x00\x00operationq\x02}q\x03(X\x02\x00\x00\x00idq\x04K\x05X\t\x00\x00\x00client_idq\x05X\x02\x00\x00\x00c0q\x06X\x0e\x00\x00\x00command_stringq\x07X\x0c\x00\x00\x00get('movie')q\x08uu."}
+[2017-11-22 21:20:44,539] replica.Replica<Replica:8a007>:OUTPUT: Received request message (source, client_id, operation_id, self_id)  c0 c0 5 r0
+[2017-11-22 21:20:44,543] replica.Replica<Replica:8a007>:OUTPUT: Head is processing request (operation_id, client_id) (5, 'c0')
+[2017-11-22 21:20:44,545] replica.Replica<Replica:8a007>:OUTPUT: Adding to history (slot, operation):  3 ,  {'id': 5, 'client_id': 'c0', 'command_string': "get('movie')"}  in Replica:  r0
+[2017-11-22 21:20:44,556] replica.Replica<Replica:8a008>:OUTPUT: Received shuttle (source, client_id, operation_id, self_id)  r0 c0 5 r1
+[2017-11-22 21:20:44,567] replica.Replica<Replica:8a008>:OUTPUT: Adding to history (slot, operation):  3 ,  {'id': 5, 'client_id': 'c0', 'command_string': "get('movie')"}  in Replica:  r1
+[2017-11-22 21:20:44,580] replica.Replica<Replica:8a009>:OUTPUT: Received shuttle (source, client_id, operation_id, self_id)  r1 c0 5 r2
+[2017-11-22 21:20:44,580] replica.Replica<Replica:8a008>:OUTPUT: Received result shuttle (source, client_id, operation_id, self_id)  r2 c0 4 r1
+[2017-11-22 21:20:44,595] replica.Replica<Replica:8a009>:OUTPUT: Adding to history (slot, operation):  3 ,  {'id': 5, 'client_id': 'c0', 'command_string': "get('movie')"}  in Replica:  r2
+[2017-11-22 21:20:44,606] replica.Replica<Replica:8a00a>:OUTPUT: Received shuttle (source, client_id, operation_id, self_id)  r2 c0 5 r3
+[2017-11-22 21:20:44,608] replica.Replica<Replica:8a007>:OUTPUT: Received result shuttle (source, client_id, operation_id, self_id)  r1 c0 4 r0
+[2017-11-22 21:20:44,626] replica.Replica<Replica:8a00a>:OUTPUT: Adding to history (slot, operation):  3 ,  {'id': 5, 'client_id': 'c0', 'command_string': "get('movie')"}  in Replica:  r3
+[2017-11-22 21:20:44,636] replica.Replica<Replica:8a00b>:OUTPUT: Received shuttle (source, client_id, operation_id, self_id)  r3 c0 5 r4
+[2017-11-22 21:20:44,656] replica.Replica<Replica:8a00b>:OUTPUT: Adding to history (slot, operation):  3 ,  {'id': 5, 'client_id': 'c0', 'command_string': "get('movie')"}  in Replica:  r4
+[2017-11-22 21:20:44,676] replica.Replica<Replica:8a00a>:OUTPUT: Received result shuttle (source, client_id, operation_id, self_id)  r4 c0 5 r3
+[2017-11-22 21:20:44,680] client.Client<Client:8a001>:OUTPUT: A result was received from replica= r4
+[2017-11-22 21:20:44,704] client.Client<Client:8a001>:OUTPUT: The operation result pair is= {'id': 5, 'client_id': 'c0', 'command_string': "get('movie')"} star2
+[2017-11-22 21:20:44,704] client.Client<Client:8a001>:OUTPUT: The result received is valid:(result, operation)= star2 {'id': 5, 'client_id': 'c0', 'command_string': "get('movie')"}
+[2017-11-22 21:20:44,705] client.Client<Client:8a001>:OUTPUT: The following operation was created: {'id': 6, 'client_id': 'c0', 'command_string': "get('movie')"}
+[2017-11-22 21:20:44,705] client.Client<Client:8a001>:OUTPUT: return_value= star2
+[2017-11-22 21:20:44,708] replica.Replica<Replica:8a009>:OUTPUT: Received result shuttle (source, client_id, operation_id, self_id)  r3 c0 5 r2
+[2017-11-22 21:20:44,708] client.Client<Client:8a001>:OUTPUT: A request for an operation was made {'content': {'is_retry': False, 'operation': {'id': 6, 'client_id': 'c0', 'command_string': "get('movie')"}}, 'signed_content': b'pj\xd6\xd5\xa8\xd4\x99\x8cW Y\x94\x85@\'N\xec\x97\xb3\x06\xe9@\x9f\xf7\xb7\x81 8\xbc\x0f\x0ey\xb3\xee\xb1\x8fi\x06\xea\x11%<\x04q\xd8\xee\xf8"\x133\xf0/6\xdda\xe0\x07\x13\xe3X\xbd~\x15\x05\x80\x03}q\x00(X\x08\x00\x00\x00is_retryq\x01\x89X\t\x00\x00\x00operationq\x02}q\x03(X\x02\x00\x00\x00idq\x04K\x06X\t\x00\x00\x00client_idq\x05X\x02\x00\x00\x00c0q\x06X\x0e\x00\x00\x00command_stringq\x07X\x0c\x00\x00\x00get(\'movie\')q\x08uu.'}
+[2017-11-22 21:20:44,710] replica.Replica<Replica:8a007>:OUTPUT: Received request message (source, client_id, operation_id, self_id)  c0 c0 6 r0
+[2017-11-22 21:20:44,714] replica.Replica<Replica:8a007>:OUTPUT: Head is processing request (operation_id, client_id) (6, 'c0')
+[2017-11-22 21:20:44,716] replica.Replica<Replica:8a007>:OUTPUT: Adding to history (slot, operation):  4 ,  {'id': 6, 'client_id': 'c0', 'command_string': "get('movie')"}  in Replica:  r0
+[2017-11-22 21:20:44,727] replica.Replica<Replica:8a008>:OUTPUT: Received shuttle (source, client_id, operation_id, self_id)  r0 c0 6 r1
+[2017-11-22 21:20:44,741] replica.Replica<Replica:8a008>:OUTPUT: Adding to history (slot, operation):  4 ,  {'id': 6, 'client_id': 'c0', 'command_string': "get('movie')"}  in Replica:  r1
+[2017-11-22 21:20:44,749] replica.Replica<Replica:8a009>:OUTPUT: Received shuttle (source, client_id, operation_id, self_id)  r1 c0 6 r2
+[2017-11-22 21:20:44,749] replica.Replica<Replica:8a008>:OUTPUT: Received result shuttle (source, client_id, operation_id, self_id)  r2 c0 5 r1
+[2017-11-22 21:20:44,765] replica.Replica<Replica:8a009>:OUTPUT: Adding to history (slot, operation):  4 ,  {'id': 6, 'client_id': 'c0', 'command_string': "get('movie')"}  in Replica:  r2
+[2017-11-22 21:20:44,775] replica.Replica<Replica:8a00a>:OUTPUT: Received shuttle (source, client_id, operation_id, self_id)  r2 c0 6 r3
+[2017-11-22 21:20:44,782] replica.Replica<Replica:8a007>:OUTPUT: Received result shuttle (source, client_id, operation_id, self_id)  r1 c0 5 r0
+[2017-11-22 21:20:44,795] replica.Replica<Replica:8a00a>:OUTPUT: Adding to history (slot, operation):  4 ,  {'id': 6, 'client_id': 'c0', 'command_string': "get('movie')"}  in Replica:  r3
+[2017-11-22 21:20:44,807] replica.Replica<Replica:8a00b>:OUTPUT: Received shuttle (source, client_id, operation_id, self_id)  r3 c0 6 r4
+[2017-11-22 21:20:44,826] replica.Replica<Replica:8a00b>:OUTPUT: Adding to history (slot, operation):  4 ,  {'id': 6, 'client_id': 'c0', 'command_string': "get('movie')"}  in Replica:  r4
+[2017-11-22 21:20:44,848] replica.Replica<Replica:8a00a>:OUTPUT: Received result shuttle (source, client_id, operation_id, self_id)  r4 c0 6 r3
+[2017-11-22 21:20:44,855] client.Client<Client:8a001>:OUTPUT: A result was received from replica= r4
+[2017-11-22 21:20:44,877] client.Client<Client:8a001>:OUTPUT: The operation result pair is= {'id': 6, 'client_id': 'c0', 'command_string': "get('movie')"} star2
+[2017-11-22 21:20:44,879] client.Client<Client:8a001>:OUTPUT: The result received is valid:(result, operation)= star2 {'id': 6, 'client_id': 'c0', 'command_string': "get('movie')"}
+[2017-11-22 21:20:44,880] client.Client<Client:8a001>:OUTPUT: The following operation was created: {'id': 7, 'client_id': 'c0', 'command_string': "get('movie')"}
+[2017-11-22 21:20:44,880] client.Client<Client:8a001>:OUTPUT: return_value= star2
+[2017-11-22 21:20:44,881] replica.Replica<Replica:8a009>:OUTPUT: Received result shuttle (source, client_id, operation_id, self_id)  r3 c0 6 r2
+[2017-11-22 21:20:44,883] client.Client<Client:8a001>:OUTPUT: A request for an operation was made {'content': {'is_retry': False, 'operation': {'id': 7, 'client_id': 'c0', 'command_string': "get('movie')"}}, 'signed_content': b"\xc7LD\xfd\xec\xd6\x99\xec\xe85w\xd6\xc0AE\xb1b\xca\xdf\xd7\xd1\xf0n\xa4\xe9l,\xe1\xa2K\xab\x8e\xb0\xc8`\xfcz\xbch{]\xca\xac\xbe\x8eH\xef}T\xdf\x1a\xb2\x8f\xb8\x00n\xab\xfe)\xb5\xe8r\xa5\r\x80\x03}q\x00(X\x08\x00\x00\x00is_retryq\x01\x89X\t\x00\x00\x00operationq\x02}q\x03(X\x02\x00\x00\x00idq\x04K\x07X\t\x00\x00\x00client_idq\x05X\x02\x00\x00\x00c0q\x06X\x0e\x00\x00\x00command_stringq\x07X\x0c\x00\x00\x00get('movie')q\x08uu."}
+[2017-11-22 21:20:44,884] replica.Replica<Replica:8a007>:OUTPUT: Received request message (source, client_id, operation_id, self_id)  c0 c0 7 r0
+[2017-11-22 21:20:44,888] replica.Replica<Replica:8a007>:OUTPUT: Head is processing request (operation_id, client_id) (7, 'c0')
+[2017-11-22 21:20:44,890] replica.Replica<Replica:8a007>:OUTPUT: Adding to history (slot, operation):  5 ,  {'id': 7, 'client_id': 'c0', 'command_string': "get('movie')"}  in Replica:  r0
+[2017-11-22 21:20:44,899] replica.Replica<Replica:8a008>:OUTPUT: Received shuttle (source, client_id, operation_id, self_id)  r0 c0 7 r1
+[2017-11-22 21:20:44,912] replica.Replica<Replica:8a008>:OUTPUT: Adding to history (slot, operation):  5 ,  {'id': 7, 'client_id': 'c0', 'command_string': "get('movie')"}  in Replica:  r1
+[2017-11-22 21:20:44,922] replica.Replica<Replica:8a009>:OUTPUT: Received shuttle (source, client_id, operation_id, self_id)  r1 c0 7 r2
+[2017-11-22 21:20:44,922] replica.Replica<Replica:8a008>:OUTPUT: Received result shuttle (source, client_id, operation_id, self_id)  r2 c0 6 r1
+[2017-11-22 21:20:44,938] replica.Replica<Replica:8a009>:OUTPUT: Adding to history (slot, operation):  5 ,  {'id': 7, 'client_id': 'c0', 'command_string': "get('movie')"}  in Replica:  r2
+[2017-11-22 21:20:44,947] replica.Replica<Replica:8a00a>:OUTPUT: Received shuttle (source, client_id, operation_id, self_id)  r2 c0 7 r3
+[2017-11-22 21:20:44,948] replica.Replica<Replica:8a007>:OUTPUT: Received result shuttle (source, client_id, operation_id, self_id)  r1 c0 6 r0
+[2017-11-22 21:20:44,967] replica.Replica<Replica:8a00a>:OUTPUT: Adding to history (slot, operation):  5 ,  {'id': 7, 'client_id': 'c0', 'command_string': "get('movie')"}  in Replica:  r3
+[2017-11-22 21:20:44,978] replica.Replica<Replica:8a00b>:OUTPUT: Received shuttle (source, client_id, operation_id, self_id)  r3 c0 7 r4
+[2017-11-22 21:20:45,000] replica.Replica<Replica:8a00b>:OUTPUT: Adding to history (slot, operation):  5 ,  {'id': 7, 'client_id': 'c0', 'command_string': "get('movie')"}  in Replica:  r4
+[2017-11-22 21:20:45,024] replica.Replica<Replica:8a00a>:OUTPUT: Received result shuttle (source, client_id, operation_id, self_id)  r4 c0 7 r3
+[2017-11-22 21:20:45,031] client.Client<Client:8a001>:OUTPUT: A result was received from replica= r4
+[2017-11-22 21:20:45,054] client.Client<Client:8a001>:OUTPUT: The operation result pair is= {'id': 7, 'client_id': 'c0', 'command_string': "get('movie')"} star2
+[2017-11-22 21:20:45,055] client.Client<Client:8a001>:OUTPUT: The result received is valid:(result, operation)= star2 {'id': 7, 'client_id': 'c0', 'command_string': "get('movie')"}
+[2017-11-22 21:20:45,055] client.Client<Client:8a001>:OUTPUT: The following operation was created: {'id': 8, 'client_id': 'c0', 'command_string': "get('movie')"}
+[2017-11-22 21:20:45,056] client.Client<Client:8a001>:OUTPUT: return_value= star2
+[2017-11-22 21:20:45,057] replica.Replica<Replica:8a009>:OUTPUT: Received result shuttle (source, client_id, operation_id, self_id)  r3 c0 7 r2
+[2017-11-22 21:20:45,058] client.Client<Client:8a001>:OUTPUT: A request for an operation was made {'content': {'is_retry': False, 'operation': {'id': 8, 'client_id': 'c0', 'command_string': "get('movie')"}}, 'signed_content': b"*\x9aJ\xa0\x9c\xabO\nY$\xd68}\x81\xc6\xa7GM\xf0;\x15\xc1\xbeO\x16Kxt\xd4g\x1b\xf7j\x00\xa3\xa7\x88qtD\xb3q\xa8\x90\x07\x01\xa59\xde\xa5\x84\x89c\xf7B\xa0\xaa\xe8Ux\x93\x95&\x00\x80\x03}q\x00(X\x08\x00\x00\x00is_retryq\x01\x89X\t\x00\x00\x00operationq\x02}q\x03(X\x02\x00\x00\x00idq\x04K\x08X\t\x00\x00\x00client_idq\x05X\x02\x00\x00\x00c0q\x06X\x0e\x00\x00\x00command_stringq\x07X\x0c\x00\x00\x00get('movie')q\x08uu."}
+[2017-11-22 21:20:45,059] replica.Replica<Replica:8a007>:OUTPUT: Received request message (source, client_id, operation_id, self_id)  c0 c0 8 r0
+[2017-11-22 21:20:45,063] replica.Replica<Replica:8a007>:OUTPUT: Head is processing request (operation_id, client_id) (8, 'c0')
+[2017-11-22 21:20:45,066] replica.Replica<Replica:8a007>:OUTPUT: Adding to history (slot, operation):  6 ,  {'id': 8, 'client_id': 'c0', 'command_string': "get('movie')"}  in Replica:  r0
+[2017-11-22 21:20:45,076] replica.Replica<Replica:8a008>:OUTPUT: Received shuttle (source, client_id, operation_id, self_id)  r0 c0 8 r1
+[2017-11-22 21:20:45,087] replica.Replica<Replica:8a008>:OUTPUT: Adding to history (slot, operation):  6 ,  {'id': 8, 'client_id': 'c0', 'command_string': "get('movie')"}  in Replica:  r1
+[2017-11-22 21:20:45,094] replica.Replica<Replica:8a009>:OUTPUT: Received shuttle (source, client_id, operation_id, self_id)  r1 c0 8 r2
+[2017-11-22 21:20:45,094] replica.Replica<Replica:8a008>:OUTPUT: Received result shuttle (source, client_id, operation_id, self_id)  r2 c0 7 r1
+[2017-11-22 21:20:45,112] replica.Replica<Replica:8a009>:OUTPUT: Adding to history (slot, operation):  6 ,  {'id': 8, 'client_id': 'c0', 'command_string': "get('movie')"}  in Replica:  r2
+[2017-11-22 21:20:45,121] replica.Replica<Replica:8a00a>:OUTPUT: Received shuttle (source, client_id, operation_id, self_id)  r2 c0 8 r3
+[2017-11-22 21:20:45,123] replica.Replica<Replica:8a007>:OUTPUT: Received result shuttle (source, client_id, operation_id, self_id)  r1 c0 7 r0
+[2017-11-22 21:20:45,140] replica.Replica<Replica:8a00a>:OUTPUT: Adding to history (slot, operation):  6 ,  {'id': 8, 'client_id': 'c0', 'command_string': "get('movie')"}  in Replica:  r3
+[2017-11-22 21:20:45,153] replica.Replica<Replica:8a00b>:OUTPUT: Received shuttle (source, client_id, operation_id, self_id)  r3 c0 8 r4
+[2017-11-22 21:20:45,175] replica.Replica<Replica:8a00b>:OUTPUT: Adding to history (slot, operation):  6 ,  {'id': 8, 'client_id': 'c0', 'command_string': "get('movie')"}  in Replica:  r4
+[2017-11-22 21:20:45,199] replica.Replica<Replica:8a00a>:OUTPUT: Received result shuttle (source, client_id, operation_id, self_id)  r4 c0 8 r3
+[2017-11-22 21:20:45,204] client.Client<Client:8a001>:OUTPUT: A result was received from replica= r4
+[2017-11-22 21:20:45,226] client.Client<Client:8a001>:OUTPUT: The operation result pair is= {'id': 8, 'client_id': 'c0', 'command_string': "get('movie')"} star2
+[2017-11-22 21:20:45,226] client.Client<Client:8a001>:OUTPUT: The result received is valid:(result, operation)= star2 {'id': 8, 'client_id': 'c0', 'command_string': "get('movie')"}
+[2017-11-22 21:20:45,227] client.Client<Client:8a001>:OUTPUT: The following operation was created: {'id': 9, 'client_id': 'c0', 'command_string': "get('movie')"}
+[2017-11-22 21:20:45,227] client.Client<Client:8a001>:OUTPUT: return_value= star2
+[2017-11-22 21:20:45,229] client.Client<Client:8a001>:OUTPUT: A request for an operation was made {'content': {'is_retry': False, 'operation': {'id': 9, 'client_id': 'c0', 'command_string': "get('movie')"}}, 'signed_content': b"\x8f\x07\r\x19\xb5^\xad%!\x94\xe0O-\xe0 \xc67\x8e/M\xfe\xff\xf0\xc7ez8\x7f\x07\xc3\xbc>\xfa\x13R=*\xa2HS\x17\xdb\xd1\xc1A\x82%W\x02 \xee\x93\xa8\x06\xaec\xd8(\xd8\xf4\xad\xef\xfd\n\x80\x03}q\x00(X\x08\x00\x00\x00is_retryq\x01\x89X\t\x00\x00\x00operationq\x02}q\x03(X\x02\x00\x00\x00idq\x04K\tX\t\x00\x00\x00client_idq\x05X\x02\x00\x00\x00c0q\x06X\x0e\x00\x00\x00command_stringq\x07X\x0c\x00\x00\x00get('movie')q\x08uu."}
+[2017-11-22 21:20:45,231] replica.Replica<Replica:8a007>:OUTPUT: Received request message (source, client_id, operation_id, self_id)  c0 c0 9 r0
+[2017-11-22 21:20:45,232] replica.Replica<Replica:8a009>:OUTPUT: Received result shuttle (source, client_id, operation_id, self_id)  r3 c0 8 r2
+[2017-11-22 21:20:45,234] replica.Replica<Replica:8a007>:OUTPUT: Head is processing request (operation_id, client_id) (9, 'c0')
+[2017-11-22 21:20:45,236] replica.Replica<Replica:8a007>:OUTPUT: Adding to history (slot, operation):  7 ,  {'id': 9, 'client_id': 'c0', 'command_string': "get('movie')"}  in Replica:  r0
+[2017-11-22 21:20:45,245] replica.Replica<Replica:8a008>:OUTPUT: Received shuttle (source, client_id, operation_id, self_id)  r0 c0 9 r1
+[2017-11-22 21:20:45,259] replica.Replica<Replica:8a008>:OUTPUT: Adding to history (slot, operation):  7 ,  {'id': 9, 'client_id': 'c0', 'command_string': "get('movie')"}  in Replica:  r1
+[2017-11-22 21:20:45,270] replica.Replica<Replica:8a008>:OUTPUT: Received result shuttle (source, client_id, operation_id, self_id)  r2 c0 8 r1
+[2017-11-22 21:20:45,270] replica.Replica<Replica:8a009>:OUTPUT: Received shuttle (source, client_id, operation_id, self_id)  r1 c0 9 r2
+[2017-11-22 21:20:45,286] replica.Replica<Replica:8a009>:OUTPUT: Adding to history (slot, operation):  7 ,  {'id': 9, 'client_id': 'c0', 'command_string': "get('movie')"}  in Replica:  r2
+[2017-11-22 21:20:45,298] replica.Replica<Replica:8a00a>:OUTPUT: Received shuttle (source, client_id, operation_id, self_id)  r2 c0 9 r3
+[2017-11-22 21:20:45,302] replica.Replica<Replica:8a007>:OUTPUT: Received result shuttle (source, client_id, operation_id, self_id)  r1 c0 8 r0
+[2017-11-22 21:20:45,320] replica.Replica<Replica:8a00a>:OUTPUT: Adding to history (slot, operation):  7 ,  {'id': 9, 'client_id': 'c0', 'command_string': "get('movie')"}  in Replica:  r3
+[2017-11-22 21:20:45,330] replica.Replica<Replica:8a00b>:OUTPUT: Received shuttle (source, client_id, operation_id, self_id)  r3 c0 9 r4
+[2017-11-22 21:20:45,350] replica.Replica<Replica:8a00b>:OUTPUT: Adding to history (slot, operation):  7 ,  {'id': 9, 'client_id': 'c0', 'command_string': "get('movie')"}  in Replica:  r4
+[2017-11-22 21:20:45,371] replica.Replica<Replica:8a00a>:OUTPUT: Received result shuttle (source, client_id, operation_id, self_id)  r4 c0 9 r3
+[2017-11-22 21:20:45,375] client.Client<Client:8a001>:OUTPUT: A result was received from replica= r4
+[2017-11-22 21:20:45,395] client.Client<Client:8a001>:OUTPUT: The operation result pair is= {'id': 9, 'client_id': 'c0', 'command_string': "get('movie')"} star2
+[2017-11-22 21:20:45,396] client.Client<Client:8a001>:OUTPUT: The result received is valid:(result, operation)= star2 {'id': 9, 'client_id': 'c0', 'command_string': "get('movie')"}
+[2017-11-22 21:20:45,396] client.Client<Client:8a001>:OUTPUT: The following operation was created: {'id': 10, 'client_id': 'c0', 'command_string': "get('movie')"}
+[2017-11-22 21:20:45,397] client.Client<Client:8a001>:OUTPUT: return_value= star2
+[2017-11-22 21:20:45,400] client.Client<Client:8a001>:OUTPUT: A request for an operation was made {'content': {'is_retry': False, 'operation': {'id': 10, 'client_id': 'c0', 'command_string': "get('movie')"}}, 'signed_content': b"\xceD\x00\r\x0fYr\xd7\xea\r\x10F\xc0cV\x83\xf8\r\x1e\xe0\xca\x18\xc8\xec0\xbe0\xf4?7\xe4\x86\xe9\x8a\xc3\xb3\n\\\xcc7\x9d\x12v\xeb\xbf\x8a\x0e\x1f\x01\xc8\xcd\xf4H\x18x<G\x95?o\nP\xa4\x01\x80\x03}q\x00(X\x08\x00\x00\x00is_retryq\x01\x89X\t\x00\x00\x00operationq\x02}q\x03(X\x02\x00\x00\x00idq\x04K\nX\t\x00\x00\x00client_idq\x05X\x02\x00\x00\x00c0q\x06X\x0e\x00\x00\x00command_stringq\x07X\x0c\x00\x00\x00get('movie')q\x08uu."}
+[2017-11-22 21:20:45,401] replica.Replica<Replica:8a009>:OUTPUT: Received result shuttle (source, client_id, operation_id, self_id)  r3 c0 9 r2
+[2017-11-22 21:20:45,402] replica.Replica<Replica:8a007>:OUTPUT: Received request message (source, client_id, operation_id, self_id)  c0 c0 10 r0
+[2017-11-22 21:20:45,406] replica.Replica<Replica:8a007>:OUTPUT: Head is processing request (operation_id, client_id) (10, 'c0')
+[2017-11-22 21:20:45,409] replica.Replica<Replica:8a007>:OUTPUT: Adding to history (slot, operation):  8 ,  {'id': 10, 'client_id': 'c0', 'command_string': "get('movie')"}  in Replica:  r0
+[2017-11-22 21:20:45,416] replica.Replica<Replica:8a008>:OUTPUT: Received shuttle (source, client_id, operation_id, self_id)  r0 c0 10 r1
+[2017-11-22 21:20:45,429] replica.Replica<Replica:8a008>:OUTPUT: Adding to history (slot, operation):  8 ,  {'id': 10, 'client_id': 'c0', 'command_string': "get('movie')"}  in Replica:  r1
+[2017-11-22 21:20:45,439] replica.Replica<Replica:8a009>:OUTPUT: Received shuttle (source, client_id, operation_id, self_id)  r1 c0 10 r2
+[2017-11-22 21:20:45,439] replica.Replica<Replica:8a008>:OUTPUT: Received result shuttle (source, client_id, operation_id, self_id)  r2 c0 9 r1
+[2017-11-22 21:20:45,454] replica.Replica<Replica:8a009>:OUTPUT: Adding to history (slot, operation):  8 ,  {'id': 10, 'client_id': 'c0', 'command_string': "get('movie')"}  in Replica:  r2
+[2017-11-22 21:20:45,468] replica.Replica<Replica:8a00a>:OUTPUT: Received shuttle (source, client_id, operation_id, self_id)  r2 c0 10 r3
+[2017-11-22 21:20:45,471] replica.Replica<Replica:8a007>:OUTPUT: Received result shuttle (source, client_id, operation_id, self_id)  r1 c0 9 r0
+[2017-11-22 21:20:45,489] replica.Replica<Replica:8a00a>:OUTPUT: Adding to history (slot, operation):  8 ,  {'id': 10, 'client_id': 'c0', 'command_string': "get('movie')"}  in Replica:  r3
+[2017-11-22 21:20:45,501] replica.Replica<Replica:8a00b>:OUTPUT: Received shuttle (source, client_id, operation_id, self_id)  r3 c0 10 r4
+[2017-11-22 21:20:45,519] replica.Replica<Replica:8a00b>:OUTPUT: Adding to history (slot, operation):  8 ,  {'id': 10, 'client_id': 'c0', 'command_string': "get('movie')"}  in Replica:  r4
+[2017-11-22 21:20:45,541] replica.Replica<Replica:8a00a>:OUTPUT: Received result shuttle (source, client_id, operation_id, self_id)  r4 c0 10 r3
+[2017-11-22 21:20:45,546] client.Client<Client:8a001>:OUTPUT: A result was received from replica= r4
+[2017-11-22 21:20:45,566] client.Client<Client:8a001>:OUTPUT: The operation result pair is= {'id': 10, 'client_id': 'c0', 'command_string': "get('movie')"} star2
+[2017-11-22 21:20:45,567] client.Client<Client:8a001>:OUTPUT: The result received is valid:(result, operation)= star2 {'id': 10, 'client_id': 'c0', 'command_string': "get('movie')"}
+[2017-11-22 21:20:45,568] client.Client<Client:8a001>:OUTPUT: The following operation was created: {'id': 11, 'client_id': 'c0', 'command_string': "get('movie')"}
+[2017-11-22 21:20:45,568] client.Client<Client:8a001>:OUTPUT: return_value= star2
+[2017-11-22 21:20:45,569] replica.Replica<Replica:8a009>:OUTPUT: Received result shuttle (source, client_id, operation_id, self_id)  r3 c0 10 r2
+[2017-11-22 21:20:45,571] client.Client<Client:8a001>:OUTPUT: A request for an operation was made {'content': {'is_retry': False, 'operation': {'id': 11, 'client_id': 'c0', 'command_string': "get('movie')"}}, 'signed_content': b"S\xa2\xad?\xb2\xb5E\x15\x99s\xb8\xe4\xd4\xf6RQ\x9d\x97rs\xd7\xfd0\xd1\x85\xc2\xa7\xf6\xc0\x9d-Vu\xb5\xb1\xbd\xad\x95\x02\xeb\xcb\xdb\x85\xc7\xbe\xc55y\xf9\x8f\xd2\x1fX\xa0j\xc9\x9d\xc0w rX\xaa\r\x80\x03}q\x00(X\x08\x00\x00\x00is_retryq\x01\x89X\t\x00\x00\x00operationq\x02}q\x03(X\x02\x00\x00\x00idq\x04K\x0bX\t\x00\x00\x00client_idq\x05X\x02\x00\x00\x00c0q\x06X\x0e\x00\x00\x00command_stringq\x07X\x0c\x00\x00\x00get('movie')q\x08uu."}
+[2017-11-22 21:20:45,573] replica.Replica<Replica:8a007>:OUTPUT: Received request message (source, client_id, operation_id, self_id)  c0 c0 11 r0
+[2017-11-22 21:20:45,576] replica.Replica<Replica:8a007>:OUTPUT: Head is processing request (operation_id, client_id) (11, 'c0')
+[2017-11-22 21:20:45,578] replica.Replica<Replica:8a007>:OUTPUT: Adding to history (slot, operation):  9 ,  {'id': 11, 'client_id': 'c0', 'command_string': "get('movie')"}  in Replica:  r0
+[2017-11-22 21:20:45,587] replica.Replica<Replica:8a008>:OUTPUT: Received shuttle (source, client_id, operation_id, self_id)  r0 c0 11 r1
+[2017-11-22 21:20:45,597] replica.Replica<Replica:8a008>:OUTPUT: Adding to history (slot, operation):  9 ,  {'id': 11, 'client_id': 'c0', 'command_string': "get('movie')"}  in Replica:  r1
+[2017-11-22 21:20:45,606] replica.Replica<Replica:8a009>:OUTPUT: Received shuttle (source, client_id, operation_id, self_id)  r1 c0 11 r2
+[2017-11-22 21:20:45,607] replica.Replica<Replica:8a008>:OUTPUT: Received result shuttle (source, client_id, operation_id, self_id)  r2 c0 10 r1
+[2017-11-22 21:20:45,625] replica.Replica<Replica:8a009>:OUTPUT: Adding to history (slot, operation):  9 ,  {'id': 11, 'client_id': 'c0', 'command_string': "get('movie')"}  in Replica:  r2
+[2017-11-22 21:20:45,638] replica.Replica<Replica:8a00a>:OUTPUT: Received shuttle (source, client_id, operation_id, self_id)  r2 c0 11 r3
+[2017-11-22 21:20:45,643] replica.Replica<Replica:8a007>:OUTPUT: Received result shuttle (source, client_id, operation_id, self_id)  r1 c0 10 r0
+[2017-11-22 21:20:45,658] replica.Replica<Replica:8a00a>:OUTPUT: Adding to history (slot, operation):  9 ,  {'id': 11, 'client_id': 'c0', 'command_string': "get('movie')"}  in Replica:  r3
+[2017-11-22 21:20:45,671] replica.Replica<Replica:8a00b>:OUTPUT: Received shuttle (source, client_id, operation_id, self_id)  r3 c0 11 r4
+[2017-11-22 21:20:45,692] replica.Replica<Replica:8a00b>:OUTPUT: Adding to history (slot, operation):  9 ,  {'id': 11, 'client_id': 'c0', 'command_string': "get('movie')"}  in Replica:  r4
+[2017-11-22 21:20:45,716] replica.Replica<Replica:8a00a>:OUTPUT: Received result shuttle (source, client_id, operation_id, self_id)  r4 c0 11 r3
+[2017-11-22 21:20:45,720] client.Client<Client:8a001>:OUTPUT: A result was received from replica= r4
+[2017-11-22 21:20:45,740] client.Client<Client:8a001>:OUTPUT: The operation result pair is= {'id': 11, 'client_id': 'c0', 'command_string': "get('movie')"} star2
+[2017-11-22 21:20:45,740] client.Client<Client:8a001>:OUTPUT: The result received is valid:(result, operation)= star2 {'id': 11, 'client_id': 'c0', 'command_string': "get('movie')"}
+[2017-11-22 21:20:45,741] client.Client<Client:8a001>:OUTPUT: The following operation was created: {'id': 12, 'client_id': 'c0', 'command_string': "get('movie')"}
+[2017-11-22 21:20:45,741] client.Client<Client:8a001>:OUTPUT: return_value= star2
+[2017-11-22 21:20:45,742] replica.Replica<Replica:8a009>:OUTPUT: Received result shuttle (source, client_id, operation_id, self_id)  r3 c0 11 r2
+[2017-11-22 21:20:45,744] client.Client<Client:8a001>:OUTPUT: A request for an operation was made {'content': {'is_retry': False, 'operation': {'id': 12, 'client_id': 'c0', 'command_string': "get('movie')"}}, 'signed_content': b"v\x85\x93\x08\x00]^\x8f\xbe*{k\xf0\xa6\x83\xd04\xac\xb80V\x0f_m\x03\xc5((\x18\xf1\xf1\n\\vr\xe7Iw\xd2%\xfc\xfc\x8b\xaa\x90\xb9_X\x0c\xb9\xa4\x05\x10nr\xd6\xb6\x11\x1e1\xd6\xfd\x9e\x06\x80\x03}q\x00(X\x08\x00\x00\x00is_retryq\x01\x89X\t\x00\x00\x00operationq\x02}q\x03(X\x02\x00\x00\x00idq\x04K\x0cX\t\x00\x00\x00client_idq\x05X\x02\x00\x00\x00c0q\x06X\x0e\x00\x00\x00command_stringq\x07X\x0c\x00\x00\x00get('movie')q\x08uu."}
+[2017-11-22 21:20:45,745] replica.Replica<Replica:8a007>:OUTPUT: Received request message (source, client_id, operation_id, self_id)  c0 c0 12 r0
+[2017-11-22 21:20:45,748] replica.Replica<Replica:8a007>:OUTPUT: Head is processing request (operation_id, client_id) (12, 'c0')
+[2017-11-22 21:20:45,750] replica.Replica<Replica:8a007>:OUTPUT: Adding to history (slot, operation):  10 ,  {'id': 12, 'client_id': 'c0', 'command_string': "get('movie')"}  in Replica:  r0
+[2017-11-22 21:20:45,760] replica.Replica<Replica:8a008>:OUTPUT: Received shuttle (source, client_id, operation_id, self_id)  r0 c0 12 r1
+[2017-11-22 21:20:45,771] replica.Replica<Replica:8a008>:OUTPUT: Adding to history (slot, operation):  10 ,  {'id': 12, 'client_id': 'c0', 'command_string': "get('movie')"}  in Replica:  r1
+[2017-11-22 21:20:45,781] replica.Replica<Replica:8a008>:OUTPUT: Received result shuttle (source, client_id, operation_id, self_id)  r2 c0 11 r1
+[2017-11-22 21:20:45,781] replica.Replica<Replica:8a009>:OUTPUT: Received shuttle (source, client_id, operation_id, self_id)  r1 c0 12 r2
+[2017-11-22 21:20:45,798] replica.Replica<Replica:8a009>:OUTPUT: Adding to history (slot, operation):  10 ,  {'id': 12, 'client_id': 'c0', 'command_string': "get('movie')"}  in Replica:  r2
+[2017-11-22 21:20:45,809] replica.Replica<Replica:8a00a>:OUTPUT: Received shuttle (source, client_id, operation_id, self_id)  r2 c0 12 r3
+[2017-11-22 21:20:45,810] replica.Replica<Replica:8a007>:OUTPUT: Received result shuttle (source, client_id, operation_id, self_id)  r1 c0 11 r0
+[2017-11-22 21:20:45,830] replica.Replica<Replica:8a00a>:OUTPUT: Adding to history (slot, operation):  10 ,  {'id': 12, 'client_id': 'c0', 'command_string': "get('movie')"}  in Replica:  r3
+[2017-11-22 21:20:45,841] replica.Replica<Replica:8a00b>:OUTPUT: Received shuttle (source, client_id, operation_id, self_id)  r3 c0 12 r4
+[2017-11-22 21:20:45,864] replica.Replica<Replica:8a00b>:OUTPUT: Adding to history (slot, operation):  10 ,  {'id': 12, 'client_id': 'c0', 'command_string': "get('movie')"}  in Replica:  r4
+[2017-11-22 21:20:45,886] replica.Replica<Replica:8a00a>:OUTPUT: Received result shuttle (source, client_id, operation_id, self_id)  r4 c0 12 r3
+[2017-11-22 21:20:45,890] client.Client<Client:8a001>:OUTPUT: A result was received from replica= r4
+[2017-11-22 21:20:45,910] client.Client<Client:8a001>:OUTPUT: The operation result pair is= {'id': 12, 'client_id': 'c0', 'command_string': "get('movie')"} star2
+[2017-11-22 21:20:45,911] client.Client<Client:8a001>:OUTPUT: The result received is valid:(result, operation)= star2 {'id': 12, 'client_id': 'c0', 'command_string': "get('movie')"}
+[2017-11-22 21:20:45,911] client.Client<Client:8a001>:OUTPUT: The following operation was created: {'id': 13, 'client_id': 'c0', 'command_string': "get('movie')"}
+[2017-11-22 21:20:45,911] client.Client<Client:8a001>:OUTPUT: return_value= star2
+[2017-11-22 21:20:45,913] replica.Replica<Replica:8a009>:OUTPUT: Received result shuttle (source, client_id, operation_id, self_id)  r3 c0 12 r2
+[2017-11-22 21:20:45,914] client.Client<Client:8a001>:OUTPUT: A request for an operation was made {'content': {'is_retry': False, 'operation': {'id': 13, 'client_id': 'c0', 'command_string': "get('movie')"}}, 'signed_content': b"\xdd\x1f\xee\x02\xec]\x1e\xa5\x88\xf5\x0f\xdf\r!\x08Y\xe7\x85\xbb\xc0\x05\x10\xbd\x8c\x97W\x8dkjM\xfa\x1c\x00\x16\x8c\x12>6f\x86\xaeZ\x99\xadsr\x8c\\\x03\x15^\xbd\x14\x98\xea\xaa2\xecT\xfe\xa6\x1b\xb0\x02\x80\x03}q\x00(X\x08\x00\x00\x00is_retryq\x01\x89X\t\x00\x00\x00operationq\x02}q\x03(X\x02\x00\x00\x00idq\x04K\rX\t\x00\x00\x00client_idq\x05X\x02\x00\x00\x00c0q\x06X\x0e\x00\x00\x00command_stringq\x07X\x0c\x00\x00\x00get('movie')q\x08uu."}
+[2017-11-22 21:20:45,915] replica.Replica<Replica:8a007>:OUTPUT: Received request message (source, client_id, operation_id, self_id)  c0 c0 13 r0
+[2017-11-22 21:20:45,919] replica.Replica<Replica:8a007>:OUTPUT: Head is processing request (operation_id, client_id) (13, 'c0')
+[2017-11-22 21:20:45,923] replica.Replica<Replica:8a007>:OUTPUT: Adding to history (slot, operation):  11 ,  {'id': 13, 'client_id': 'c0', 'command_string': "get('movie')"}  in Replica:  r0
+[2017-11-22 21:20:45,933] replica.Replica<Replica:8a008>:OUTPUT: Received shuttle (source, client_id, operation_id, self_id)  r0 c0 13 r1
+[2017-11-22 21:20:45,945] replica.Replica<Replica:8a008>:OUTPUT: Adding to history (slot, operation):  11 ,  {'id': 13, 'client_id': 'c0', 'command_string': "get('movie')"}  in Replica:  r1
+[2017-11-22 21:20:45,954] replica.Replica<Replica:8a009>:OUTPUT: Received shuttle (source, client_id, operation_id, self_id)  r1 c0 13 r2
+[2017-11-22 21:20:45,955] replica.Replica<Replica:8a008>:OUTPUT: Received result shuttle (source, client_id, operation_id, self_id)  r2 c0 12 r1
+[2017-11-22 21:20:45,972] replica.Replica<Replica:8a009>:OUTPUT: Adding to history (slot, operation):  11 ,  {'id': 13, 'client_id': 'c0', 'command_string': "get('movie')"}  in Replica:  r2
+[2017-11-22 21:20:45,985] replica.Replica<Replica:8a00a>:OUTPUT: Received shuttle (source, client_id, operation_id, self_id)  r2 c0 13 r3
+[2017-11-22 21:20:45,986] replica.Replica<Replica:8a007>:OUTPUT: Received result shuttle (source, client_id, operation_id, self_id)  r1 c0 12 r0
+[2017-11-22 21:20:46,007] replica.Replica<Replica:8a00a>:OUTPUT: Adding to history (slot, operation):  11 ,  {'id': 13, 'client_id': 'c0', 'command_string': "get('movie')"}  in Replica:  r3
+[2017-11-22 21:20:46,021] replica.Replica<Replica:8a00b>:OUTPUT: Received shuttle (source, client_id, operation_id, self_id)  r3 c0 13 r4
+[2017-11-22 21:20:46,045] replica.Replica<Replica:8a00b>:OUTPUT: Adding to history (slot, operation):  11 ,  {'id': 13, 'client_id': 'c0', 'command_string': "get('movie')"}  in Replica:  r4
+[2017-11-22 21:20:46,067] replica.Replica<Replica:8a00a>:OUTPUT: Received result shuttle (source, client_id, operation_id, self_id)  r4 c0 13 r3
+[2017-11-22 21:20:46,071] client.Client<Client:8a001>:OUTPUT: A result was received from replica= r4
+[2017-11-22 21:20:46,090] client.Client<Client:8a001>:OUTPUT: The operation result pair is= {'id': 13, 'client_id': 'c0', 'command_string': "get('movie')"} star2
+[2017-11-22 21:20:46,091] client.Client<Client:8a001>:OUTPUT: The result received is valid:(result, operation)= star2 {'id': 13, 'client_id': 'c0', 'command_string': "get('movie')"}
+[2017-11-22 21:20:46,091] client.Client<Client:8a001>:OUTPUT: The following operation was created: {'id': 14, 'client_id': 'c0', 'command_string': "get('movie')"}
+[2017-11-22 21:20:46,091] client.Client<Client:8a001>:OUTPUT: return_value= star2
+[2017-11-22 21:20:46,093] replica.Replica<Replica:8a009>:OUTPUT: Received result shuttle (source, client_id, operation_id, self_id)  r3 c0 13 r2
+[2017-11-22 21:20:46,094] client.Client<Client:8a001>:OUTPUT: A request for an operation was made {'content': {'is_retry': False, 'operation': {'id': 14, 'client_id': 'c0', 'command_string': "get('movie')"}}, 'signed_content': b"\x8b\x02\xa7\xc5)hW\xb5\xf9\x0fQykf\x1a\xdf\xba\xb7\xf6I\x14z`Q\x9d(-\xe7\x81u\xd1\x11{\x80\x1d$}\xf4\xcf*\xdd\x97`\xf0\xcaN\xa89\xfb6\xcb\x83W\x96\xecYH%\xf2\xf4\xa4\xf5=\x07\x80\x03}q\x00(X\x08\x00\x00\x00is_retryq\x01\x89X\t\x00\x00\x00operationq\x02}q\x03(X\x02\x00\x00\x00idq\x04K\x0eX\t\x00\x00\x00client_idq\x05X\x02\x00\x00\x00c0q\x06X\x0e\x00\x00\x00command_stringq\x07X\x0c\x00\x00\x00get('movie')q\x08uu."}
+[2017-11-22 21:20:46,095] replica.Replica<Replica:8a007>:OUTPUT: Received request message (source, client_id, operation_id, self_id)  c0 c0 14 r0
+[2017-11-22 21:20:46,099] replica.Replica<Replica:8a007>:OUTPUT: Head is processing request (operation_id, client_id) (14, 'c0')
+[2017-11-22 21:20:46,102] replica.Replica<Replica:8a007>:OUTPUT: Adding to history (slot, operation):  12 ,  {'id': 14, 'client_id': 'c0', 'command_string': "get('movie')"}  in Replica:  r0
+[2017-11-22 21:20:46,112] replica.Replica<Replica:8a008>:OUTPUT: Received shuttle (source, client_id, operation_id, self_id)  r0 c0 14 r1
+[2017-11-22 21:20:46,127] replica.Replica<Replica:8a008>:OUTPUT: Adding to history (slot, operation):  12 ,  {'id': 14, 'client_id': 'c0', 'command_string': "get('movie')"}  in Replica:  r1
+[2017-11-22 21:20:46,139] replica.Replica<Replica:8a008>:OUTPUT: Received result shuttle (source, client_id, operation_id, self_id)  r2 c0 13 r1
+[2017-11-22 21:20:46,139] replica.Replica<Replica:8a009>:OUTPUT: Received shuttle (source, client_id, operation_id, self_id)  r1 c0 14 r2
+[2017-11-22 21:20:46,156] replica.Replica<Replica:8a009>:OUTPUT: Adding to history (slot, operation):  12 ,  {'id': 14, 'client_id': 'c0', 'command_string': "get('movie')"}  in Replica:  r2
+[2017-11-22 21:20:46,169] replica.Replica<Replica:8a00a>:OUTPUT: Received shuttle (source, client_id, operation_id, self_id)  r2 c0 14 r3
+[2017-11-22 21:20:46,175] replica.Replica<Replica:8a007>:OUTPUT: Received result shuttle (source, client_id, operation_id, self_id)  r1 c0 13 r0
+[2017-11-22 21:20:46,190] replica.Replica<Replica:8a00a>:OUTPUT: Adding to history (slot, operation):  12 ,  {'id': 14, 'client_id': 'c0', 'command_string': "get('movie')"}  in Replica:  r3
+[2017-11-22 21:20:46,202] replica.Replica<Replica:8a00b>:OUTPUT: Received shuttle (source, client_id, operation_id, self_id)  r3 c0 14 r4
+[2017-11-22 21:20:46,222] replica.Replica<Replica:8a00b>:OUTPUT: Adding to history (slot, operation):  12 ,  {'id': 14, 'client_id': 'c0', 'command_string': "get('movie')"}  in Replica:  r4
+[2017-11-22 21:20:46,243] replica.Replica<Replica:8a00a>:OUTPUT: Received result shuttle (source, client_id, operation_id, self_id)  r4 c0 14 r3
+[2017-11-22 21:20:46,248] client.Client<Client:8a001>:OUTPUT: A result was received from replica= r4
+[2017-11-22 21:20:46,269] client.Client<Client:8a001>:OUTPUT: The operation result pair is= {'id': 14, 'client_id': 'c0', 'command_string': "get('movie')"} star2
+[2017-11-22 21:20:46,269] client.Client<Client:8a001>:OUTPUT: The result received is valid:(result, operation)= star2 {'id': 14, 'client_id': 'c0', 'command_string': "get('movie')"}
+[2017-11-22 21:20:46,270] client.Client<Client:8a001>:OUTPUT: The following operation was created: {'id': 15, 'client_id': 'c0', 'command_string': "get('movie')"}
+[2017-11-22 21:20:46,270] client.Client<Client:8a001>:OUTPUT: return_value= star2
+[2017-11-22 21:20:46,271] replica.Replica<Replica:8a009>:OUTPUT: Received result shuttle (source, client_id, operation_id, self_id)  r3 c0 14 r2
+[2017-11-22 21:20:46,273] client.Client<Client:8a001>:OUTPUT: A request for an operation was made {'content': {'is_retry': False, 'operation': {'id': 15, 'client_id': 'c0', 'command_string': "get('movie')"}}, 'signed_content': b"=c\x93u\x7f\x8e\xd9\xa1\xfc\xfe;\x90#u\xca\xf9(\x99\xff|^`\xbc\x171\xa8\xe5\x99\x0c\xa1\xff,.\xd5w-\x90\xcf\xb4\xe6\x0b\xf7*\x90\xf0Q\x90\x00\xdd\xe9\x1a\xbd\xc8l\xb6\x19`+'\xa2S\xe2\xe3\x0e\x80\x03}q\x00(X\x08\x00\x00\x00is_retryq\x01\x89X\t\x00\x00\x00operationq\x02}q\x03(X\x02\x00\x00\x00idq\x04K\x0fX\t\x00\x00\x00client_idq\x05X\x02\x00\x00\x00c0q\x06X\x0e\x00\x00\x00command_stringq\x07X\x0c\x00\x00\x00get('movie')q\x08uu."}
+[2017-11-22 21:20:46,275] replica.Replica<Replica:8a007>:OUTPUT: Received request message (source, client_id, operation_id, self_id)  c0 c0 15 r0
+[2017-11-22 21:20:46,279] replica.Replica<Replica:8a007>:OUTPUT: Head is processing request (operation_id, client_id) (15, 'c0')
+[2017-11-22 21:20:46,281] replica.Replica<Replica:8a007>:OUTPUT: Adding to history (slot, operation):  13 ,  {'id': 15, 'client_id': 'c0', 'command_string': "get('movie')"}  in Replica:  r0
+[2017-11-22 21:20:46,290] replica.Replica<Replica:8a008>:OUTPUT: Received shuttle (source, client_id, operation_id, self_id)  r0 c0 15 r1
+[2017-11-22 21:20:46,303] replica.Replica<Replica:8a008>:OUTPUT: Adding to history (slot, operation):  13 ,  {'id': 15, 'client_id': 'c0', 'command_string': "get('movie')"}  in Replica:  r1
+[2017-11-22 21:20:46,314] replica.Replica<Replica:8a009>:OUTPUT: Received shuttle (source, client_id, operation_id, self_id)  r1 c0 15 r2
+[2017-11-22 21:20:46,315] replica.Replica<Replica:8a008>:OUTPUT: Received result shuttle (source, client_id, operation_id, self_id)  r2 c0 14 r1
+[2017-11-22 21:20:46,333] replica.Replica<Replica:8a009>:OUTPUT: Adding to history (slot, operation):  13 ,  {'id': 15, 'client_id': 'c0', 'command_string': "get('movie')"}  in Replica:  r2
+[2017-11-22 21:20:46,343] replica.Replica<Replica:8a00a>:OUTPUT: Received shuttle (source, client_id, operation_id, self_id)  r2 c0 15 r3
+[2017-11-22 21:20:46,348] replica.Replica<Replica:8a007>:OUTPUT: Received result shuttle (source, client_id, operation_id, self_id)  r1 c0 14 r0
+[2017-11-22 21:20:46,361] replica.Replica<Replica:8a00a>:OUTPUT: Adding to history (slot, operation):  13 ,  {'id': 15, 'client_id': 'c0', 'command_string': "get('movie')"}  in Replica:  r3
+[2017-11-22 21:20:46,372] replica.Replica<Replica:8a00b>:OUTPUT: Received shuttle (source, client_id, operation_id, self_id)  r3 c0 15 r4
+[2017-11-22 21:20:46,390] replica.Replica<Replica:8a00b>:OUTPUT: Adding to history (slot, operation):  13 ,  {'id': 15, 'client_id': 'c0', 'command_string': "get('movie')"}  in Replica:  r4
+[2017-11-22 21:20:46,411] replica.Replica<Replica:8a00a>:OUTPUT: Received result shuttle (source, client_id, operation_id, self_id)  r4 c0 15 r3
+[2017-11-22 21:20:46,417] client.Client<Client:8a001>:OUTPUT: A result was received from replica= r4
+[2017-11-22 21:20:46,435] client.Client<Client:8a001>:OUTPUT: The operation result pair is= {'id': 15, 'client_id': 'c0', 'command_string': "get('movie')"} star2
+[2017-11-22 21:20:46,437] client.Client<Client:8a001>:OUTPUT: The result received is valid:(result, operation)= star2 {'id': 15, 'client_id': 'c0', 'command_string': "get('movie')"}
+[2017-11-22 21:20:46,437] replica.Replica<Replica:8a009>:OUTPUT: Received result shuttle (source, client_id, operation_id, self_id)  r3 c0 15 r2
+[2017-11-22 21:20:46,437] client.Client<Client:8a001>:OUTPUT: The following operation was created: {'id': 16, 'client_id': 'c0', 'command_string': "get('movie')"}
+[2017-11-22 21:20:46,438] client.Client<Client:8a001>:OUTPUT: return_value= star2
+[2017-11-22 21:20:46,441] client.Client<Client:8a001>:OUTPUT: A request for an operation was made {'content': {'is_retry': False, 'operation': {'id': 16, 'client_id': 'c0', 'command_string': "get('movie')"}}, 'signed_content': b'\\X\x0cd\xccX\xc3;\x90\x7f\x87\x86\xdc\xb7%\xdc\xe6\xd7,\x9d\xe4%!\xca\x1aFPM\xaf:\x87T\xe5\x12cb\n B5\xc1z\x1f\xfb\xf7\x88"\xaa\xf4\x17Z\x82\xf2\xbc\xd5\xeb\x83\x85\x13.\xab\x9bk\x0e\x80\x03}q\x00(X\x08\x00\x00\x00is_retryq\x01\x89X\t\x00\x00\x00operationq\x02}q\x03(X\x02\x00\x00\x00idq\x04K\x10X\t\x00\x00\x00client_idq\x05X\x02\x00\x00\x00c0q\x06X\x0e\x00\x00\x00command_stringq\x07X\x0c\x00\x00\x00get(\'movie\')q\x08uu.'}
+[2017-11-22 21:20:46,442] replica.Replica<Replica:8a007>:OUTPUT: Received request message (source, client_id, operation_id, self_id)  c0 c0 16 r0
+[2017-11-22 21:20:46,446] replica.Replica<Replica:8a007>:OUTPUT: Head is processing request (operation_id, client_id) (16, 'c0')
+[2017-11-22 21:20:46,449] replica.Replica<Replica:8a007>:OUTPUT: Adding to history (slot, operation):  14 ,  {'id': 16, 'client_id': 'c0', 'command_string': "get('movie')"}  in Replica:  r0
+[2017-11-22 21:20:46,461] replica.Replica<Replica:8a008>:OUTPUT: Received shuttle (source, client_id, operation_id, self_id)  r0 c0 16 r1
+[2017-11-22 21:20:46,473] replica.Replica<Replica:8a008>:OUTPUT: Adding to history (slot, operation):  14 ,  {'id': 16, 'client_id': 'c0', 'command_string': "get('movie')"}  in Replica:  r1
+[2017-11-22 21:20:46,482] replica.Replica<Replica:8a008>:OUTPUT: Received result shuttle (source, client_id, operation_id, self_id)  r2 c0 15 r1
+[2017-11-22 21:20:46,496] replica.Replica<Replica:8a009>:OUTPUT: Adding to history (slot, operation):  14 ,  {'id': 16, 'client_id': 'c0', 'command_string': "get('movie')"}  in Replica:  r2
+[2017-11-22 21:20:46,507] replica.Replica<Replica:8a00a>:OUTPUT: Received shuttle (source, client_id, operation_id, self_id)  r2 c0 16 r3
+[2017-11-22 21:20:46,510] replica.Replica<Replica:8a007>:OUTPUT: Received result shuttle (source, client_id, operation_id, self_id)  r1 c0 15 r0
+[2017-11-22 21:20:46,525] replica.Replica<Replica:8a00a>:OUTPUT: Adding to history (slot, operation):  14 ,  {'id': 16, 'client_id': 'c0', 'command_string': "get('movie')"}  in Replica:  r3
+[2017-11-22 21:20:46,534] replica.Replica<Replica:8a00b>:OUTPUT: Received shuttle (source, client_id, operation_id, self_id)  r3 c0 16 r4
+[2017-11-22 21:20:46,551] replica.Replica<Replica:8a00b>:OUTPUT: Adding to history (slot, operation):  14 ,  {'id': 16, 'client_id': 'c0', 'command_string': "get('movie')"}  in Replica:  r4
+[2017-11-22 21:20:46,575] replica.Replica<Replica:8a00a>:OUTPUT: Received result shuttle (source, client_id, operation_id, self_id)  r4 c0 16 r3
+[2017-11-22 21:20:46,579] client.Client<Client:8a001>:OUTPUT: A result was received from replica= r4
+[2017-11-22 21:20:46,598] client.Client<Client:8a001>:OUTPUT: The operation result pair is= {'id': 16, 'client_id': 'c0', 'command_string': "get('movie')"} star2
+[2017-11-22 21:20:46,599] client.Client<Client:8a001>:OUTPUT: The result received is valid:(result, operation)= star2 {'id': 16, 'client_id': 'c0', 'command_string': "get('movie')"}
+[2017-11-22 21:20:46,599] client.Client<Client:8a001>:OUTPUT: The following operation was created: {'id': 17, 'client_id': 'c0', 'command_string': "get('movie')"}
+[2017-11-22 21:20:46,600] client.Client<Client:8a001>:OUTPUT: return_value= star2
+[2017-11-22 21:20:46,602] client.Client<Client:8a001>:OUTPUT: A request for an operation was made {'content': {'is_retry': False, 'operation': {'id': 17, 'client_id': 'c0', 'command_string': "get('movie')"}}, 'signed_content': b",\xb3ak\xcc\xc47\xf7Cem]X\xe9\xd9q\xc5\x0f\x8e\xfb\xa1&\xc5\xf6~\xf0\xe6\xf6\xb4\xbd<C\xb1n)Lg\x8aX+\xb2\x10\xa8\xea\x88~\xef\xa2\x8e\xcct\xbc\xe0;)*\xbc%#\xa1&\x16\x93\x07\x80\x03}q\x00(X\x08\x00\x00\x00is_retryq\x01\x89X\t\x00\x00\x00operationq\x02}q\x03(X\x02\x00\x00\x00idq\x04K\x11X\t\x00\x00\x00client_idq\x05X\x02\x00\x00\x00c0q\x06X\x0e\x00\x00\x00command_stringq\x07X\x0c\x00\x00\x00get('movie')q\x08uu."}
+[2017-11-22 21:20:46,604] replica.Replica<Replica:8a009>:OUTPUT: Received result shuttle (source, client_id, operation_id, self_id)  r3 c0 16 r2
+[2017-11-22 21:20:46,604] replica.Replica<Replica:8a007>:OUTPUT: Received request message (source, client_id, operation_id, self_id)  c0 c0 17 r0
+[2017-11-22 21:20:46,609] replica.Replica<Replica:8a007>:OUTPUT: Head is processing request (operation_id, client_id) (17, 'c0')
+[2017-11-22 21:20:46,612] replica.Replica<Replica:8a007>:OUTPUT: Adding to history (slot, operation):  15 ,  {'id': 17, 'client_id': 'c0', 'command_string': "get('movie')"}  in Replica:  r0
+[2017-11-22 21:20:46,624] replica.Replica<Replica:8a008>:OUTPUT: Received shuttle (source, client_id, operation_id, self_id)  r0 c0 17 r1
+[2017-11-22 21:20:46,638] replica.Replica<Replica:8a008>:OUTPUT: Adding to history (slot, operation):  15 ,  {'id': 17, 'client_id': 'c0', 'command_string': "get('movie')"}  in Replica:  r1
+[2017-11-22 21:20:46,649] replica.Replica<Replica:8a008>:OUTPUT: Received result shuttle (source, client_id, operation_id, self_id)  r2 c0 16 r1
+[2017-11-22 21:20:46,650] replica.Replica<Replica:8a009>:OUTPUT: Received shuttle (source, client_id, operation_id, self_id)  r1 c0 17 r2
+[2017-11-22 21:20:46,667] replica.Replica<Replica:8a009>:OUTPUT: Adding to history (slot, operation):  15 ,  {'id': 17, 'client_id': 'c0', 'command_string': "get('movie')"}  in Replica:  r2
+[2017-11-22 21:20:46,676] replica.Replica<Replica:8a00a>:OUTPUT: Received shuttle (source, client_id, operation_id, self_id)  r2 c0 17 r3
+[2017-11-22 21:20:46,678] replica.Replica<Replica:8a007>:OUTPUT: Received result shuttle (source, client_id, operation_id, self_id)  r1 c0 16 r0
+[2017-11-22 21:20:46,694] replica.Replica<Replica:8a00a>:OUTPUT: Adding to history (slot, operation):  15 ,  {'id': 17, 'client_id': 'c0', 'command_string': "get('movie')"}  in Replica:  r3
+[2017-11-22 21:20:46,705] replica.Replica<Replica:8a00b>:OUTPUT: Received shuttle (source, client_id, operation_id, self_id)  r3 c0 17 r4
+[2017-11-22 21:20:46,728] replica.Replica<Replica:8a00b>:OUTPUT: Adding to history (slot, operation):  15 ,  {'id': 17, 'client_id': 'c0', 'command_string': "get('movie')"}  in Replica:  r4
+[2017-11-22 21:20:46,752] replica.Replica<Replica:8a00a>:OUTPUT: Received result shuttle (source, client_id, operation_id, self_id)  r4 c0 17 r3
+[2017-11-22 21:20:46,757] client.Client<Client:8a001>:OUTPUT: A result was received from replica= r4
+[2017-11-22 21:20:46,777] client.Client<Client:8a001>:OUTPUT: The operation result pair is= {'id': 17, 'client_id': 'c0', 'command_string': "get('movie')"} star2
+[2017-11-22 21:20:46,778] client.Client<Client:8a001>:OUTPUT: The result received is valid:(result, operation)= star2 {'id': 17, 'client_id': 'c0', 'command_string': "get('movie')"}
+[2017-11-22 21:20:46,779] client.Client<Client:8a001>:OUTPUT: The following operation was created: {'id': 18, 'client_id': 'c0', 'command_string': "get('movie')"}
+[2017-11-22 21:20:46,779] client.Client<Client:8a001>:OUTPUT: return_value= star2
+[2017-11-22 21:20:46,782] client.Client<Client:8a001>:OUTPUT: A request for an operation was made {'content': {'is_retry': False, 'operation': {'id': 18, 'client_id': 'c0', 'command_string': "get('movie')"}}, 'signed_content': b"\xd4\x0b\x95\x7f*Y\x81\xa3\xdd\xbb\x8a\x19\xa3\x0e*\xfd`8u\xda \x0bRo/\x17\x0f\x92Ms\x91?\xdb\x1aU\xb4\xa3\x12su\x1fl\xfd(\xac\x01\xe6\x95\xdcX\xbb4/\xa2\x7f\xc8\xc3\xfd[)\xfc'd\x0c\x80\x03}q\x00(X\x08\x00\x00\x00is_retryq\x01\x89X\t\x00\x00\x00operationq\x02}q\x03(X\x02\x00\x00\x00idq\x04K\x12X\t\x00\x00\x00client_idq\x05X\x02\x00\x00\x00c0q\x06X\x0e\x00\x00\x00command_stringq\x07X\x0c\x00\x00\x00get('movie')q\x08uu."}
+[2017-11-22 21:20:46,783] replica.Replica<Replica:8a007>:OUTPUT: Received request message (source, client_id, operation_id, self_id)  c0 c0 18 r0
+[2017-11-22 21:20:46,785] replica.Replica<Replica:8a009>:OUTPUT: Received result shuttle (source, client_id, operation_id, self_id)  r3 c0 17 r2
+[2017-11-22 21:20:46,787] replica.Replica<Replica:8a007>:OUTPUT: Head is processing request (operation_id, client_id) (18, 'c0')
+[2017-11-22 21:20:46,790] replica.Replica<Replica:8a007>:OUTPUT: Adding to history (slot, operation):  16 ,  {'id': 18, 'client_id': 'c0', 'command_string': "get('movie')"}  in Replica:  r0
+[2017-11-22 21:20:46,800] replica.Replica<Replica:8a008>:OUTPUT: Received shuttle (source, client_id, operation_id, self_id)  r0 c0 18 r1
+[2017-11-22 21:20:46,812] replica.Replica<Replica:8a008>:OUTPUT: Adding to history (slot, operation):  16 ,  {'id': 18, 'client_id': 'c0', 'command_string': "get('movie')"}  in Replica:  r1
+[2017-11-22 21:20:46,821] replica.Replica<Replica:8a008>:OUTPUT: Received result shuttle (source, client_id, operation_id, self_id)  r2 c0 17 r1
+[2017-11-22 21:20:46,821] replica.Replica<Replica:8a009>:OUTPUT: Received shuttle (source, client_id, operation_id, self_id)  r1 c0 18 r2
+[2017-11-22 21:20:46,835] replica.Replica<Replica:8a009>:OUTPUT: Adding to history (slot, operation):  16 ,  {'id': 18, 'client_id': 'c0', 'command_string': "get('movie')"}  in Replica:  r2
+[2017-11-22 21:20:46,847] replica.Replica<Replica:8a00a>:OUTPUT: Received shuttle (source, client_id, operation_id, self_id)  r2 c0 18 r3
+[2017-11-22 21:20:46,851] replica.Replica<Replica:8a007>:OUTPUT: Received result shuttle (source, client_id, operation_id, self_id)  r1 c0 17 r0
+[2017-11-22 21:20:46,867] replica.Replica<Replica:8a00a>:OUTPUT: Adding to history (slot, operation):  16 ,  {'id': 18, 'client_id': 'c0', 'command_string': "get('movie')"}  in Replica:  r3
+[2017-11-22 21:20:46,878] replica.Replica<Replica:8a00b>:OUTPUT: Received shuttle (source, client_id, operation_id, self_id)  r3 c0 18 r4
+[2017-11-22 21:20:46,896] replica.Replica<Replica:8a00b>:OUTPUT: Adding to history (slot, operation):  16 ,  {'id': 18, 'client_id': 'c0', 'command_string': "get('movie')"}  in Replica:  r4
+[2017-11-22 21:20:46,922] replica.Replica<Replica:8a00a>:OUTPUT: Received result shuttle (source, client_id, operation_id, self_id)  r4 c0 18 r3
+[2017-11-22 21:20:46,928] client.Client<Client:8a001>:OUTPUT: A result was received from replica= r4
+[2017-11-22 21:20:46,948] client.Client<Client:8a001>:OUTPUT: The operation result pair is= {'id': 18, 'client_id': 'c0', 'command_string': "get('movie')"} star2
+[2017-11-22 21:20:46,948] client.Client<Client:8a001>:OUTPUT: The result received is valid:(result, operation)= star2 {'id': 18, 'client_id': 'c0', 'command_string': "get('movie')"}
+[2017-11-22 21:20:46,950] client.Client<Client:8a001>:OUTPUT: The following operation was created: {'id': 19, 'client_id': 'c0', 'command_string': "get('movie')"}
+[2017-11-22 21:20:46,950] client.Client<Client:8a001>:OUTPUT: return_value= star2
+[2017-11-22 21:20:46,954] client.Client<Client:8a001>:OUTPUT: A request for an operation was made {'content': {'is_retry': False, 'operation': {'id': 19, 'client_id': 'c0', 'command_string': "get('movie')"}}, 'signed_content': b'\x17\x9b\xae\xfcb\xf6\x91A\xd5\xe6\xc7\x94<H\xae\xca\xa6\xc8\x90\xb0\xc5\xb6\x7f\xfcD\xae7\x1f_\xb4a\xef\xf6\xbaz}\xebL\x99\x93\x9e{\xab"\xb8\xfc\t\xbd\xc5\x98\xf7f\xe0\xcc\xac\x04\rj\x17\x9d\xbaI\x1b\x04\x80\x03}q\x00(X\x08\x00\x00\x00is_retryq\x01\x89X\t\x00\x00\x00operationq\x02}q\x03(X\x02\x00\x00\x00idq\x04K\x13X\t\x00\x00\x00client_idq\x05X\x02\x00\x00\x00c0q\x06X\x0e\x00\x00\x00command_stringq\x07X\x0c\x00\x00\x00get(\'movie\')q\x08uu.'}
+[2017-11-22 21:20:46,955] replica.Replica<Replica:8a007>:OUTPUT: Received request message (source, client_id, operation_id, self_id)  c0 c0 19 r0
+[2017-11-22 21:20:46,955] replica.Replica<Replica:8a009>:OUTPUT: Received result shuttle (source, client_id, operation_id, self_id)  r3 c0 18 r2
+[2017-11-22 21:20:46,959] replica.Replica<Replica:8a007>:OUTPUT: Head is processing request (operation_id, client_id) (19, 'c0')
+[2017-11-22 21:20:46,962] replica.Replica<Replica:8a007>:OUTPUT: Adding to history (slot, operation):  17 ,  {'id': 19, 'client_id': 'c0', 'command_string': "get('movie')"}  in Replica:  r0
+[2017-11-22 21:20:46,971] replica.Replica<Replica:8a008>:OUTPUT: Received shuttle (source, client_id, operation_id, self_id)  r0 c0 19 r1
+[2017-11-22 21:20:46,986] replica.Replica<Replica:8a008>:OUTPUT: Adding to history (slot, operation):  17 ,  {'id': 19, 'client_id': 'c0', 'command_string': "get('movie')"}  in Replica:  r1
+[2017-11-22 21:20:46,996] replica.Replica<Replica:8a009>:OUTPUT: Received shuttle (source, client_id, operation_id, self_id)  r1 c0 19 r2
+[2017-11-22 21:20:46,996] replica.Replica<Replica:8a008>:OUTPUT: Received result shuttle (source, client_id, operation_id, self_id)  r2 c0 18 r1
+[2017-11-22 21:20:47,010] replica.Replica<Replica:8a009>:OUTPUT: Adding to history (slot, operation):  17 ,  {'id': 19, 'client_id': 'c0', 'command_string': "get('movie')"}  in Replica:  r2
+[2017-11-22 21:20:47,020] replica.Replica<Replica:8a00a>:OUTPUT: Received shuttle (source, client_id, operation_id, self_id)  r2 c0 19 r3
+[2017-11-22 21:20:47,022] replica.Replica<Replica:8a007>:OUTPUT: Received result shuttle (source, client_id, operation_id, self_id)  r1 c0 18 r0
+[2017-11-22 21:20:47,039] replica.Replica<Replica:8a00a>:OUTPUT: Adding to history (slot, operation):  17 ,  {'id': 19, 'client_id': 'c0', 'command_string': "get('movie')"}  in Replica:  r3
+[2017-11-22 21:20:47,051] replica.Replica<Replica:8a00b>:OUTPUT: Received shuttle (source, client_id, operation_id, self_id)  r3 c0 19 r4
+[2017-11-22 21:20:47,074] replica.Replica<Replica:8a00b>:OUTPUT: Adding to history (slot, operation):  17 ,  {'id': 19, 'client_id': 'c0', 'command_string': "get('movie')"}  in Replica:  r4
+[2017-11-22 21:20:47,100] replica.Replica<Replica:8a00a>:OUTPUT: Received result shuttle (source, client_id, operation_id, self_id)  r4 c0 19 r3
+[2017-11-22 21:20:47,105] client.Client<Client:8a001>:OUTPUT: A result was received from replica= r4
+[2017-11-22 21:20:47,119] client.Client<Client:8a001>:OUTPUT: The operation result pair is= {'id': 19, 'client_id': 'c0', 'command_string': "get('movie')"} star2
+[2017-11-22 21:20:47,120] client.Client<Client:8a001>:OUTPUT: The result received is valid:(result, operation)= star2 {'id': 19, 'client_id': 'c0', 'command_string': "get('movie')"}
+[2017-11-22 21:20:47,121] client.Client<Client:8a001>:OUTPUT: The following operation was created: {'id': 20, 'client_id': 'c0', 'command_string': "get('movie')"}
+[2017-11-22 21:20:47,121] client.Client<Client:8a001>:OUTPUT: return_value= star2
+[2017-11-22 21:20:47,125] replica.Replica<Replica:8a009>:OUTPUT: Received result shuttle (source, client_id, operation_id, self_id)  r3 c0 19 r2
+[2017-11-22 21:20:47,125] client.Client<Client:8a001>:OUTPUT: A request for an operation was made {'content': {'is_retry': False, 'operation': {'id': 20, 'client_id': 'c0', 'command_string': "get('movie')"}}, 'signed_content': b'\x14\x8e\x84\x9bC\x16\xdc90f\xcf\xda\xd6K\x7f\xbc\'}^\xbd\xe3\x88\xdd\x13\x1dK\xed\xddk\xa8L\x15\xb7)\xd6T\x08"E\x19\xed0\xfd\xae\xad\x03\'\xa1^\xe6Pt\xc9ld\x89\xc5\xee2k\xd2\xfa,\n\x80\x03}q\x00(X\x08\x00\x00\x00is_retryq\x01\x89X\t\x00\x00\x00operationq\x02}q\x03(X\x02\x00\x00\x00idq\x04K\x14X\t\x00\x00\x00client_idq\x05X\x02\x00\x00\x00c0q\x06X\x0e\x00\x00\x00command_stringq\x07X\x0c\x00\x00\x00get(\'movie\')q\x08uu.'}
+[2017-11-22 21:20:47,126] replica.Replica<Replica:8a007>:OUTPUT: Received request message (source, client_id, operation_id, self_id)  c0 c0 20 r0
+[2017-11-22 21:20:47,130] replica.Replica<Replica:8a007>:OUTPUT: Head is processing request (operation_id, client_id) (20, 'c0')
+[2017-11-22 21:20:47,133] replica.Replica<Replica:8a007>:OUTPUT: Adding to history (slot, operation):  18 ,  {'id': 20, 'client_id': 'c0', 'command_string': "get('movie')"}  in Replica:  r0
+[2017-11-22 21:20:47,143] replica.Replica<Replica:8a008>:OUTPUT: Received shuttle (source, client_id, operation_id, self_id)  r0 c0 20 r1
+[2017-11-22 21:20:47,156] replica.Replica<Replica:8a008>:OUTPUT: Adding to history (slot, operation):  18 ,  {'id': 20, 'client_id': 'c0', 'command_string': "get('movie')"}  in Replica:  r1
+[2017-11-22 21:20:47,165] replica.Replica<Replica:8a009>:OUTPUT: Received shuttle (source, client_id, operation_id, self_id)  r1 c0 20 r2
+[2017-11-22 21:20:47,165] replica.Replica<Replica:8a008>:OUTPUT: Received result shuttle (source, client_id, operation_id, self_id)  r2 c0 19 r1
+[2017-11-22 21:20:47,181] replica.Replica<Replica:8a009>:OUTPUT: Adding to history (slot, operation):  18 ,  {'id': 20, 'client_id': 'c0', 'command_string': "get('movie')"}  in Replica:  r2
+[2017-11-22 21:20:47,192] replica.Replica<Replica:8a00a>:OUTPUT: Received shuttle (source, client_id, operation_id, self_id)  r2 c0 20 r3
+[2017-11-22 21:20:47,193] replica.Replica<Replica:8a007>:OUTPUT: Received result shuttle (source, client_id, operation_id, self_id)  r1 c0 19 r0
+[2017-11-22 21:20:47,214] replica.Replica<Replica:8a00a>:OUTPUT: Adding to history (slot, operation):  18 ,  {'id': 20, 'client_id': 'c0', 'command_string': "get('movie')"}  in Replica:  r3
+[2017-11-22 21:20:47,227] replica.Replica<Replica:8a00b>:OUTPUT: Received shuttle (source, client_id, operation_id, self_id)  r3 c0 20 r4
+[2017-11-22 21:20:47,250] replica.Replica<Replica:8a00b>:OUTPUT: Adding to history (slot, operation):  18 ,  {'id': 20, 'client_id': 'c0', 'command_string': "get('movie')"}  in Replica:  r4
+[2017-11-22 21:20:47,272] replica.Replica<Replica:8a00a>:OUTPUT: Received result shuttle (source, client_id, operation_id, self_id)  r4 c0 20 r3
+[2017-11-22 21:20:47,277] client.Client<Client:8a001>:OUTPUT: A result was received from replica= r4
+[2017-11-22 21:20:47,296] client.Client<Client:8a001>:OUTPUT: The operation result pair is= {'id': 20, 'client_id': 'c0', 'command_string': "get('movie')"} star2
+[2017-11-22 21:20:47,297] client.Client<Client:8a001>:OUTPUT: The result received is valid:(result, operation)= star2 {'id': 20, 'client_id': 'c0', 'command_string': "get('movie')"}
+[2017-11-22 21:20:47,297] client.Client<Client:8a001>:OUTPUT: The following operation was created: {'id': 21, 'client_id': 'c0', 'command_string': "get('movie')"}
+[2017-11-22 21:20:47,298] client.Client<Client:8a001>:OUTPUT: return_value= star2
+[2017-11-22 21:20:47,301] client.Client<Client:8a001>:OUTPUT: A request for an operation was made {'content': {'is_retry': False, 'operation': {'id': 21, 'client_id': 'c0', 'command_string': "get('movie')"}}, 'signed_content': b"EN\x9f\xf4\xbe\xc3\xad\xc9\xc1\xcd\x00\x0e\xf7\x97\xe9T\x91\xc1\xe0\xb7\x8e\xa3\xda_\xdc\x8b$\xa0hb#\xa3\x0b_M\xc4f)\xc7,\xb6\x91\x89e\x8bt\x8e,l\xbd\x1fZL\x8a4\xf5\x1c\xd3z\xbd\x86/\x03\x08\x80\x03}q\x00(X\x08\x00\x00\x00is_retryq\x01\x89X\t\x00\x00\x00operationq\x02}q\x03(X\x02\x00\x00\x00idq\x04K\x15X\t\x00\x00\x00client_idq\x05X\x02\x00\x00\x00c0q\x06X\x0e\x00\x00\x00command_stringq\x07X\x0c\x00\x00\x00get('movie')q\x08uu."}
+[2017-11-22 21:20:47,302] replica.Replica<Replica:8a007>:OUTPUT: Received request message (source, client_id, operation_id, self_id)  c0 c0 21 r0
+[2017-11-22 21:20:47,302] replica.Replica<Replica:8a009>:OUTPUT: Received result shuttle (source, client_id, operation_id, self_id)  r3 c0 20 r2
+[2017-11-22 21:20:47,306] replica.Replica<Replica:8a007>:OUTPUT: Head is processing request (operation_id, client_id) (21, 'c0')
+[2017-11-22 21:20:47,309] replica.Replica<Replica:8a007>:OUTPUT: Adding to history (slot, operation):  19 ,  {'id': 21, 'client_id': 'c0', 'command_string': "get('movie')"}  in Replica:  r0
+[2017-11-22 21:20:47,316] replica.Replica<Replica:8a008>:OUTPUT: Received shuttle (source, client_id, operation_id, self_id)  r0 c0 21 r1
+[2017-11-22 21:20:47,328] replica.Replica<Replica:8a008>:OUTPUT: Adding to history (slot, operation):  19 ,  {'id': 21, 'client_id': 'c0', 'command_string': "get('movie')"}  in Replica:  r1
+[2017-11-22 21:20:47,337] replica.Replica<Replica:8a008>:OUTPUT: Received result shuttle (source, client_id, operation_id, self_id)  r2 c0 20 r1
+[2017-11-22 21:20:47,337] replica.Replica<Replica:8a009>:OUTPUT: Received shuttle (source, client_id, operation_id, self_id)  r1 c0 21 r2
+[2017-11-22 21:20:47,355] replica.Replica<Replica:8a009>:OUTPUT: Adding to history (slot, operation):  19 ,  {'id': 21, 'client_id': 'c0', 'command_string': "get('movie')"}  in Replica:  r2
+[2017-11-22 21:20:47,367] replica.Replica<Replica:8a00a>:OUTPUT: Received shuttle (source, client_id, operation_id, self_id)  r2 c0 21 r3
+[2017-11-22 21:20:47,369] replica.Replica<Replica:8a007>:OUTPUT: Received result shuttle (source, client_id, operation_id, self_id)  r1 c0 20 r0
+[2017-11-22 21:20:47,388] replica.Replica<Replica:8a00a>:OUTPUT: Adding to history (slot, operation):  19 ,  {'id': 21, 'client_id': 'c0', 'command_string': "get('movie')"}  in Replica:  r3
+[2017-11-22 21:20:47,401] replica.Replica<Replica:8a00b>:OUTPUT: Received shuttle (source, client_id, operation_id, self_id)  r3 c0 21 r4
+[2017-11-22 21:20:47,419] replica.Replica<Replica:8a00b>:OUTPUT: Adding to history (slot, operation):  19 ,  {'id': 21, 'client_id': 'c0', 'command_string': "get('movie')"}  in Replica:  r4
+[2017-11-22 21:20:47,443] replica.Replica<Replica:8a00a>:OUTPUT: Received result shuttle (source, client_id, operation_id, self_id)  r4 c0 21 r3
+[2017-11-22 21:20:47,447] client.Client<Client:8a001>:OUTPUT: A result was received from replica= r4
+[2017-11-22 21:20:47,466] client.Client<Client:8a001>:OUTPUT: The operation result pair is= {'id': 21, 'client_id': 'c0', 'command_string': "get('movie')"} star2
+[2017-11-22 21:20:47,467] client.Client<Client:8a001>:OUTPUT: The result received is valid:(result, operation)= star2 {'id': 21, 'client_id': 'c0', 'command_string': "get('movie')"}
+[2017-11-22 21:20:47,468] client.Client<Client:8a001>:OUTPUT: The following operation was created: {'id': 22, 'client_id': 'c0', 'command_string': "get('movie');"}
+[2017-11-22 21:20:47,468] client.Client<Client:8a001>:OUTPUT: return_value= star2
+[2017-11-22 21:20:47,471] client.Client<Client:8a001>:OUTPUT: A request for an operation was made {'content': {'is_retry': False, 'operation': {'id': 22, 'client_id': 'c0', 'command_string': "get('movie');"}}, 'signed_content': b"\xb8\xecQ<\xf4\x19Ur\x90\x0f!R\xac\x00\x1a\x8aF;\xa6\x9f\xb6\xee\xf8\x80\x02\xa3\x1aO7\xdc\xdd\xf3\xb56\t\xf7\xc7M\x82\xc4\xa2_A\x14\xd56\xa9\xcd\x1e\t\xa1R\xcd\x00\xe0L\x184cW7\xca\x8f\x04\x80\x03}q\x00(X\x08\x00\x00\x00is_retryq\x01\x89X\t\x00\x00\x00operationq\x02}q\x03(X\x02\x00\x00\x00idq\x04K\x16X\t\x00\x00\x00client_idq\x05X\x02\x00\x00\x00c0q\x06X\x0e\x00\x00\x00command_stringq\x07X\r\x00\x00\x00get('movie');q\x08uu."}
+[2017-11-22 21:20:47,472] replica.Replica<Replica:8a007>:OUTPUT: Received request message (source, client_id, operation_id, self_id)  c0 c0 22 r0
+[2017-11-22 21:20:47,474] replica.Replica<Replica:8a009>:OUTPUT: Received result shuttle (source, client_id, operation_id, self_id)  r3 c0 21 r2
+[2017-11-22 21:20:47,476] replica.Replica<Replica:8a007>:OUTPUT: Head is processing request (operation_id, client_id) (22, 'c0')
+[2017-11-22 21:20:47,478] replica.Replica<Replica:8a007>:OUTPUT: Adding to history (slot, operation):  20 ,  {'id': 22, 'client_id': 'c0', 'command_string': "get('movie');"}  in Replica:  r0
+[2017-11-22 21:20:47,488] replica.Replica<Replica:8a008>:OUTPUT: Received shuttle (source, client_id, operation_id, self_id)  r0 c0 22 r1
+[2017-11-22 21:20:47,501] replica.Replica<Replica:8a008>:OUTPUT: Adding to history (slot, operation):  20 ,  {'id': 22, 'client_id': 'c0', 'command_string': "get('movie');"}  in Replica:  r1
+[2017-11-22 21:20:47,513] replica.Replica<Replica:8a009>:OUTPUT: Received shuttle (source, client_id, operation_id, self_id)  r1 c0 22 r2
+[2017-11-22 21:20:47,513] replica.Replica<Replica:8a008>:OUTPUT: Received result shuttle (source, client_id, operation_id, self_id)  r2 c0 21 r1
+[2017-11-22 21:20:47,531] replica.Replica<Replica:8a009>:OUTPUT: Adding to history (slot, operation):  20 ,  {'id': 22, 'client_id': 'c0', 'command_string': "get('movie');"}  in Replica:  r2
+[2017-11-22 21:20:47,544] replica.Replica<Replica:8a00a>:OUTPUT: Received shuttle (source, client_id, operation_id, self_id)  r2 c0 22 r3
+[2017-11-22 21:20:47,545] replica.Replica<Replica:8a007>:OUTPUT: Received result shuttle (source, client_id, operation_id, self_id)  r1 c0 21 r0
+[2017-11-22 21:20:47,563] replica.Replica<Replica:8a00a>:OUTPUT: Adding to history (slot, operation):  20 ,  {'id': 22, 'client_id': 'c0', 'command_string': "get('movie');"}  in Replica:  r3
+[2017-11-22 21:20:47,575] replica.Replica<Replica:8a00b>:OUTPUT: Received shuttle (source, client_id, operation_id, self_id)  r3 c0 22 r4
+[2017-11-22 21:20:47,593] replica.Replica<Replica:8a00b>:OUTPUT: Adding to history (slot, operation):  20 ,  {'id': 22, 'client_id': 'c0', 'command_string': "get('movie');"}  in Replica:  r4
+[2017-11-22 21:20:47,617] replica.Replica<Replica:8a00a>:OUTPUT: Received result shuttle (source, client_id, operation_id, self_id)  r4 c0 22 r3
+[2017-11-22 21:20:47,621] client.Client<Client:8a001>:OUTPUT: A result was received from replica= r4
+[2017-11-22 21:20:47,644] client.Client<Client:8a001>:OUTPUT: The operation result pair is= {'id': 22, 'client_id': 'c0', 'command_string': "get('movie');"} star2
+[2017-11-22 21:20:47,644] client.Client<Client:8a001>:OUTPUT: The result received is valid:(result, operation)= star2 {'id': 22, 'client_id': 'c0', 'command_string': "get('movie');"}
+[2017-11-22 21:20:47,645] client.Client<Client:8a001>:OUTPUT: ~~~~~~~~~~Final state: {'movie': 'star2'}
+[2017-11-22 21:20:47,645] client.Client<Client:8a001>:OUTPUT: Requesting shared object from head from client: c0
+[2017-11-22 21:20:47,647] replica.Replica<Replica:8a009>:OUTPUT: Received result shuttle (source, client_id, operation_id, self_id)  r3 c0 22 r2
+[2017-11-22 21:20:47,649] replica.Replica<Replica:8a007>:OUTPUT: Received wedge request from Olympus in Replica:  r0
+[2017-11-22 21:20:47,654] replica.Replica<Replica:8a007>:OUTPUT: Received shared_object_request from client= c0
+[2017-11-22 21:20:47,658] client.Client<Client:8a001>:OUTPUT: Received shared object from head =  {'movie': 'star2'}
+[2017-11-22 21:20:47,662] client.Client<Client:8a001>:OUTPUT: Final results are consistent
+[2017-11-22 21:20:47,663] client.Client<Client:8a001>:OUTPUT: Workload finished for client:  c0
+[2017-11-22 21:20:47,663] client.Client<Client:8a001>:OUTPUT: Sending done message to Olympus and terminating
+[2017-11-22 21:20:47,668] olympus.Olympus<Olympus:4f002>:OUTPUT: Done message received from client:  c0
+[2017-11-22 21:20:47,674] olympus.Olympus<Olympus:4f002>:OUTPUT: Terminating replicas..
+[2017-11-22 21:20:47,677] replica.Replica<Replica:8a008>:OUTPUT: Received result shuttle (source, client_id, operation_id, self_id)  r2 c0 22 r1
+[2017-11-22 21:20:47,679] olympus.Olympus<Olympus:4f002>:OUTPUT: Sent abort command to replica : r0
+[2017-11-22 21:20:47,680] replica.Replica<Replica:8a007>:OUTPUT: Received abort message from Olympus in replica:  r0
+[2017-11-22 21:20:47,682] olympus.Olympus<Olympus:4f002>:OUTPUT: Sent abort command to replica : r1
+[2017-11-22 21:20:47,684] replica.Replica<Replica:8a007>:OUTPUT: Sending aborted message to Olympus from:  r0
+[2017-11-22 21:20:47,685] olympus.Olympus<Olympus:4f002>:OUTPUT: Sent abort command to replica : r2
+[2017-11-22 21:20:47,687] replica.Replica<Replica:8a009>:OUTPUT: Received abort message from Olympus in replica:  r2
+[2017-11-22 21:20:47,689] replica.Replica<Replica:8a007>:OUTPUT: Shutting down replica:  r0
+[2017-11-22 21:20:47,690] olympus.Olympus<Olympus:4f002>:OUTPUT: Sent abort command to replica : r3
+[2017-11-22 21:20:47,691] replica.Replica<Replica:8a00a>:OUTPUT: Received abort message from Olympus in replica:  r3
+[2017-11-22 21:20:47,695] olympus.Olympus<Olympus:4f002>:OUTPUT: Sent abort command to replica : r4
+[2017-11-22 21:20:47,697] replica.Replica<Replica:8a00b>:OUTPUT: Received abort message from Olympus in replica:  r4
+[2017-11-22 21:20:47,697] olympus.Olympus<Olympus:4f002>:OUTPUT: Olympus terminating
+[2017-11-22 21:20:47,698] replica.Replica<Replica:8a00a>:OUTPUT: Sending aborted message to Olympus from:  r3
+[2017-11-22 21:20:47,698] olympus.Olympus<Olympus:4f002>:CRITICAL: elapsed time (seconds):  11.96945309638977
+[2017-11-22 21:20:47,701] replica.Replica<Replica:8a00b>:OUTPUT: Sending aborted message to Olympus from:  r4
+[2017-11-22 21:20:47,702] replica.Replica<Replica:8a00a>:OUTPUT: Shutting down replica:  r3
+[2017-11-22 21:20:47,706] replica.Replica<Replica:8a00b>:OUTPUT: Shutting down replica:  r4
+[2017-11-22 21:20:47,709] replica.Replica<Replica:8a009>:OUTPUT: Sending aborted message to Olympus from:  r2
+[2017-11-22 21:20:47,711] replica.Replica<Replica:8a008>:OUTPUT: Received abort message from Olympus in replica:  r1
+[2017-11-22 21:20:47,724] replica.Replica<Replica:8a009>:OUTPUT: Shutting down replica:  r2
+[2017-11-22 21:20:47,728] replica.Replica<Replica:8a008>:OUTPUT: Sending aborted message to Olympus from:  r1
+[2017-11-22 21:20:47,732] replica.Replica<Replica:8a008>:OUTPUT: Shutting down replica:  r1

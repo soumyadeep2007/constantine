@@ -46,8 +46,8 @@ src/random_tasks.py - Contains randomized workload as specified above. It can be
 2. Mechanism to obtain the LOC = Added counts in IDE and used Find to get the counts of logs
 
 ## LANGUAGE_FEATURE USAGE
-1. List comprehensions =
-2. Dictionary comprehensions =
+1. List comprehensions = 3
+2. Dictionary comprehensions = 2
 
 ## OTHER COMMENTS
 1. Tried to use inheritance in DistAlgo with Replica as a base and Head and Tail as subclasses,
