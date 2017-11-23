@@ -10,7 +10,7 @@ import traceback
 
 
 class Replica(process):
-    def setup(replica_config, running_state=None, event_counts=None):
+    def setup(replica_config, running_state=None):
         self._terminate = False
         # ======================REPLICA SECTION===============================================
         self._id = replica_config['id']
@@ -22,7 +22,7 @@ class Replica(process):
         self._last_signed_slot = 0
 
         self._event_counts = {}
-        self._init_event_counts(event_counts)
+        self._init_event_counts()
 
         self._failure_trigger = None
         self._send_error = False
@@ -50,10 +50,13 @@ class Replica(process):
         self._drop_checkpt_stmts = False
 
         output("Spawned and initialized replica: ", self._id)
+        try:
+            self._apply_failure('new_configuration', None, None, 'pre')
+            self._apply_failure('new_configuration', None, None, 'post')
+        except:
+            traceback.print_exc()
 
-    def _init_event_counts(event_counts):
-        #  todo : remove unused event_counts later
-        # init event counts
+    def _init_event_counts():
         self._event_counts = {event_type: -1 for event_type in ['wedge_request', 'new_configuration', 'checkpoint',
                                                                 'completed_checkpoint', 'get_running_state',
                                                                 'catch_up',
@@ -65,7 +68,7 @@ class Replica(process):
             for client_id in self._config['clients']:
                 self._event_counts['client_events'][event_type][client_id] = -1
 
-        self._event_counts['new_configuration'] = self._config['current_config'] - 1
+        self._event_counts['new_configuration'] = self._config['current_config']
 
         #  ========================RECEIVERS=============================================
 
@@ -309,17 +312,6 @@ class Replica(process):
                                           self._config['public_keys'][self._olympus['id']]):
             output(log_messages.INVALID_SIGNATURE, self._olympus['id'])
             return
-
-        aborted_message = {
-            'content': {
-                'event_counts': self._event_counts
-            }
-        }
-
-        output('Sending aborted message to Olympus from: ', self._id)
-        aborted_message['signed_content'] = Commons.sign(aborted_message['content'], self._config['private_key'])
-        send(('aborted', aborted_message, self._id), to=self._olympus['process_id'])
-
         self._terminate = True
 
     def receive(msg=('checkpoint', checkpoint_shuttle, sender_id), from_=(self._config['prev_replica'])):
@@ -629,7 +621,8 @@ class Replica(process):
                    cloned_payload['content']['operation'], self._id)
             self._activated_failures['drop_result_stmt'] = False
         elif self._activated_failures['invalid_order_sig'] and payload_type == 'shuttle':
-            cloned_payload['signed_content'] = self._get_invalid_signature()
+            cloned_payload['content']['order_proof']['order_statements'][self._id]['signed_order_statement'] =\
+                self._get_invalid_signature()
             output('Failure invalid_order_sig applied at replica: ', self._id)
             self._activated_failures['invalid_order_sig'] = False
         elif self._activated_failures['invalid_result_sig'] and payload_type == 'result_shuttle' \
@@ -651,16 +644,13 @@ class Replica(process):
         for selected_failure in selected_failures:
             if selected_failure[0] == 'change_operation':
                 self._activated_failures['change_operation'] = True
-                output("Failure 'change_operation' activated for (operation, replica_id) ",
-                       cloned_payload['content']['operation'], self._id)
+                output("Failure 'change_operation' activated for replica_id ", self._id)
             elif selected_failure[0] == 'change_result':
                 self._activated_failures['change_result'] = True
-                output("Failure 'change_result' activated for (operation, replica_id) ",
-                       cloned_payload['content']['operation'], self._id)
+                output("Failure 'change_result' activated for replica_id ", self._id)
             elif selected_failure[0] == 'drop_result_stmt':
                 self._activated_failures['drop_result_stmt'] = True
-                output("Failure 'drop_result_stmt' activated for (operation, replica_id) ",
-                       cloned_payload['content']['operation'], self._id)
+                output("Failure 'drop_result_stmt' activated for replica_id ", self._id)
             elif selected_failure[0] == 'crash':
                 output("Applying failure 'crash' to Replica: ", self._id, ". Node going down.......")
                 logging.shutdown()
