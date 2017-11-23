@@ -31,8 +31,7 @@ replica_hosts = 0; 0; 0
 workload[0] = put('movie','star'); put('movie', 'star2'); get('movie'); get('movie'); get('movie')
 
 # FAILURE SCENARIO
-failures[0,0] = forwarded_request(0,0), change_operation()
-failures[0,1] = shuttle(0,1), change_operation()
+failures[0,0] = forwarded_request(0,0), change_operation(); client_request(0,0), drop();
 
 # ----------------EXPECTED RESULT----------------------
 # <copy log here> expected_operation, operation_changed_to

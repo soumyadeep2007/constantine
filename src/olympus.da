@@ -19,6 +19,7 @@ start_time = time.time()
 
 PRE_PROCESS_APPLICATION_FAILURES = ['crash', 'sleep', 'drop', 'increment_slot', 'extra_op']
 
+
 # noinspection PyMethodParameters
 class Olympus(process):
     def setup(process_id, file_path):
@@ -269,9 +270,14 @@ class Olympus(process):
             return
 
         output('Received valid reconfiguration request from: ', sender_id)
+        self._reconfig_in_progress = True
+        self._valid_running_state_received = False
         self._send_wedge_requests_and_wait()
 
     def receive(msg=('wedged', message, replica_id), from_=self._config['replicas'].values()):
+        if self._valid_running_state_received:
+            output('Dropping extraneous wedged message as valid running state has already been received.')
+            return
         output('Received wedged message from replica:', replica_id)
         if not Commons.is_valid_signature(message['content'], message['signed_content'],
                                           self._config['keys']['public_keys'][replica_id]):
@@ -330,6 +336,9 @@ class Olympus(process):
         output('Validated history successfully for wedged message from: ', replica_id)
 
     def receive(msg=('caught_up', caught_up_message, replica_id), from_=self._config['replicas'].values()):
+        if self._valid_running_state_received:
+            output('Dropping extraneous caught_up message as valid running state has already been received.')
+            return
         output('Received caught up message from replica:', replica_id)
         if not Commons.is_valid_signature(caught_up_message['content'], caught_up_message['signed_content'],
                                           self._config['keys']['public_keys'][replica_id]):
@@ -360,7 +369,7 @@ class Olympus(process):
             if client_id in self._latest_result_stmt_result_pairs:
                 if latest_result_stmt_result_pair != self._latest_result_stmt_result_pairs[client_id]:
                     output('Invalid result statement and result pair found in potentially'
-                           ' unserved client requests for replica: ', client_id)
+                           ' unserved client requests for replica: ', replica_id)
                     self._handle_caught_up_quorum_unsatisfied()
                     return
 
@@ -371,6 +380,9 @@ class Olympus(process):
         output("Added Replica to caught up quorum: ", replica_id)
 
     def _send_wedge_requests_and_wait():
+        if self._valid_running_state_received and not self._reconfig_in_progress:
+            output("Ignoring stale reconfig process message/timer.  ")
+            return
         # housekeeping
         self._wedged_responses = {}
         self._wedged_quorum = {}
@@ -380,7 +392,6 @@ class Olympus(process):
         self._expected_running_state_hash = None
 
         self._num_caught_up_messages = 0
-        self._reconfig_in_progress = True
         self._reconfig_id = uuid.uuid4().hex
 
         for replica in self._config['replicas'].items():
@@ -395,7 +406,7 @@ class Olympus(process):
             send(('wedge', wedge_request_message), to=replica[1])
             output("Sent wedge request to: ", replica[0])
 
-        if await(len(self._wedged_quorum) >= (self._config['t'] + 1)):
+        if await((len(self._wedged_quorum) >= (self._config['t'] + 1)) or self._valid_running_state_received):
             self._handle_wedged_quorum_satisfied()
         elif timeout(self._timeout):
             output('Wait for a wedged quorum timed out...Restarting quorum selection..')
@@ -412,12 +423,12 @@ class Olympus(process):
         output('Reconfiguration started')
         self._terminate_replicas()
 
-        if await(len(self._aborted_messages) == len(self._replicas)):
-            output('Received all aborted messages')
-            pass
-        elif timeout(self._timeout):
-            output('Wait for aborted messages from all replicas timed out.')
-            pass
+        # if await(len(self._aborted_messages) == len(self._replicas)):
+        #     output('Received all aborted messages')
+        #     pass
+        # elif timeout(self._timeout):
+        #     output('Wait for aborted messages from all replicas timed out.')
+        #     pass
 
         self.generate_keys_for_replicas()
         self.init_hist(running_state)
@@ -463,6 +474,9 @@ class Olympus(process):
 
     def receive(msg=('running_state', running_state_message),
                 from_=self._config['replicas'][self._running_state_requested_replica_id]):
+        if self._valid_running_state_received:
+            output('Dropping extraneous running_state message as valid running state has already been received.')
+            return
         output('Running state received from: ', self._running_state_requested_replica_id)
         if not Commons.is_valid_signature(running_state_message['content'], running_state_message['signed_content'],
                                           self._config['keys']['public_keys'][
@@ -527,7 +541,11 @@ class Olympus(process):
         return False
 
     def _handle_wedged_quorum_satisfied():
-        output("Wedged quorum is satisfied, initiating catch-up process in Olympus.")
+        if self._valid_running_state_received:
+            output('Running state has already been received, not handling caught_up quorum satisfaction')
+            return
+        output("Wedged quorum is satisfied, initiating catch-up process in Olympus. Members = ",
+               self._wedged_quorum.keys())
 
         longest_history = self._get_longest_history()
 
@@ -551,7 +569,7 @@ class Olympus(process):
             output('Sending catch up message to replica: ', replica_id)
             send(('catch_up', catch_up_message), to=self._config['replicas'][replica_id])
 
-        if await(self._num_caught_up_messages >= self._config['t'] + 1):
+        if await(self._num_caught_up_messages == len(self._wedged_quorum) or self._valid_running_state_received):
             self._handle_caught_up_quorum_satisfied()
         elif timeout(self._timeout):
             output('Wait for a caught up quorum timed out...Restarting quorum selection..')
@@ -581,7 +599,10 @@ class Olympus(process):
         return max_operation_slot
 
     def _handle_caught_up_quorum_satisfied():
-        output('Caught up quorum is satisfied.')
+        if self._valid_running_state_received:
+            output('Running state has already been received, not handling caught_up quorum satisfaction')
+            return
+        output('Caught up quorum is satisfied. Members = ', self._wedged_quorum.keys())
         for replica_id, wedged_message in self._wedged_quorum.items():
             get_running_state_messsage = {
                 'content': {
@@ -599,7 +620,6 @@ class Olympus(process):
 
             self._valid_running_state_received = False
             if await(self._valid_running_state_received):
-                self._valid_running_state_received = False
                 self._running_state_requested_replica_id = None
                 self._expected_running_state_hash = None
                 break
@@ -633,7 +653,8 @@ class Olympus(process):
 
         self._wedged_quorum[random_replica_id] = self._wedged_responses[random_replica_id]
         del self._wedged_responses[random_replica_id]
-        output('Chosen the following replica as a replacement in the quorum:', random_replica_id)
+        output('Chosen the following replica as a replacement in the caught-up quorum:', random_replica_id,
+               " Members = ", self._wedged_quorum.keys())
         self._handle_wedged_quorum_satisfied()
 
 

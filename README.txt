@@ -10,7 +10,7 @@ An implementation of the Byzantine Chain Replication protocol
 ## INSTRUCTIONS
 1. To run the system, navigate to the src directory and type in the following command:
 python -m da --message-buffer-size {size_in_bytes} --logfile --logfilename {log_file_path_with_name} olympus.da {test-case-path}
-Example: python -m da --message-buffer-size 100000 -F output --logfile --logfilename ../log/testcase1 olympus.da ../test_cases/test_operation_change_fwd_request_t1_single_client.csv
+Example: python -m da --message-buffer-size 1000000 -F output --logfile --logfilename ../log/testcase1 olympus.da ../test_cases/test_operation_change_fwd_request_t1_single_client.csv
 Please note: Enter a significantly large buffer size in bytes, like the size in the example above to avoid running
 into buffer constraints.
 
@@ -19,14 +19,9 @@ into buffer constraints.
 2. Replica, config files, testing - Tushar
 
 ## BUGS AND LIMITATIONS
-1. If head changes the operation, the system cannot handle it.
-2. For result validation simplicity in the client for phase 2 we have assumed that the keys used for each client's workload
+1. For result validation simplicity in the client, we have assumed that the keys used for each client's workload
 is segregated on a per client basis.
-3. We have adopted the mechanism to sign every message in the system exchanged via the send and receive mechaninsm
-to authenticate the sender of each message at the receiver. This extra functionality is giving rise to signature
-mismatches currently. We will fix this in Phase 3.
-4. Multi-host execution is not supported.
-5. Test for: test_operation_change_fwd_request_t2_multi_client.csv is failing intermittently
+2. Test for: test_operation_change_fwd_request_t2_multi_client.csv is failing intermittently
 
 
 ## WORKLOAD GENERATION
@@ -44,14 +39,15 @@ src/random_tasks.py - Contains randomized workload as specified above. It can be
 
 ## CODE SIZE
 1. LOC (including spaces and comments) =
-    i)   Algorithm code = 590 (~64.1%)
-    ii)  Trigger and maintenance code = 275 (~29.9%)
-    iii) Log statements = 55 (~6%)
-    iv) Total = 920
+    i)   Algorithm code ~ 1510 (~72%)
+    ii)  Trigger and maintenance code ~ 420 (~20%)
+    iii) Log statements ~ 170 (~8%)
+    iv) Total = 2100
 2. Mechanism to obtain the LOC = Added counts in IDE and used Find to get the counts of logs
 
 ## LANGUAGE_FEATURE USAGE
 1. List comprehensions =
+2. Dictionary comprehensions =
 
 ## OTHER COMMENTS
 1. Tried to use inheritance in DistAlgo with Replica as a base and Head and Tail as subclasses,

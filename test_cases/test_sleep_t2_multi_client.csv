@@ -32,4 +32,4 @@ workload[0] = put('movie','star'); get('movie'); append('movie', '123'); get('mo
 workload[1] = put('movie1','star1'); get('movie1'); append('movie1', '123'); get('movie1'); get('movie1');
 
 # FAILURE SCENARIO
-failures[0,1] = shuttle(0,2), sleep(10000);
+failures[0,1] = shuttle(0,2), sleep(8000);

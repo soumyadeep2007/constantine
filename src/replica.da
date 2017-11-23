@@ -608,7 +608,7 @@ class Replica(process):
     def _apply_failure(trigger_type, payload, payload_type, failure_application='post'):
         cloned_payload = dict(payload) if payload is not None else None
 
-        if self._activated_failures['change_operation'] and payload_type == 'payload':
+        if self._activated_failures['change_operation'] and payload_type == 'shuttle':
             cloned_payload['content']['operation']['command_string'] = "get('x')"
             output("Failure 'change_operation' applied for (operation, replica_id) ",
                    cloned_payload['content']['operation'], self._id)

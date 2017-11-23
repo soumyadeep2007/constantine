@@ -13,7 +13,7 @@ client_timeout = 3000
 head_timeout = 3000
 nonhead_timeout = 3000
 
-checkpt_interval = 5
+checkpt_interval = 100
 
 # MAPPING OF PROCESSES TO HOSTS
 # to simplify changing the hosts, wegit first specify a semicolon-separated
@@ -31,4 +31,4 @@ replica_hosts = 0; 0; 0; 0; 0;
 workload[0] = put('movie','star'); get('movie'); append('movie', '123'); get('movie'); get('movie'); get('movie'); get('movie'); get('movie'); get('movie'); get('movie'); get('movie'); get('movie'); get('movie'); get('movie'); get('movie');
 
 # FAILURE SCENARIO
-failures[0,0] = client_request(0,1), invalid_order_sig()
+failures[0,0] = client_request(0,1), invalid_order_sig();
