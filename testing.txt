@@ -19,8 +19,9 @@ raft2.da reported time: 12.243465900421143s
 
 perform900:
 single_client:
-    With logs at output level: 38.018301293812911s
-    With logs at critical level: 18.838352918624878s
+    With logs at output level: 26.028234243392944s
+    With logs at critical level: 14.953104496002197s
 
 
 Please note: that failure entries must end with a trailing semicolon
+

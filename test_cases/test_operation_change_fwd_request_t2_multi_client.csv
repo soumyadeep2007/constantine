@@ -28,8 +28,8 @@ client_hosts = 0; 0
 replica_hosts = 0; 0; 0; 0; 0
 
 # CLIENT WORKLOAD
-workload[0] = put('movie','star'); put('movie', 'star2'); get('movie'); get('movie'); get('movie')
+workload[0] = put('movie','star'); put('movie', 'star2'); get('movie'); get('movie'); get('movie'); get('movie'); get('movie'); get('movie');
 workload[1] = put('jedi','luke skywalker'); slice('jedi','0:4'); get('jedi')
 
 # FAILURE SCENARIO
-failures[0,0] = forwarded_request(0,0), change_operation(); client_request(0,0), drop();
+failures[0,0] = forwarded_request(0,0), crash(); client_request(0,0), drop(); client_request(0,2), drop();

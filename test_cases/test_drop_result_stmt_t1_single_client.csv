@@ -27,10 +27,10 @@ client_hosts = 0;
 replica_hosts = 0; 0; 0
 
 # CLIENT WORKLOAD
-workload[0] = put('movie','star'); get('movie'); append('movie', '123'); get('movie');
+workload[0] = put('movie','star'); get('movie'); append('movie', '123'); get('movie')
 
 # FAILURE SCENARIO
-failures[0,1] = result_shuttle(0,6), drop_result_stmt();
+failures[0,1] = result_shuttle(0,2), drop_result_stmt();
 
 # ----------------EXPECTED RESULT----------------------
 # <copy log here> result proof error(replica = head missing from result proof)

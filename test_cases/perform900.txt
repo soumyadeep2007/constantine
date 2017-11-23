@@ -24,7 +24,7 @@ hosts = localhost;
 client_hosts = 0; 0; 0
 # host on which each replica runs.  same in all configurations.
 replica_hosts = 0; 0; 0; 0; 0
-checkpt_interval = 100
+checkpt_interval = 200
 
 # CLIENT WORKLOAD
 workload[0] = pseudorandom(190,300)
